@@ -10,6 +10,10 @@ public class Item : MonoBehaviour
     public AudioClip[] pickupSounds;
     public AudioClip[] useSounds;
     public AudioClip[] collisionSounds;
+    public AudioClip[] parrySounds;
+
+    [Header("Settings that exist")]
+    [SerializeField] float throwMultiplier = 0.1f;
 
     [HideInInspector] public PlayerController controller;
     protected AudioSource audioSource;
@@ -38,8 +42,7 @@ public class Item : MonoBehaviour
 
     private void TogglePhysics(bool state)
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb != null)
+        if (TryGetComponent<Rigidbody>(out var rb))
         {
             rb.isKinematic = !state;
             rb.detectCollisions = state;
@@ -59,7 +62,12 @@ public class Item : MonoBehaviour
 
     public virtual void OnUse(GameObject user)
     {
-        if (useSounds.All(i=>i!=null)) audioSource.PlayOneShot(useSounds[Random.Range(0,useSounds.Length)]);
+        if (useSounds.Length > 0 && useSounds.All(i=>i!=null))
+        {
+            AudioClip clip = useSounds[Random.Range(0, useSounds.Length)];
+            audioSource.PlayOneShot(clip);
+        }
+
         Debug.Log($"{gameObject.name} used by {user.name}");
     }
 
@@ -69,6 +77,16 @@ public class Item : MonoBehaviour
         if (TryGetComponent<Rigidbody>(out var rb))
         {
             rb.AddForce(direction * force, ForceMode.Impulse);
+
+            Vector3 torque = force * throwMultiplier * Vector3.Cross(direction, Vector3.up);
+
+            Vector3 randomSpin = new Vector3(
+                Random.Range(-0.5f, 0.5f),
+                Random.Range(-0.5f, 0.5f),
+                Random.Range(-0.5f, 0.5f)
+            );
+
+            rb.AddTorque((torque + randomSpin * force) / rb.mass, ForceMode.Impulse);
         }
     }
 
@@ -76,5 +94,23 @@ public class Item : MonoBehaviour
     {
         transform.SetPositionAndRotation(position, rotation);
         OnDrop();
+    }
+
+    public virtual void OnParry()
+    {
+        if (parrySounds != null && parrySounds.Length > 0)
+        {
+            audioSource.PlayOneShot(parrySounds[Random.Range(0, parrySounds.Length)]);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collisionSounds != null && collisionSounds.Length > 0)
+        {
+            float impactVolume = Mathf.Clamp01(collision.relativeVelocity.magnitude * 0.1f);
+            AudioClip clip = collisionSounds[Random.Range(0, collisionSounds.Length)];
+            audioSource.PlayOneShot(clip, impactVolume);
+        }
     }
 }

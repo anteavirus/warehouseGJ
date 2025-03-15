@@ -1,9 +1,8 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float airDrag = 0.5f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float playerHeight = 2f;
+    [SerializeField] bool reverseMovement;
 
     [Header("Look Settings")]
     [SerializeField] private float mouseSensitivity = 100f;
@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
     private GameObject heldItem, previewObject;
     private Item currentInteractable;
+    private Coroutine spinRoutine;
 
     private SurfaceType currentSurface;
 
@@ -101,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
-        var input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        var input = new Vector2((reverseMovement ? -1 : 1) * Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         moveDirection = transform.forward * input.y + transform.right * input.x;
 
         float multiplier = isGrounded ? 1f : airControlFactor;
@@ -192,7 +193,7 @@ public class PlayerController : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
 
-        playerCameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        playerCameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, reverseMovement ? 180f : 0);
         transform.Rotate(Vector3.up * mouseX);
     }
 
@@ -247,6 +248,8 @@ public class PlayerController : MonoBehaviour
         {
             currentChargeTime = 0f;
             chargeMeterUI.SetActive(true);
+            if (spinRoutine != null) StopCoroutine(spinRoutine);
+            spinRoutine = StartCoroutine(SpinWhileCharging());
         }
 
         if (Input.GetMouseButton(0))
@@ -260,6 +263,25 @@ public class PlayerController : MonoBehaviour
             ThrowItem(chargedThrowForce);
             chargeMeterUI.SetActive(false);
             currentChargeTime = 0f;
+
+            if (spinRoutine != null)
+            {
+                StopCoroutine(spinRoutine);
+                spinRoutine = null;
+            }
+        }
+    }
+
+    private IEnumerator SpinWhileCharging()
+    {
+        while (true)
+        {
+            if (heldItem != null)
+            {
+                float spinSpeed = chargeMeter.fillAmount * 360f;
+                heldItem.transform.Rotate(Vector3.right, spinSpeed * Time.deltaTime);
+            }
+            yield return null;
         }
     }
 
@@ -274,7 +296,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleParry()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canParry)
+        if (Input.GetKeyDown(KeyCode.F) && canParry)
             StartCoroutine(ParryAction());
     }
 
@@ -289,8 +311,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Projectile"))
+        Rigidbody rb = other.attachedRigidbody;
+        Item item = other.GetComponent<Item>();
+        if (item != null && rb != null && rb.velocity.magnitude >= 0.5f)
+        {
             StartCoroutine(EnableParryWindow());
+        }
     }
 
     private IEnumerator EnableParryWindow()
@@ -302,12 +328,32 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isParrying && collision.gameObject.CompareTag("Projectile"))
-            ParryProjectile(collision.gameObject);
+        if (isParrying)
+        {
+            Item item = collision.gameObject.GetComponent<Item>();
+            if (item != null)
+            {
+                Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
+                if (rb != null && rb.velocity.magnitude >= 0.5f)
+                {
+                    ParryProjectile(collision.gameObject);
+                }
+            }
+        }
     }
 
-    private void ParryProjectile(GameObject projectile) =>
-        projectile.GetComponent<Rigidbody>().velocity *= -1;
+    private void ParryProjectile(GameObject projectile)
+    {
+        if (projectile.TryGetComponent<Item>(out var item))
+        {
+            item.OnParry();
+        }
+
+        if (projectile.TryGetComponent<Rigidbody>(out var rb))
+        {
+            rb.velocity *= -3;
+        }
+    }
 
     private void HandlePlacement()
     {
@@ -357,8 +403,10 @@ public class PlayerController : MonoBehaviour
         isValidPlacement = Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
             out RaycastHit hit, placementMaxDistance, placementLayer);
 
+        // TODO: issue if placing upwards. i'm thinking of just disallowing that lol
+        float offest = GetObjectBottomOffset(previewObject);
         Vector3 targetPos = isValidPlacement ?
-            hit.point + placementOffset + Vector3.up * GetObjectBottomOffset(heldItem) :
+            hit.point + placementOffset + Vector3.up * offest :
             playerCameraTransform.position + playerCameraTransform.forward * placementMaxDistance;
 
         Quaternion targetRot = Quaternion.Euler(0,
@@ -368,6 +416,7 @@ public class PlayerController : MonoBehaviour
         previewObject.transform.SetPositionAndRotation(targetPos, targetRot);
         UpdatePreviewAppearance();
     }
+
 
     private void CreatePreview()
     {
@@ -400,9 +449,9 @@ public class PlayerController : MonoBehaviour
     {
         if (obj == null) return 0f;
 
-        if (obj.TryGetComponent<Collider>(out var col)) return col.bounds.extents.y;
-
-        if (obj.TryGetComponent<Renderer>(out var rend)) return rend.bounds.extents.y;
+        //if (obj.TryGetComponent<Collider>(out var col)) return col.bounds.extents.y;
+        // TODO: These two seem to return 0 most, if not all the time... may need to be fixed but. meh. below works as well
+        //if (obj.TryGetComponent<Renderer>(out var rend)) return rend.bounds.extents.y;
 
         return obj.transform.localScale.y / 2; // it's something... i guess.
     }
@@ -416,21 +465,26 @@ public class PlayerController : MonoBehaviour
     {
         while (true)
         {
+            bool hitInteractable = Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
+                out RaycastHit hit, pickupRange, hoverLayer);
 
-            if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-                out RaycastHit hit, pickupRange, hoverLayer))
+            Item newInteractable = null;
+            if (hitInteractable) hit.collider.TryGetComponent(out newInteractable);
+
+            if (newInteractable != currentInteractable)
             {
-                if (hit.collider.TryGetComponent<Item>(out var newInteractable))
+                if (currentInteractable != null)
                 {
-                    if (currentInteractable != newInteractable)
-                    {
-                        currentInteractable = newInteractable;
-                        ShowHint(pickUpHint);
-                    }
+                    HideHint();
                 }
-            } 
-            else 
-                HideHint();
+
+                currentInteractable = newInteractable;
+
+                if (currentInteractable != null)
+                {
+                    ShowHint(pickUpHint);
+                }
+            }
 
             yield return new WaitForSecondsRealtime(checkRate);
         }
