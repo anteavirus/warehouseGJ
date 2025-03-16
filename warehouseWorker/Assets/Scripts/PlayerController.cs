@@ -55,6 +55,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask hoverLayer;
     readonly string pickUpHint = "[E]";
 
+    [Header("Held Item Physics")]
+    [SerializeField] private float followForce = 100f;
+    [SerializeField] private float maxHoldDistance = 1.5f;
+    [SerializeField] private float damping = 5f;
+    [SerializeField] private float angularDamping = 5f;
+
+    [Header("Camera Wobble")]
+    [SerializeField] private float wobbleAmount = 0.05f;
+    [SerializeField] private float wobbleFrequency = 4f;
+    [SerializeField] private float wobbleResetSpeed = 5f;
+
+    private Rigidbody heldItemRb;
+    private Vector3 originalCameraLocalPosition;
+
     private Rigidbody rb;
     private float xRotation;
     private Vector3 moveDirection;
@@ -78,12 +92,15 @@ public class PlayerController : MonoBehaviour
             playerCamera = Camera.main;
 
         playerCameraTransform = playerCamera.transform;
+        originalCameraLocalPosition = playerCameraTransform.localPosition;
 
         StartCoroutine(CheckForInteractables());
     }
 
     void Update()
     {
+        if (!Application.isFocused) return;
+
         HandleLook();
         HandleJump();
         UpdateDrag();
@@ -93,11 +110,13 @@ public class PlayerController : MonoBehaviour
         HandleParry();
         HandleInteractions();
         HandleFootsteps();
+        HandleCameraWobble();
     }
 
     void FixedUpdate()
     {
         MovePlayer();
+        HandleHeldItemPhysics(); // Add physics handling for held item
     }
 
     private void MovePlayer()
@@ -116,6 +135,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void HandleHeldItemPhysics()
+    {
+        if (heldItem == null || heldItemRb == null) return;
+
+        Vector3 targetPosition = handTransform.position;
+        Quaternion targetRotation = handTransform.rotation;
+
+        // Position handling
+        Vector3 positionDelta = targetPosition - heldItemRb.position;
+        float distance = positionDelta.magnitude;
+
+        Vector3 force = positionDelta.normalized * (followForce * distance);
+        force -= heldItemRb.velocity * damping;
+        heldItemRb.AddForce(force);
+
+        // Rotation handling
+        Quaternion rotationDelta = targetRotation * Quaternion.Inverse(heldItemRb.rotation);
+        rotationDelta.ToAngleAxis(out float angle, out Vector3 axis);
+        if (angle > 180f) angle -= 360f;
+
+        Vector3 torque = (0.5f * angle * axis) - (heldItemRb.angularVelocity * angularDamping);
+        heldItemRb.AddTorque(torque, ForceMode.Acceleration);
+
+        // Prevent object from getting too far
+        if (distance > maxHoldDistance)
+        {
+            heldItemRb.MovePosition(targetPosition);
+            heldItemRb.velocity = Vector3.zero;
+            heldItemRb.angularVelocity = Vector3.zero;
+        }
+    }
+
     private void HandleJump()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down,
@@ -125,6 +176,28 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    private void HandleCameraWobble()
+    {
+        if (isGrounded && moveDirection != Vector3.zero)
+        {
+            float wobble = Mathf.Sin(Time.time * wobbleFrequency) * wobbleAmount;
+            Vector3 targetWobble = originalCameraLocalPosition + new Vector3(0, Mathf.Abs(wobble), 0);
+            playerCameraTransform.localPosition = Vector3.Lerp(
+                playerCameraTransform.localPosition,
+                targetWobble,
+                Time.deltaTime * wobbleResetSpeed
+            );
+        }
+        else
+        {
+            playerCameraTransform.localPosition = Vector3.Lerp(
+                playerCameraTransform.localPosition,
+                originalCameraLocalPosition,
+                Time.deltaTime * wobbleResetSpeed
+            );
         }
     }
 
@@ -214,7 +287,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     private void TryPickupItem()
     {
         if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
@@ -226,9 +298,24 @@ public class PlayerController : MonoBehaviour
                 {
                     heldItem = item.gameObject;
                     item.OnPickup(handTransform);
+
+                    heldItem.transform.parent = null;
+                    heldItemRb = heldItem.GetComponent<Rigidbody>();
+                    if (heldItemRb != null)
+                    {
+                        heldItemRb.isKinematic = false;
+                        heldItemRb.useGravity = false;
+                        heldItemRb.drag = 5f;
+                        heldItemRb.angularDrag = 5f;
+                    }
                 }
             }
         }
+    }
+
+    public void ForceDropItem()
+    {
+        DropItem();
     }
 
     private void DropItem()
@@ -237,7 +324,16 @@ public class PlayerController : MonoBehaviour
 
         Item item = heldItem.GetComponent<Item>();
         item.OnDrop();
+
+        // Reset physics properties
+        if (heldItemRb != null)
+        {
+            heldItemRb.useGravity = true;
+            heldItemRb.drag = 0f;
+            heldItemRb.angularDrag = 0.05f;
+        }
         heldItem = null;
+        heldItemRb = null;
     }
 
     private void HandleThrow()
@@ -247,8 +343,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             currentChargeTime = 0f;
+            DisableSpinRoutineIfReal();
             chargeMeterUI.SetActive(true);
-            if (spinRoutine != null) StopCoroutine(spinRoutine);
             spinRoutine = StartCoroutine(SpinWhileCharging());
         }
 
@@ -258,18 +354,22 @@ public class PlayerController : MonoBehaviour
             chargedThrowForce = Mathf.Lerp(minThrowForce, maxThrowForce, chargeMeter.fillAmount);
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && spinRoutine != null)
         {
+            DestroyPreview();
             ThrowItem(chargedThrowForce);
-            chargeMeterUI.SetActive(false);
             currentChargeTime = 0f;
 
-            if (spinRoutine != null)
-            {
-                StopCoroutine(spinRoutine);
-                spinRoutine = null;
-            }
+            DisableSpinRoutineIfReal();
         }
+    }
+
+    private void DisableSpinRoutineIfReal()
+    {
+        if (spinRoutine == null) return;
+        StopCoroutine(spinRoutine);
+        spinRoutine = null;
+        chargeMeterUI.SetActive(false);
     }
 
     private IEnumerator SpinWhileCharging()
@@ -291,7 +391,16 @@ public class PlayerController : MonoBehaviour
 
         Item item = heldItem.GetComponent<Item>();
         item.OnThrow(playerCameraTransform.forward, force);
+
+        // Reset physics properties
+        if (heldItemRb != null)
+        {
+            heldItemRb.useGravity = true;
+            heldItemRb.drag = 0f;
+            heldItemRb.angularDrag = 0.05f;
+        }
         heldItem = null;
+        heldItemRb = null;
     }
 
     private void HandleParry()
@@ -363,7 +472,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePlacementInput()
     {
-        if (heldItem == null) return;
+        if (heldItem == null || !Application.isFocused) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -421,7 +530,7 @@ public class PlayerController : MonoBehaviour
     private void CreatePreview()
     {
         previewObject = Instantiate(heldItem);
-        Destroy(previewObject.GetComponent<Rigidbody>());
+        previewObject.GetComponent<Rigidbody>().isKinematic = true;
         foreach (Collider col in previewObject.GetComponentsInChildren<Collider>())
             col.enabled = false;
 
@@ -440,20 +549,23 @@ public class PlayerController : MonoBehaviour
 
     private void PlaceItem()
     {
+        if (previewObject == null) return;
         Item item = heldItem.GetComponent<Item>();
+        heldItemRb.velocity = Vector3.zero;
         item.OnPlace(previewObject.transform.position, previewObject.transform.rotation);
         heldItem = null;
+        DisableSpinRoutineIfReal();
     }
 
     private float GetObjectBottomOffset(GameObject obj)
     {
         if (obj == null) return 0f;
 
-        //if (obj.TryGetComponent<Collider>(out var col)) return col.bounds.extents.y;
+        if (obj.TryGetComponent<Collider>(out var col)) return col.bounds.extents.y;
         // TODO: These two seem to return 0 most, if not all the time... may need to be fixed but. meh. below works as well
-        //if (obj.TryGetComponent<Renderer>(out var rend)) return rend.bounds.extents.y;
+        if (obj.TryGetComponent<Renderer>(out var rend)) return rend.bounds.extents.y;
 
-        return obj.transform.localScale.y / 2; // it's something... i guess.
+        return obj.transform.lossyScale.y / 2; // it's something... i guess.
     }
 
     private void DestroyPreview()
@@ -501,5 +613,31 @@ public class PlayerController : MonoBehaviour
 
     void HideHint() {
         if (interactionHintUI != null) interactionHintUI.gameObject.SetActive(false);
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+        {
+            if (isHoldingToPlace)
+            {
+                DestroyPreview();
+                isHoldingToPlace = false;
+                if (heldItem != null) heldItem.SetActive(true);
+            }
+
+            currentChargeTime = 0f;
+            chargeMeterUI.SetActive(false);
+            if (spinRoutine != null)
+            {
+                StopCoroutine(spinRoutine);
+                spinRoutine = null;
+                if (heldItem != null) heldItem.transform.rotation = Quaternion.identity;
+            }
+
+            isParrying = false;
+            parryMiniGameUI.SetActive(false);
+            canParry = false;
+        }
     }
 }

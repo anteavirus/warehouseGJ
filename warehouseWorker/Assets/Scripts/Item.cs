@@ -1,8 +1,12 @@
 using UnityEngine;
 using System.Linq;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Item : MonoBehaviour
 {
+    public int ID;
+    public int scoreValue;
+
     [Header("Base Item Settings")]
     public bool isPickupable = true;
 
@@ -29,33 +33,34 @@ public class Item : MonoBehaviour
         if (pickupSounds != null && pickupSounds.Length > 0)
             audioSource.PlayOneShot(pickupSounds[Random.Range(0, pickupSounds.Length)]);
 
-        transform.SetParent(holder);
-        transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-        TogglePhysics(false);
+        ToggleColliders(false);
     }
 
     public virtual void OnDrop()
     {
-        transform.SetParent(null);
-        TogglePhysics(true);
+        ToggleColliders(true);
     }
 
+    private void ToggleColliders(bool state)
+    {
+        TogglePhysics(state);
+
+        foreach (Collider col in GetComponentsInChildren<Collider>())
+        {
+            col.enabled = state;
+        }
+    }
+
+    // keep outdated just in case
     private void TogglePhysics(bool state)
     {
         if (TryGetComponent<Rigidbody>(out var rb))
         {
-            rb.isKinematic = !state;
-            rb.detectCollisions = state;
             if (state)
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
-        }
-
-        foreach (Collider col in GetComponentsInChildren<Collider>())
-        {
-            col.enabled = state;
         }
     }
 
