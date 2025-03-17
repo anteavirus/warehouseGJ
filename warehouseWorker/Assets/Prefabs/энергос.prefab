@@ -151,10 +151,15 @@ MonoBehaviour:
   ID: 2
   scoreValue: 50
   isPickupable: 1
-  pickupSounds: []
+  pickupSounds:
+  - {fileID: 8300000, guid: 58782e84a5a648247ab04a629b2b2b6a, type: 3}
   useSounds: []
-  collisionSounds: []
-  parrySounds: []
+  collisionSounds:
+  - {fileID: 8300000, guid: 840d3831c52633b45838ca110016aac9, type: 3}
+  - {fileID: 8300000, guid: 1405e6b5a5b933d4483e8aedf1ea3675, type: 3}
+  - {fileID: 8300000, guid: 9cae6c7086cf725439334a67e260039d, type: 3}
+  parrySounds:
+  - {fileID: 0}
   throwMultiplier: 0.1
   controller: {fileID: 0}
 --- !u!114 &6525397498677607383

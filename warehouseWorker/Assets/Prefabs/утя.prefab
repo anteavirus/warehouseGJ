@@ -151,10 +151,22 @@ MonoBehaviour:
   ID: 1
   scoreValue: 25
   isPickupable: 1
-  pickupSounds: []
-  useSounds: []
-  collisionSounds: []
-  parrySounds: []
+  pickupSounds:
+  - {fileID: 8300000, guid: 39cb6cc5e8fbb2145be7d37573c09546, type: 3}
+  - {fileID: 8300000, guid: 0d17b75198cf34a439e2773467e482a7, type: 3}
+  useSounds:
+  - {fileID: 8300000, guid: 675d9682768e6994dad0c95af4029d88, type: 3}
+  - {fileID: 8300000, guid: 0d17b75198cf34a439e2773467e482a7, type: 3}
+  - {fileID: 8300000, guid: d6223aff4590b9243b21dc167d289693, type: 3}
+  collisionSounds:
+  - {fileID: 8300000, guid: 39cb6cc5e8fbb2145be7d37573c09546, type: 3}
+  - {fileID: 8300000, guid: 0d17b75198cf34a439e2773467e482a7, type: 3}
+  - {fileID: 8300000, guid: d6223aff4590b9243b21dc167d289693, type: 3}
+  parrySounds:
+  - {fileID: 8300000, guid: 675d9682768e6994dad0c95af4029d88, type: 3}
+  - {fileID: 8300000, guid: 0d17b75198cf34a439e2773467e482a7, type: 3}
+  - {fileID: 8300000, guid: 39cb6cc5e8fbb2145be7d37573c09546, type: 3}
+  - {fileID: 8300000, guid: d6223aff4590b9243b21dc167d289693, type: 3}
   throwMultiplier: 0.1
   controller: {fileID: 0}
 --- !u!114 &-8536708249557659784

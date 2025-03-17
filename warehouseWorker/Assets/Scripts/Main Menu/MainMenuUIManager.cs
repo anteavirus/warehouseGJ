@@ -73,14 +73,14 @@ public class UIManager : MonoBehaviour
     public void SaveGameSettings()
     {
         PlayerPrefs.SetString("CurrentUsername", usernameInput.text);
-        PlayerPrefs.SetInt("GameDifficulty", difficultyDropdown.value);
+        //PlayerPrefs.SetInt("GameDifficulty", difficultyDropdown.value);
         PlayerPrefs.Save();
     }
 
     public void LoadGameSettings()
     {
         usernameInput.text = PlayerPrefs.GetString("CurrentUsername", "Player");
-        difficultyDropdown.value = PlayerPrefs.GetInt("GameDifficulty", 0);
+        //difficultyDropdown.value = PlayerPrefs.GetInt("GameDifficulty", 0);
     }
 
     public void StartGame()

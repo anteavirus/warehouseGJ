@@ -1493,6 +1493,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1701809638}
   - {fileID: 1129530867}
   m_Father: {fileID: 1552460523}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4547,6 +4548,9 @@ MonoBehaviour:
   hideUIButton: {fileID: 960542754}
   uiElementsToHide:
   - {fileID: 1875758307}
+  - {fileID: 229216923}
+  - {fileID: 539431504}
+  - {fileID: 561247818}
   usernameInput: {fileID: 1803973378}
   difficultyDropdown: {fileID: 0}
 --- !u!1 &1636276109
@@ -4713,11 +4717,11 @@ RectTransform:
   m_Children:
   - {fileID: 1480449652}
   - {fileID: 351730114}
-  m_Father: {fileID: 1875758308}
+  m_Father: {fileID: 539431507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -28, y: -19}
+  m_AnchoredPosition: {x: 137.36848, y: 49.439384}
   m_SizeDelta: {x: 176.0348, y: 240.3793}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1701809639
@@ -5306,7 +5310,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1701809638}
   - {fileID: 1094133992}
   - {fileID: 889267590}
   m_Father: {fileID: 1552460523}
@@ -5694,12 +5697,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e191d6fd33bf5b647bf8fc98abb453ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  setdownItem: 0
+  startGame: 0
   scoreUI: {fileID: 0}
   timerUI: {fileID: 0}
+  timerParentUI: {fileID: 0}
   items: []
   box: {fileID: 0}
+  eventList: []
   spawnPosition: {fileID: 0}
   randomSpawnIntervalMax: 1
+  timerRestore: 1
 --- !u!4 &2062938293
 Transform:
   m_ObjectHideFlags: 0
@@ -5784,6 +5792,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Resting Place
+      objectReference: {fileID: 0}
+    - target: {fileID: 2398106361004482152, guid: 834846cacdafb0e459a0494676bfe555,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3837544456097886423, guid: 834846cacdafb0e459a0494676bfe555,
         type: 3}

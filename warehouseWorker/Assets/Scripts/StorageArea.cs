@@ -7,7 +7,7 @@ public class StorageArea : MonoBehaviour
 {
     public int ID;
     BoxCollider boxCollider;
-    [SerializeField] Vector3 limitVelocity = new Vector3(0.1f, 0.1f, 0.1f);
+    [SerializeField] Vector3 limitVelocity = new Vector3(0.3f, 0.3f, 0.3f);
 
     void Start()
     {
@@ -26,16 +26,16 @@ public class StorageArea : MonoBehaviour
             Mathf.Abs(velocity.y) < limitVelocity.y &&
             Mathf.Abs(velocity.z) < limitVelocity.z;
 
-        Debug.Log(isVelocityUnderLimit);
-        Debug.Log(rb.velocity);
-
         if (isVelocityUnderLimit)
         {
             Item item = other.GetComponent<Item>();
             if (item != null && item.ID == ID)
             {
                 if (GameManager.Instance != null)
+                {
                     GameManager.Instance.AddScore(item.scoreValue);
+                    GameManager.Instance.setdownItem = true;
+                }
                 item.enabled = false;
                 Destroy(other.gameObject);
             }

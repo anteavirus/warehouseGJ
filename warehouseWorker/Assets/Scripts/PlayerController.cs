@@ -405,6 +405,9 @@ public class PlayerController : MonoBehaviour
 
     private void HandleParry()
     {
+        // TODO!!!! This will become it's own item for some fucking reason.
+        // I have no idea how we'll tell the user it can parry shit.
+        // Nor how will the parry work.
         if (Input.GetKeyDown(KeyCode.F) && canParry)
             StartCoroutine(ParryAction());
     }
@@ -551,7 +554,15 @@ public class PlayerController : MonoBehaviour
     {
         if (previewObject == null) return;
         Item item = heldItem.GetComponent<Item>();
-        heldItemRb.velocity = Vector3.zero;
+
+        if (heldItemRb != null)
+        {
+            heldItemRb.velocity = Vector3.zero;
+            heldItemRb.useGravity = true;
+            heldItemRb.drag = 0f;
+            heldItemRb.angularDrag = 0.05f;
+        }
+
         item.OnPlace(previewObject.transform.position, previewObject.transform.rotation);
         heldItem = null;
         DisableSpinRoutineIfReal();

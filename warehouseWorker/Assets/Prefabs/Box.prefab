@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2259084242324950148}
   - component: {fileID: 3943981039289178991}
   - component: {fileID: 4554695507802504736}
+  - component: {fileID: 5082579548337248556}
   m_Layer: 6
   m_Name: Box
   m_TagString: Item
@@ -151,9 +152,23 @@ MonoBehaviour:
   isPickupable: 1
   pickupSounds: []
   useSounds: []
-  collisionSounds: []
+  collisionSounds:
+  - {fileID: 0}
   parrySounds: []
   throwMultiplier: 0.1
   controller: {fileID: 0}
   containedItem: {fileID: 6190435878620182654, guid: e5a2859fd9bc35e4689ed98dd65f4dc2,
     type: 3}
+--- !u!114 &5082579548337248556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684404609544575223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceed96982c449544fabc45c58a124970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surfaceType: 2

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public bool setdownItem;
+    public bool startGame;
     [SerializeField] TextMeshProUGUI scoreUI;
-    [SerializeField] TextMeshProUGUI timerUI;
+    [SerializeField] Image timerUI;
 
     [Tooltip("I will kill you if you put something that doesn't have an Item Component here.")]
     [SerializeField] List<GameObject> items = new List<GameObject>();
@@ -16,12 +19,24 @@ public class GameManager : MonoBehaviour
     [Tooltip("Spawn box, user must unbox the box. Then they bring wherever they need to.")]
     [SerializeField] GameObject box;
     float timer = 30;
+    static readonly float maxTimer = 30;
     int score = 0;
+
+    float progressTimer;
+
+    float currentTime = 0;
+
+    float eventTimer = 60;
+    [SerializeField] List<GameObject> eventList = new List<GameObject>();
+    private Event currentEvent;
 
     public Transform spawnPosition;
 
     [Range(0, 10), SerializeField]
     float randomSpawnIntervalMax = 1;
+
+    [Range(0, 10), SerializeField]
+    float timerRestore = 1;
 
     void Awake()
     {
@@ -35,8 +50,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    public void StartGame()
     {
+        startGame = true;
         if (items.Count > 0) SpawnItem();
     }
 
@@ -46,9 +62,18 @@ public class GameManager : MonoBehaviour
         scoreUI.text = this.score.ToString();
         if (resetTimer)
         {
-            timer = 30; // TODO: make this progressively harder
+            setdownItem = true;
 
             StartCoroutine(SpawnItemAfterDelay());
+        }
+    }
+
+    public void ResetTimer()
+    {
+        if (setdownItem)
+        {
+            timer = Mathf.Clamp(timer + timerRestore, 0, maxTimer);
+            setdownItem = false;
         }
     }
 
@@ -67,12 +92,68 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        timer -= Time.deltaTime;
-        timerUI.text = this.timer.ToString();
+        if (!startGame) return;
 
-        if (timer < 0)
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            StartRandomEvent();
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            timer = maxTimer;
+        }
+        timer -= Time.deltaTime;
+        currentTime += Time.deltaTime;
+
+        progressTimer = timer / maxTimer;
+        timerUI.fillAmount = progressTimer;
+
+        // Bad!
+        var color = timerUI.color;
+        color.a = progressTimer;
+        timerUI.color = color;
+
+        if (timer < 0 || score < 0)
         {
             GameOver();
+        }
+
+        if (currentTime >= eventTimer)
+        {
+            StartRandomEvent();
+            currentTime = 0;
+        }
+
+        if (currentEvent != null && currentEvent.isActive)
+        {
+            currentEvent.UpdateEvent();
+        }
+    }
+
+    void StartRandomEvent()
+    {
+        if (eventList.Count == 0) return;
+
+        if (currentEvent != null)
+        {
+            currentEvent.EndEvent();
+        }
+
+        int randomIndex = Random.Range(0, eventList.Count);
+        currentEvent = eventList[randomIndex].GetComponent<Event>();
+        currentEvent.StartEvent();
+
+        StartCoroutine(EndEventAfterDuration(currentEvent));
+    }
+
+
+    IEnumerator EndEventAfterDuration(Event evt)
+    {
+        yield return new WaitForSeconds(evt.duration);
+        if (currentEvent == evt)
+        {
+            evt.EndEvent();
+            currentEvent = null;
         }
     }
 
