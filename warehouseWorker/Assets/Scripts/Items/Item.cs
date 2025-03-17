@@ -26,6 +26,9 @@ public class Item : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.spatialBlend = 1;
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
+        audioSource.maxDistance = 30;
     }
 
     public virtual void OnPickup(Transform holder)

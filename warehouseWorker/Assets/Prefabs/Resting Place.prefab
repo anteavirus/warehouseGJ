@@ -225,7 +225,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.427
+  m_Volume: 0.837
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -234,9 +234,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 43.37834
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -269,7 +269,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -323,6 +323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shredderDestroySFX:
   - {fileID: 8300000, guid: a7069814449731b4f81d94634347f596, type: 3}
+  shredderParticle: {fileID: 1444300035487481277}
 --- !u!82 &5935658143600522981
 AudioSource:
   m_ObjectHideFlags: 0
@@ -344,9 +345,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 50
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -379,7 +380,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -895,7 +896,7 @@ Transform:
   m_GameObject: {fileID: 772555569680967563}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.01, y: 4.4, z: 41.57}
+  m_LocalPosition: {x: 5.01, y: 4.31, z: 41.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1929,7 +1930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3554555603826027176
 Transform:
   m_ObjectHideFlags: 0
@@ -10356,7 +10357,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.52, y: 0.2988}
+  m_AnchoredPosition: {x: -0.53, y: 0.2988}
   m_SizeDelta: {x: 86.9087, y: 55.8234}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5704940195435221467

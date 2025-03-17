@@ -94,14 +94,6 @@ public class GameManager : MonoBehaviour
     {
         if (!startGame) return;
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            StartRandomEvent();
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            timer = maxTimer;
-        }
         timer -= Time.deltaTime;
         currentTime += Time.deltaTime;
 

@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float airDrag = 0.5f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float playerHeight = 2f;
+    [SerializeField] private float timeToGetUpAfterRagdolling = 2f;
     [SerializeField] bool reverseMovement;
 
     [Header("Look Settings")]
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour
 
     private SurfaceType currentSurface;
 
-    private bool isGrounded, isParrying, canParry, isHoldingToPlace, isValidPlacement, wasGrounded;
+    private bool isGrounded, isParrying, canParry, isHoldingToPlace, isValidPlacement, wasGrounded, canMove = true;
 
     private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer;
 
@@ -99,7 +100,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!Application.isFocused) return;
+        if (!Application.isFocused || !canMove) return;
+
+        if (Input.GetKeyDown(KeyCode.I)) Ragdoll();
 
         HandleLook();
         HandleJump();
@@ -115,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        MovePlayer();
+        if (canMove) MovePlayer();
         HandleHeldItemPhysics(); // Add physics handling for held item
     }
 
@@ -321,6 +324,7 @@ public class PlayerController : MonoBehaviour
     private void DropItem()
     {
         if (heldItem == null) return;
+        DisableSpinRoutineIfReal();
 
         Item item = heldItem.GetComponent<Item>();
         item.OnDrop();
@@ -650,5 +654,56 @@ public class PlayerController : MonoBehaviour
             parryMiniGameUI.SetActive(false);
             canParry = false;
         }
+    }
+
+    public void Ragdoll()
+    {
+        StartCoroutine(ragdollAsync());
+    }
+
+    IEnumerator ragdollAsync()
+    {
+        rb.constraints = RigidbodyConstraints.None;
+        canMove = false;
+
+        Vector3 randomForce = new Vector3(
+            Random.Range(-1f, 1f),
+            Random.Range(-0.3f, 1f), 
+            Random.Range(-1f, 1f)
+        ).normalized * 20f; 
+
+        Vector3 randomTorque = new Vector3(
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f)
+        ).normalized * 1.67f;
+
+        rb.AddForce(randomForce, ForceMode.Impulse);
+        rb.AddTorque(randomTorque, ForceMode.Impulse);
+
+        yield return new WaitForSeconds(timeToGetUpAfterRagdolling);
+
+        float maxWaitTime = 3f;
+        float waitStartTime = Time.time;
+        while ((rb.velocity.magnitude > 0.1f || rb.angularVelocity.magnitude > 0.1f) && Time.time - waitStartTime < maxWaitTime)
+        {
+            yield return null;
+        }
+
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = Quaternion.identity;
+        float rotationTime = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < rotationTime)
+        {
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / rotationTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
+        canMove = true;
     }
 }
