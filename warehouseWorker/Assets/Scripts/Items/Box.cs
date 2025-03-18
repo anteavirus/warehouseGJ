@@ -17,6 +17,7 @@ public class Box : Item
         var boxscript = newbox.GetComponent<Box>();
         boxscript.OnDrop();
         boxscript.containedItem = null;
+        boxscript.OnUse(user); // I wonder if race condition makes it sometimes play the sound, sometimes not.
         boxscript.useSounds = null;
 
         user.GetComponent<PlayerController>().ForceDropItem();

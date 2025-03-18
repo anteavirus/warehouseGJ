@@ -89,6 +89,10 @@ public class BlackHoleEvent : Event
         {
             Destroy(blackHoleInstance);
         }
+        if (weakerBlackHoleInstance != null)
+        {
+            Destroy(weakerBlackHoleInstance);
+        }
         base.EndEvent();
     }
 }

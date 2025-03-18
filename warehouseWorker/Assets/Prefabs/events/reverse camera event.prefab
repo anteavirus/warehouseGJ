@@ -122,4 +122,5 @@ MonoBehaviour:
   duration: 15
   isActive: 0
   targetInversion: 1
-  transitionDuration: 2
+  transitionDuration: 1
+  rotato: {fileID: 8300000, guid: 08e4dcbcb4c3a8e4c913f43215257f25, type: 3}

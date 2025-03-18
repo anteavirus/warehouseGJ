@@ -128,7 +128,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 73f48c68219a8ae40b1ceeab37753955, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -259,4 +259,5 @@ MonoBehaviour:
   throwMultiplier: 0.1
   controller: {fileID: 0}
   parentEvent: {fileID: 0}
+  defusion: {fileID: 8300000, guid: b6e2c130c135fcb4d8a847a1b6b75c7b, type: 3}
   interactionRange: 3

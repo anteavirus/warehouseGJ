@@ -417,7 +417,8 @@ MonoBehaviour:
     m_Bits: 72
   playerHeight: 2
   timeToGetUpAfterRagdolling: 2
-  reverseMovement: 0
+  inversionProgress: 0
+  inversionTransitionSpeed: 2
   mouseSensitivity: 100
   playerCameraTransform: {fileID: 5656950899774948969}
   playerCamera: {fileID: 5656950899774948969}
@@ -447,18 +448,25 @@ MonoBehaviour:
   - surface: 0
     footstepSounds:
     - {fileID: 8300000, guid: 73885d769764b974ba9dbded2b6c63ee, type: 3}
+    - {fileID: 8300000, guid: 748bfd966275ab0438e1b03cc9b6cca7, type: 3}
     landingSounds: []
   - surface: 1
     footstepSounds:
     - {fileID: 8300000, guid: 388f8d108715be84992b9a59ccbe36f5, type: 3}
+    - {fileID: 8300000, guid: 6c40637b19d783a4387e96418fcf055a, type: 3}
+    - {fileID: 8300000, guid: 8c6c2b4949ea3534483085d36e6aa4e1, type: 3}
+    - {fileID: 8300000, guid: ba290c3d2c90aa341b0118c8533e4a52, type: 3}
     landingSounds: []
   - surface: 2
     footstepSounds:
     - {fileID: 8300000, guid: daccd8c0179f36b47ac5dfcd90bbd29a, type: 3}
+    - {fileID: 8300000, guid: e0117b949a7006343b21e384e61a8928, type: 3}
     landingSounds: []
   - surface: 3
     footstepSounds:
     - {fileID: 8300000, guid: 0e64c0ae2e9e64447a10044341d71e9c, type: 3}
+    - {fileID: 8300000, guid: 236e12201c7c11744a7ce4d6ebe21974, type: 3}
+    - {fileID: 8300000, guid: a152c821a369d9641880ab3273566b19, type: 3}
     landingSounds: []
   - surface: 4
     footstepSounds:

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [SelectionBase]
@@ -6,7 +7,7 @@ public class UpsideDownCameraEvent : Event
     [Header("Smooth Transition Settings")]
     [SerializeField] private float targetInversion = 1f;
     [SerializeField] private float transitionDuration = 2f;
-    
+    [SerializeField] AudioClip rotato;
     private PlayerController player;
     private Coroutine inversionRoutine;
     Blank slave;
@@ -15,28 +16,37 @@ public class UpsideDownCameraEvent : Event
     {
         base.StartEvent();
         player = FindObjectOfType<PlayerController>();
-        slave = new GameObject("slave").AddComponent<Blank>();
-        inversionRoutine = slave.StartCoroutine(SmoothInversion());
+        slave = new GameObject("upsideDownSlave").AddComponent<Blank>();
+        slave.transform.SetParent(player.transform);
+        inversionRoutine = slave.StartCoroutine(SmoothInversion(player.inversionProgress, targetInversion));
     }
 
-    private System.Collections.IEnumerator SmoothInversion()
+    private System.Collections.IEnumerator SmoothInversion(float start, float end, bool Kaboom = false)
     {
-        float startValue = player.inversionProgress;
-        float elapsed = 0f;
+        if (player == null || slave == null || rotato == null)
+            yield break;
 
-        while (elapsed < transitionDuration)
+        if (!slave.TryGetComponent<AudioSource>(out var audioSource)) 
+            audioSource = slave.AddComponent<AudioSource>();
+        audioSource.PlayOneShot(rotato);
+
+        float elapsed = 0f;
+        float duration = Mathf.Max(transitionDuration, 0.001f);
+
+        while (elapsed < duration)
         {
-            player.inversionProgress = Mathf.Lerp(
-                startValue, 
-                targetInversion, 
-                elapsed / transitionDuration
-            );
-            
+            float t = elapsed / duration;
+            float smoothedT = 0.5f * (1f - Mathf.Cos(t * Mathf.PI));
+
+            player.inversionProgress = Mathf.Lerp(start, end, smoothedT);
             elapsed += Time.deltaTime;
             yield return null;
         }
-        
-        player.inversionProgress = targetInversion;
+
+        player.inversionProgress = end;
+
+        if (Kaboom)
+            Destroy(slave.gameObject, rotato.length);
     }
 
     public override void EndEvent()
@@ -44,27 +54,6 @@ public class UpsideDownCameraEvent : Event
         base.EndEvent();
         if(inversionRoutine != null) StopCoroutine(inversionRoutine);
         
-        slave.StartCoroutine(RevertInversion());
-    }
-
-    private System.Collections.IEnumerator RevertInversion()
-    {
-        float startValue = player.inversionProgress;
-        float elapsed = 0f;
-
-        while (elapsed < transitionDuration)
-        {
-            player.inversionProgress = Mathf.Lerp(
-                startValue, 
-                0f, 
-                elapsed / transitionDuration
-            );
-            
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        
-        player.inversionProgress = 0f;
-        Destroy(slave.gameObject);
+        slave.StartCoroutine(SmoothInversion(player.inversionProgress, 0, true));
     }
 }
