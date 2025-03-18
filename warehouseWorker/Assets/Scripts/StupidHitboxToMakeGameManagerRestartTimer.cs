@@ -7,7 +7,7 @@ public class StupidHitboxToMakeGameManagerRestartTimer : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var gm = FindObjectOfType<GameManager>();
-        if (gm != null && gm.startGame && gm.setdownItem)
+        if (gm != null && gm.gameStarted && gm.setdownItem)
         {
             gm.ResetTimer();
         }

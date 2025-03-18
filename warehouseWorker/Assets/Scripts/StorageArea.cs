@@ -6,6 +6,7 @@ using UnityEngine;
 public class StorageArea : MonoBehaviour
 {
     public int ID;
+    Item containingObject;
     BoxCollider boxCollider;
     [SerializeField] Vector3 limitVelocity = new Vector3(0.3f, 0.3f, 0.3f);
 
@@ -13,6 +14,9 @@ public class StorageArea : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider>();
         boxCollider.isTrigger = true;
+
+        containingObject = GameManager.Instance.ReturnItemById(ID);
+        containingObject.fromShelf = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -29,7 +33,7 @@ public class StorageArea : MonoBehaviour
         if (isVelocityUnderLimit)
         {
             Item item = other.GetComponent<Item>();
-            if (item != null && item.ID == ID)
+            if (item != null && item.ID == ID && !item.fromShelf)
             {
                 if (GameManager.Instance != null)
                 {
@@ -40,5 +44,13 @@ public class StorageArea : MonoBehaviour
                 Destroy(other.gameObject);
             }
         }
+    }
+
+    public GameObject CreateNewItemForPickup()
+    {
+        var obj = containingObject.gameObject;
+        obj.SetActive(true);
+        // do whatever else is needed to the obj.
+        return Instantiate(obj);
     }
 }

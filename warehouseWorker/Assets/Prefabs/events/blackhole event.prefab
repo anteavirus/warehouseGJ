@@ -119,9 +119,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: black hole event
-  duration: 3
+  duration: 15
   isActive: 0
   blackHolePrefab: {fileID: 639902644409947038, guid: 7dce725888ab09d44a929bf56a235451,
     type: 3}
-  blackHoleForce: 20
-  rangeOfForce: 192.4
+  blackHoleForce: 19.7
+  rangeOfForce: 1924
+  forceMultiplierToPlayer: 4

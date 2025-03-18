@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4684404609544575223}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28.5, y: -1.5419327, z: 17.8}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,7 +44,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4684404609544575223}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2432090755550338912, guid: 58b41e8b92df1ef45bab91ee0ca2b88b, type: 3}
 --- !u!23 &810949064864366460
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 4f398c546eb7bce45bce8f3caa3028de, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,8 +106,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.8125, y: 0.6875, z: 1}
+  m_Center: {x: 0.09375, y: 0.34375, z: 0}
 --- !u!54 &3943981039289178991
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -116,7 +116,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4684404609544575223}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.7
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -148,7 +148,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 0
-  scoreValue: 0
+  scoreValue: 15
+  fromShelf: 0
   isPickupable: 1
   pickupSounds:
   - {fileID: 8300000, guid: b4bbe371f641bbf4dab8e15ee643061b, type: 3}
@@ -169,6 +170,7 @@ MonoBehaviour:
   controller: {fileID: 0}
   containedItem: {fileID: 6190435878620182654, guid: e5a2859fd9bc35e4689ed98dd65f4dc2,
     type: 3}
+  openBox: {fileID: 4684404609544575223}
 --- !u!114 &5082579548337248556
 MonoBehaviour:
   m_ObjectHideFlags: 0

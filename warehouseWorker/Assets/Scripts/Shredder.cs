@@ -31,10 +31,16 @@ public class Shredder : MonoBehaviour
                 AudioClip clip = shredderDestroySFX[Random.Range(0, shredderDestroySFX.Length)];
                 shredderSource.PlayOneShot(clip);
             }
-            if (other.TryGetComponent<Box>(out var _))
+            
+            // Dirty, but serves me well for now
+            if (other.TryGetComponent<Box>(out var box))
             {
                 if (GameManager.Instance != null)
-                    GameManager.Instance.AddScore(15, false);
+                    GameManager.Instance.AddScore(box.scoreValue, false);
+            }
+            if (other.TryGetComponent<C4Item>(out var bomb))
+            {
+                bomb.parentEvent.OnArmedC4Shredded(bomb);
             }
             Destroy(other.gameObject);
 
@@ -76,5 +82,4 @@ public class Shredder : MonoBehaviour
         module.simulationSpeed = startSpeed;
         speedierShredder = null;
     }
-
 }

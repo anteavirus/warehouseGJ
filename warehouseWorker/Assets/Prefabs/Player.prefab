@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3909deb6595f7df48aadfb7bb2c0b41c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 20
   jumpForce: 5
   airControlFactor: 0.5
   groundDrag: 5
@@ -428,8 +428,6 @@ MonoBehaviour:
     m_Bits: 64
   handTransform: {fileID: 8706735555661924714}
   interactionHintUI: {fileID: 0}
-  parryWindow: 0.5
-  parryMiniGameUI: {fileID: 0}
   minThrowForce: 5
   maxThrowForce: 25
   maxChargeTime: 1.5
@@ -466,6 +464,8 @@ MonoBehaviour:
     footstepSounds:
     - {fileID: 8300000, guid: f21e7c7570772b04e8f8943ef48d0fd9, type: 3}
     landingSounds: []
+  slipSounds:
+  - {fileID: 8300000, guid: 1535062021c5fd54baf2ccc51972ec0c, type: 3}
   checkRate: 0.2
   hoverLayer:
     serializedVersion: 2
@@ -485,7 +485,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3684526152076748746}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

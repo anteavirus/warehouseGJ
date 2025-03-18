@@ -9,15 +9,11 @@ public class PunchClock : MonoBehaviour
     {
         if (other.TryGetComponent<PunchCard>(out var card))
         {
-            if (GameManager.Instance != null)
+            if (GameManager.Instance != null && !GameManager.Instance.gameStarted)
             {
                 card.OnUse(gameObject);
                 GameManager.Instance.StartGame();
                 StartCoroutine(MoveObjectUp(thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform, 150, 1));
-            }
-            else
-            {
-                Debug.LogError("bruh where the fuck is gamemanager (says the punchclock)");
             }
         }
     }

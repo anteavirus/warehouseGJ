@@ -15,23 +15,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float timeToGetUpAfterRagdolling = 2f;
-    [SerializeField] bool reverseMovement;
+    
+    [Header("Camera Inversion Settings")]
+    public float inversionProgress = 0f;
+    public float inversionTransitionSpeed = 2f;
 
     [Header("Look Settings")]
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private Transform playerCameraTransform;
-    [SerializeField] private Camera playerCamera;
+    public Camera playerCamera;
     [SerializeField] private float maxLookAngle = 90f;
 
     [Header("Interaction Settings")]
     [SerializeField] private float pickupRange = 2f;
-    [SerializeField] private LayerMask interactableLayer;
-    [SerializeField] public Transform handTransform;
-    [SerializeField] public Transform interactionHintUI;
+    public LayerMask interactableLayer;
+    public Transform handTransform;
+    public Transform interactionHintUI;
 
-    [Header("Combat Settings")]
-    [SerializeField] private float parryWindow = 0.5f;
-    [SerializeField] private GameObject parryMiniGameUI;
+    [Header("GPT Named me Combat, but actually i'm just Throwing")]
     [SerializeField] private float minThrowForce = 5f;
     [SerializeField] private float maxThrowForce = 25f;
     [SerializeField] private float maxChargeTime = 1.5f;
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioSource landingSource;
     [SerializeField] private float footstepInterval = 0.4f;
     [SerializeField] private List<SurfaceSound> surfaceSounds = new();
+    [SerializeField] private AudioClip[] slipSounds;
 
     [Header("Hover Over Settings")]
     [SerializeField] private float checkRate = 0.2f;
@@ -79,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
     private SurfaceType currentSurface;
 
-    private bool isGrounded, isParrying, canParry, isHoldingToPlace, isValidPlacement, wasGrounded, canMove = true;
+    private bool isGrounded, isHoldingToPlace, isValidPlacement, wasGrounded, canMove = true;
 
     private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer;
 
@@ -110,7 +112,6 @@ public class PlayerController : MonoBehaviour
         HandlePlacement();
         HandleUseItem();
         HandleThrow();
-        HandleParry();
         HandleInteractions();
         HandleFootsteps();
         HandleCameraWobble();
@@ -124,7 +125,11 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
-        var input = new Vector2((reverseMovement ? -1 : 1) * Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        var input = new Vector2(
+            (1 - 2 * inversionProgress) * Input.GetAxisRaw("Horizontal"),
+            Input.GetAxisRaw("Vertical")
+        );
+
         moveDirection = transform.forward * input.y + transform.right * input.x;
 
         float multiplier = isGrounded ? 1f : airControlFactor;
@@ -142,8 +147,7 @@ public class PlayerController : MonoBehaviour
     {
         if (heldItem == null || heldItemRb == null) return;
 
-        Vector3 targetPosition = handTransform.position;
-        Quaternion targetRotation = handTransform.rotation;
+        handTransform.GetPositionAndRotation(out Vector3 targetPosition, out Quaternion targetRotation);
 
         // Position handling
         Vector3 positionDelta = targetPosition - heldItemRb.position;
@@ -269,7 +273,7 @@ public class PlayerController : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
 
-        playerCameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, reverseMovement ? 180f : 0);
+        playerCameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 180 * inversionProgress);
         transform.Rotate(Vector3.up * mouseX);
     }
 
@@ -290,29 +294,58 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void TryPickupItem()
+    public void ForcePickupItem(Item stupidBullshit)
+    {
+        TryPickupItem(stupidBullshit);
+    }
+
+    private void TryPickupItem(Item stupidShit = null)
     {
         if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-            out RaycastHit hit, pickupRange, interactableLayer) && hit.collider.CompareTag("Item"))
+            out RaycastHit hit, pickupRange, interactableLayer))
         {
             if (hit.transform.TryGetComponent<Item>(out var item))
             {
                 if (item.isPickupable)
                 {
-                    heldItem = item.gameObject;
-                    item.OnPickup(handTransform);
-
-                    heldItem.transform.parent = null;
-                    heldItemRb = heldItem.GetComponent<Rigidbody>();
-                    if (heldItemRb != null)
-                    {
-                        heldItemRb.isKinematic = false;
-                        heldItemRb.useGravity = false;
-                        heldItemRb.drag = 5f;
-                        heldItemRb.angularDrag = 5f;
-                    }
+                    PickUpItem(item);
                 }
             }
+            else if (stupidShit != null)
+            {
+                if (stupidShit.isPickupable)
+                {
+                    PickUpItem(stupidShit);
+                    return;
+                }
+            }
+
+
+            if (hit.transform.TryGetComponent<StorageArea>(out var area))
+            {
+                var newItem = area.CreateNewItemForPickup();
+                newItem.SetActive(true);
+                Item itemScript = newItem.GetComponent<Item>();
+                TryPickupItem(itemScript);
+            }
+        }
+    }
+
+    void PickUpItem(Item item)
+    {
+        if (item == null) return;
+
+        heldItem = item.gameObject;
+        item.OnPickup(handTransform);
+
+        heldItem.transform.parent = null;
+        heldItemRb = heldItem.GetComponent<Rigidbody>();
+        if (heldItemRb != null)
+        {
+            heldItemRb.isKinematic = false;
+            heldItemRb.useGravity = false;
+            heldItemRb.drag = 5f;
+            heldItemRb.angularDrag = 5f;
         }
     }
 
@@ -407,70 +440,6 @@ public class PlayerController : MonoBehaviour
         heldItemRb = null;
     }
 
-    private void HandleParry()
-    {
-        // TODO!!!! This will become it's own item for some fucking reason.
-        // I have no idea how we'll tell the user it can parry shit.
-        // Nor how will the parry work.
-        if (Input.GetKeyDown(KeyCode.F) && canParry)
-            StartCoroutine(ParryAction());
-    }
-
-    private IEnumerator ParryAction()
-    {
-        isParrying = true;
-        parryMiniGameUI.SetActive(true);
-        yield return new WaitForSeconds(parryWindow);
-        isParrying = false;
-        parryMiniGameUI.SetActive(false);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        Rigidbody rb = other.attachedRigidbody;
-        Item item = other.GetComponent<Item>();
-        if (item != null && rb != null && rb.velocity.magnitude >= 0.5f)
-        {
-            StartCoroutine(EnableParryWindow());
-        }
-    }
-
-    private IEnumerator EnableParryWindow()
-    {
-        canParry = true;
-        yield return new WaitForSeconds(1f);
-        canParry = false;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (isParrying)
-        {
-            Item item = collision.gameObject.GetComponent<Item>();
-            if (item != null)
-            {
-                Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
-                if (rb != null && rb.velocity.magnitude >= 0.5f)
-                {
-                    ParryProjectile(collision.gameObject);
-                }
-            }
-        }
-    }
-
-    private void ParryProjectile(GameObject projectile)
-    {
-        if (projectile.TryGetComponent<Item>(out var item))
-        {
-            item.OnParry();
-        }
-
-        if (projectile.TryGetComponent<Rigidbody>(out var rb))
-        {
-            rb.velocity *= -3;
-        }
-    }
-
     private void HandlePlacement()
     {
         HandlePlacementInput();
@@ -516,18 +485,54 @@ public class PlayerController : MonoBehaviour
         if (!isHoldingToPlace || previewObject == null) return;
 
         currentRotationOffset += Input.mouseScrollDelta.y * rotationSpeed;
-        isValidPlacement = Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-            out RaycastHit hit, placementMaxDistance, placementLayer);
 
-        // TODO: issue if placing upwards. i'm thinking of just disallowing that lol
-        float offest = GetObjectBottomOffset(previewObject);
-        Vector3 targetPos = isValidPlacement ?
-            hit.point + placementOffset + Vector3.up * offest :
-            playerCameraTransform.position + playerCameraTransform.forward * placementMaxDistance;
+        RaycastHit[] hits = Physics.RaycastAll(
+            playerCameraTransform.position,
+            playerCameraTransform.forward,
+            placementMaxDistance,
+            placementLayer
+        );
+
+        RaycastHit? validHit = null;
+        foreach (RaycastHit hit in hits)
+        {
+            if (!hit.collider.CompareTag("IgnoreRaycast"))
+            {
+                validHit = hit;
+                break;
+            }
+        }
+
+        isValidPlacement = validHit.HasValue;
+
+        bool isVerticalSurface = false;
+
+        if (isValidPlacement)
+        {
+            isVerticalSurface = Mathf.Abs(validHit.Value.normal.y) < 0.7f;
+            isValidPlacement = !isVerticalSurface;
+        }
+
+        Vector3 targetPos;
+        if (isValidPlacement || isVerticalSurface)
+        {
+            float offset = GetObjectBottomOffset(previewObject);
+            targetPos = validHit.Value.point
+                       + placementOffset
+                       + Vector3.up * offset;
+        }
+        else
+        {
+            targetPos = playerCameraTransform.position
+                       + playerCameraTransform.forward * placementMaxDistance;
+        }
 
         Quaternion targetRot = Quaternion.Euler(0,
-            Quaternion.LookRotation(Vector3.ProjectOnPlane(playerCameraTransform.forward, Vector3.up)).eulerAngles.y
-            + currentRotationOffset, 0);
+            Quaternion.LookRotation(
+                Vector3.ProjectOnPlane(playerCameraTransform.forward, Vector3.up)
+            ).eulerAngles.y + currentRotationOffset,
+            0
+        );
 
         previewObject.transform.SetPositionAndRotation(targetPos, targetRot);
         UpdatePreviewAppearance();
@@ -649,22 +654,23 @@ public class PlayerController : MonoBehaviour
                 spinRoutine = null;
                 if (heldItem != null) heldItem.transform.rotation = Quaternion.identity;
             }
-
-            isParrying = false;
-            parryMiniGameUI.SetActive(false);
-            canParry = false;
         }
     }
 
     public void Ragdoll()
     {
-        StartCoroutine(ragdollAsync());
+        StartCoroutine(RagdollAsync());
     }
 
-    IEnumerator ragdollAsync()
+    IEnumerator RagdollAsync()
     {
         rb.constraints = RigidbodyConstraints.None;
         canMove = false;
+
+        if (slipSounds != null && slipSounds.Length > 0)
+        {
+            footstepSource.PlayOneShot(slipSounds[Random.Range(0, slipSounds.Length)]);
+        }
 
         Vector3 randomForce = new Vector3(
             Random.Range(-1f, 1f),

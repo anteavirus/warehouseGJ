@@ -117,7 +117,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7581103289063453181}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 1
   scoreValue: 25
+  fromShelf: 0
   isPickupable: 1
   pickupSounds:
   - {fileID: 8300000, guid: 39cb6cc5e8fbb2145be7d37573c09546, type: 3}

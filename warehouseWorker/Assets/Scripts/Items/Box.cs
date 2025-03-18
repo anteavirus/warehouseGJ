@@ -3,6 +3,7 @@ using UnityEngine;
 public class Box : Item
 {
     public GameObject containedItem;
+    [SerializeField] GameObject openBox;
 
     public override void OnUse(GameObject user)
     {
@@ -10,12 +11,21 @@ public class Box : Item
         base.OnUse(user);
         useSounds = null;
         OnDrop();
+
+        var newbox = Instantiate(openBox);
+        newbox.transform.position = transform.position;
+        var boxscript = newbox.GetComponent<Box>();
+        boxscript.OnDrop();
+        boxscript.containedItem = null;
+        boxscript.useSounds = null;
+
         user.GetComponent<PlayerController>().ForceDropItem();
 
         var item = Instantiate(containedItem);
         item.transform.position = transform.position;
 
         containedItem = null;
+        Destroy(this.gameObject);
     }
 
     private void ToggleColliders(bool state)

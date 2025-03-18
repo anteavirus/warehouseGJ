@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,12 +10,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public bool setdownItem;
-    public bool startGame;
+    public bool gameStarted;
     [SerializeField] TextMeshProUGUI scoreUI;
     [SerializeField] Image timerUI;
+    [SerializeField] TextMeshProUGUI orderListUI;
 
     [Tooltip("I will kill you if you put something that doesn't have an Item Component here.")]
-    [SerializeField] List<GameObject> items = new List<GameObject>();
+    [SerializeField] List<GameObject> items = new();
+    readonly List<Item> itemTemplates = new();
 
     [Tooltip("Spawn box, user must unbox the box. Then they bring wherever they need to.")]
     [SerializeField] GameObject box;
@@ -27,10 +30,29 @@ public class GameManager : MonoBehaviour
     float currentTime = 0;
 
     float eventTimer = 60;
+
+    [Header("Order System")]
+    [SerializeField] float orderCooldown = 25f;
+    [SerializeField] AudioClip[] newOrderSound;
+    [SerializeField] AudioClip[] orderCompleteSound;
+    [SerializeField] AudioClip[] orderFailSound;
+
+    readonly List<Order> activeOrders = new List<Order>();
+    private float orderTimer = 0;
+    private AudioSource audioSource;
+
+    [System.Serializable]
+    public class Order
+    {
+        public int requestedItemID;
+        public float timeRemaining;
+    }
+
     [SerializeField] List<GameObject> eventList = new List<GameObject>();
     private Event currentEvent;
 
     public Transform spawnPosition;
+    public Transform blackHoleSpawnPosition;
 
     [Range(0, 10), SerializeField]
     float randomSpawnIntervalMax = 1;
@@ -48,22 +70,114 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        var parent = new GameObject("[Template]s Parent");
+        foreach (var item in items)
+        {
+            var obj=Instantiate(item);
+            obj.name = obj.name.Replace("(Clone)", "");
+            obj.transform.parent = parent.transform;
+            itemTemplates.Add(obj.GetComponent<Item>());
+            obj.SetActive(false);
+        }
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    void GenerateNewOrder()
+    {
+        if (items.Count == 0) return;
+
+        Order newOrder = new Order
+        {
+            requestedItemID = itemTemplates[Random.Range(0, itemTemplates.Count)].ID,
+            timeRemaining = 45f
+        };
+
+        activeOrders.Add(newOrder);
+        PlaySound(newOrderSound);
+        UpdateOrderUI();
+    }
+
+    void UpdateOrderUI()
+    {
+        if (activeOrders.Count < 1)
+        {
+            orderListUI.text = "Ноль заказов.";
+            return;
+        }
+        orderListUI.text = "";
+        foreach (Order order in activeOrders)
+        {
+            Item item = ReturnItemById(order.requestedItemID);
+            orderListUI.text += $"- {item.name} ({Mathf.FloorToInt(order.timeRemaining)}s)\n";
+        }
+    }
+
+    public void ProcessDelivery(Item deliveredItem, bool fromShelf)
+    {
+        bool orderFound = false;
+
+        foreach (Order order in activeOrders.ToList())
+        {
+            if (order.requestedItemID == deliveredItem.ID)
+            {
+                int scoreChange = fromShelf ? deliveredItem.scoreValue * 2 : deliveredItem.scoreValue * -1;
+                AddScore(scoreChange, resetTimer: !fromShelf, immediateReset: true);
+
+                activeOrders.Remove(order);
+                orderFound = true;
+                PlaySound(orderCompleteSound);
+                break;
+            }
+        }
+
+        if (!orderFound)
+        {
+            AddScore(deliveredItem.scoreValue * (fromShelf ? 0 : -3), resetTimer: !fromShelf);
+            PlaySound(orderFailSound);
+        }
+
+        UpdateOrderUI();
+    }
+
+    void PlaySound(AudioClip[] listOfRandomSounds)
+    {
+        if (listOfRandomSounds != null && listOfRandomSounds.Length > 0)
+        {
+            audioSource.PlayOneShot(listOfRandomSounds[Random.Range(0, listOfRandomSounds.Length)]);
+        }
+    }
+
+    public Item ReturnItemById(int id)
+    {
+        foreach (var item in itemTemplates)
+        {
+            if (item.ID == id)
+                return item;
+        }
+        return null;
     }
 
     public void StartGame()
     {
-        startGame = true;
+        gameStarted = true;
         if (items.Count > 0) SpawnItem();
     }
 
-    public void AddScore(int amount, bool resetTimer = true)
+    public void AddScore(int amount, bool resetTimer = true, bool immediateReset = false)
     {
         this.score += amount;
+        if (scoreUI != null)
         scoreUI.text = this.score.ToString();
         if (resetTimer)
         {
             setdownItem = true;
-
+            if (immediateReset) ResetTimer();
             StartCoroutine(SpawnItemAfterDelay());
         }
     }
@@ -92,7 +206,16 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!startGame) return;
+        if (!gameStarted) return;
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            StartRandomEvent();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            timer = maxTimer;
+        }
+
 
         timer -= Time.deltaTime;
         currentTime += Time.deltaTime;
@@ -105,21 +228,46 @@ public class GameManager : MonoBehaviour
         color.a = progressTimer;
         timerUI.color = color;
 
-        if (timer < 0 || score < 0)
+        if (timer < 0)
         {
             GameOver();
         }
 
-        if (currentTime >= eventTimer)
+        if (currentEvent != null)
         {
-            StartRandomEvent();
-            currentTime = 0;
+            if (currentEvent.isActive)
+            {
+                currentEvent.UpdateEvent();
+            }
+        }
+        else
+        {
+            if (currentTime >= eventTimer)
+            {
+                StartRandomEvent();
+                currentTime = 0;
+            }
         }
 
-        if (currentEvent != null && currentEvent.isActive)
+        orderTimer += Time.deltaTime;
+        if (orderTimer >= orderCooldown)
         {
-            currentEvent.UpdateEvent();
+            GenerateNewOrder();
+            orderTimer = 0;
         }
+
+        foreach (Order order in activeOrders.ToList())
+        {
+            order.timeRemaining -= Time.deltaTime;
+            if (order.timeRemaining <= 0)
+            {
+                AddScore(-25, resetTimer: false);
+                activeOrders.Remove(order);
+                PlaySound(orderFailSound);
+            }
+        }
+
+        UpdateOrderUI();
     }
 
     void StartRandomEvent()
@@ -138,6 +286,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(EndEventAfterDuration(currentEvent));
     }
 
+    public void ResetEventTimer()
+    {
+        currentTime = 0;
+    }
 
     IEnumerator EndEventAfterDuration(Event evt)
     {
@@ -147,6 +299,11 @@ public class GameManager : MonoBehaviour
             evt.EndEvent();
             currentEvent = null;
         }
+    }
+
+    public void ForceGameOver()
+    {
+        GameOver();
     }
 
     void GameOver()

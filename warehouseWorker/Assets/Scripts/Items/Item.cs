@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 {
     public int ID;
     public int scoreValue;
+    public bool fromShelf;
 
     [Header("Base Item Settings")]
     public bool isPickupable = true;
@@ -61,6 +62,7 @@ public class Item : MonoBehaviour
         {
             if (state)
             {
+                rb.useGravity = state;
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
@@ -70,6 +72,11 @@ public class Item : MonoBehaviour
 
     public virtual void OnUse(GameObject user)
     {
+        if (user.TryGetComponent<PlayerController>(out var plr))
+        {
+            controller = plr;
+        }
+
         if (useSounds.Length > 0 && useSounds.All(i=>i!=null))
         {
             AudioClip clip = useSounds[Random.Range(0, useSounds.Length)];
