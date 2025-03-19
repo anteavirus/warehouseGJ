@@ -40,7 +40,7 @@ public class Shredder : MonoBehaviour
             }
             if (other.TryGetComponent<C4Item>(out var bomb))
             {
-                bomb.parentEvent.OnArmedC4Shredded(bomb);
+                bomb.HandleShredded();
             }
             Destroy(other.gameObject);
 

@@ -277,10 +277,12 @@ public class GameManager : MonoBehaviour
         if (currentEvent != null)
         {
             currentEvent.EndEvent();
+            Destroy(currentEvent.gameObject);
         }
 
         int randomIndex = Random.Range(0, eventList.Count);
-        currentEvent = eventList[randomIndex].GetComponent<Event>();
+        GameObject eventInstance = Instantiate(eventList[randomIndex]);
+        currentEvent = eventInstance.GetComponent<Event>();
         currentEvent.StartEvent();
 
         StartCoroutine(EndEventAfterDuration(currentEvent));
@@ -298,6 +300,7 @@ public class GameManager : MonoBehaviour
         {
             evt.EndEvent();
             currentEvent = null;
+            Destroy(evt.gameObject);
         }
     }
 

@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 8230142557434353951}
   - component: {fileID: 9052148839566857156}
   - component: {fileID: 873552632067579904}
-  - component: {fileID: 8818079533037549842}
+  - component: {fileID: -3374606539002646355}
   m_Layer: 0
-  m_Name: bomb event
+  m_Name: leaves
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8818079533037549842
+--- !u!114 &-3374606539002646355
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,17 +115,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2967366868401370336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14e34bf54900d7c47b5e1fc486f194ce, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b621b90f668aa843a490621b5865b36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 15
-  isActive: 1
-  c4Prefab: {fileID: 2377480699299705579, guid: fb366738f233beb479d9e9259db1a152,
-    type: 3}
-  disarmedC4Prefab: {fileID: 2140473877698300169, guid: a6e9151eb4875ef48ad2cd87975050d6,
-    type: 3}
-  PrefabPlier: {fileID: 1521921737126237428, guid: 788c881790c460845b7facf0bbcf4d5f,
-    type: 3}
-  c4SpawnPoint: {fileID: 0}
-  SpawnPointPlier: {fileID: 0}
-  activeC4: {fileID: 0}
+  isActive: 0
+  leavesParticleSystem: {fileID: 0}
+  windDirection: {x: 0, y: 0, z: 1}
+  windStrength: 5
+  swayFrequency: 1
+  swayAmplitude: 0.5
+  sfx: {fileID: 0}

@@ -4,6 +4,7 @@ using UnityEngine;
 public class PunchClock : MonoBehaviour
 {
     [SerializeField] GameObject thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds;
+    float maxDistance = 15;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -13,7 +14,7 @@ public class PunchClock : MonoBehaviour
             {
                 card.OnUse(gameObject);
                 GameManager.Instance.StartGame();
-                StartCoroutine(MoveObjectUp(thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform, 150, 1));
+                StartCoroutine(MoveObjectUp(thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform, 15, 1));
             }
         }
     }
@@ -23,7 +24,7 @@ public class PunchClock : MonoBehaviour
         Vector3 startPos = objectToMove.position;
         float distanceMoved = 0f;
 
-        while (distanceMoved < distance)
+        while (distanceMoved < distance || objectToMove.position.y <= startPos.y + maxDistance)
         {
             float step = speed * Time.deltaTime;
             objectToMove.position += Vector3.up * step;

@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "HeadshotHunter", "score": 2500},
-        {"name": "FragMaster", "score": 1800},
-        {"name": "AimQueen", "score": 1650},
-        {"name": "ShadowStrike", "score": 1420},
-        {"name": "xX_ProGamer_Xx", "score": 950},
-        {"name": "NoobSlayer", "score": 720},
-        {"name": "Viper", "score": 300},
-        {"name": "Ghost", "score": 150},
-        {"name": "LuckyShot", "score": -200},
-        {"name": "CampingCarl", "score": -1200}
+        {
+            "name": "HeadshotHunter",
+            "score": 862
+        },
+        {
+            "name": "FragMaster",
+            "score": -996
+        },
+        {
+            "name": "AimQueen",
+            "score": 356
+        },
+        {
+            "name": "ShadowStrike",
+            "score": 988
+        },
+        {
+            "name": "xX_ProGamer_Xx",
+            "score": 187
+        },
+        {
+            "name": "NoobSlayer",
+            "score": 184
+        },
+        {
+            "name": "Viper",
+            "score": 104
+        },
+        {
+            "name": "Ghost",
+            "score": 109
+        },
+        {
+            "name": "LuckyShot",
+            "score": -779
+        },
+        {
+            "name": "CampingCarl",
+            "score": 9
+        }
     ]
 }

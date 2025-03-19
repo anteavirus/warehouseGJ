@@ -1,14 +1,44 @@
-{  
-    "entries": [  
-        {"name": "CtrlZedAlot", "score": 1337},  
-        {"name": "LimeWireGandalf", "score": 404},  
-        {"name": "BenedictCumberSnatch", "score": 221},  
-        {"name": "CheeseTouchOG", "score": -666},  
-        {"name": "SonicHedgefund", "score": 8008},  
-        {"name": "John2", "score": 42},  
-        {"name": "PootisSpencerHere", "score": 9876},  
-        {"name": "ShrekIsLoveShrekIsLife", "score": 1234},  
-        {"name": "BabadookBaklava", "score": 3},  
-        {"name": "User404NotFound", "score": 1984}  
-    ]  
-}  
+{
+    "entries": [
+        {
+            "name": "CtrlZedAlot",
+            "score": 733
+        },
+        {
+            "name": "LimeWireGandalf",
+            "score": 592
+        },
+        {
+            "name": "BenedictCumberSnatch",
+            "score": 965
+        },
+        {
+            "name": "CheeseTouchOG",
+            "score": 6
+        },
+        {
+            "name": "SonicHedgefund",
+            "score": -746
+        },
+        {
+            "name": "John2",
+            "score": 329
+        },
+        {
+            "name": "PootisSpencerHere",
+            "score": 165
+        },
+        {
+            "name": "ShrekIsLoveShrekIsLife",
+            "score": 580
+        },
+        {
+            "name": "BabadookBaklava",
+            "score": 440
+        },
+        {
+            "name": "User404NotFound",
+            "score": -60
+        }
+    ]
+}

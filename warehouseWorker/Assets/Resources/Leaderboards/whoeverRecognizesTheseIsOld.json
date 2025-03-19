@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "ShutUpAndTakeMyHbux", "score": 4510},
-        {"name": "EnhanceYourCalm", "score": 2112},
-        {"name": "ToxicAvenger4Hire", "score": 1984},
-        {"name": "ZardozHeadpiece", "score": -999},
-        {"name": "RoomInTheAlps", "score": 0},
-        {"name": "SharknadoSurvivr", "score": 666},
-        {"name": "BarbarellaJetBoots", "score": 1968},
-        {"name": "GymkataGrandmaster", "score": 1985},
-        {"name": "Troll2Nilbog", "score": -1990},
-        {"name": "NicCageNationalTreasure", "score": 1776}
+        {
+            "name": "ShutUpAndTakeMyHbux",
+            "score": 429
+        },
+        {
+            "name": "EnhanceYourCalm",
+            "score": 877
+        },
+        {
+            "name": "ToxicAvenger4Hire",
+            "score": 498
+        },
+        {
+            "name": "ZardozHeadpiece",
+            "score": 189
+        },
+        {
+            "name": "RoomInTheAlps",
+            "score": 92
+        },
+        {
+            "name": "SharknadoSurvivr",
+            "score": 990
+        },
+        {
+            "name": "BarbarellaJetBoots",
+            "score": 899
+        },
+        {
+            "name": "GymkataGrandmaster",
+            "score": 304
+        },
+        {
+            "name": "Troll2Nilbog",
+            "score": 471
+        },
+        {
+            "name": "NicCageNationalTreasure",
+            "score": 419
+        }
     ]
 }

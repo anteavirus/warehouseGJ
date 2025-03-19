@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Item
   - IgnoreRaycast
+  - IgnoreComponent
   layers:
   - Default
   - TransparentFX

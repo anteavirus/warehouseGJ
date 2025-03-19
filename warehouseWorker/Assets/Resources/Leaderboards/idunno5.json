@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "VoidWalker_GG", "score": 2450},
-        {"name": "BlackHoleBuffoon", "score": -800},
-        {"name": "UgandanKnuckles", "score": 5000},
-        {"name": "SaveSlotHero", "score": 1200},
-        {"name": "DistractedBoyfriend", "score": -200},
-        {"name": "PixelPainter", "score": 1200},
-        {"name": "CelestialPaladin", "score": 3000},
-        {"name": "RecursionError", "score": -600},
-        {"name": "BlinkingHealth", "score": 600},
-        {"name": "ShadowMarauder", "score": 2750}
+        {
+            "name": "VoidWalker_GG",
+            "score": -904
+        },
+        {
+            "name": "BlackHoleBuffoon",
+            "score": -874
+        },
+        {
+            "name": "UgandanKnuckles",
+            "score": 714
+        },
+        {
+            "name": "SaveSlotHero",
+            "score": 869
+        },
+        {
+            "name": "DistractedBoyfriend",
+            "score": 76
+        },
+        {
+            "name": "PixelPainter",
+            "score": 885
+        },
+        {
+            "name": "CelestialPaladin",
+            "score": 104
+        },
+        {
+            "name": "RecursionError",
+            "score": 76
+        },
+        {
+            "name": "BlinkingHealth",
+            "score": 112
+        },
+        {
+            "name": "ShadowMarauder",
+            "score": -661
+        }
     ]
 }

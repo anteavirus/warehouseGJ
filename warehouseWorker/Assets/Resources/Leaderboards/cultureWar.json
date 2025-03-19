@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "Faris_AlQahira", "score": 3200},
-        {"name": "SakuraBashō", "score": 2850},
-        {"name": "BorisBlyat", "score": 2400},
-        {"name": "ElReyGuerrero", "score": 1950},
-        {"name": "JjangKorea", "score": 1600},
-        {"name": "ChaiWallah", "score": 850},
-        {"name": "CarnavalKiller", "score": 420},
-        {"name": "NairaQueen", "score": -150},
-        {"name": "KebabSniper", "score": -800},
-        {"name": "ValkyrieNord", "score": -1650}
+        {
+            "name": "Faris_AlQahira",
+            "score": -670
+        },
+        {
+            "name": "SakuraBash\u0415\u040c",
+            "score": 446
+        },
+        {
+            "name": "BorisBlyat",
+            "score": 50
+        },
+        {
+            "name": "ElReyGuerrero",
+            "score": -867
+        },
+        {
+            "name": "JjangKorea",
+            "score": 382
+        },
+        {
+            "name": "ChaiWallah",
+            "score": 357
+        },
+        {
+            "name": "CarnavalKiller",
+            "score": 956
+        },
+        {
+            "name": "NairaQueen",
+            "score": 410
+        },
+        {
+            "name": "KebabSniper",
+            "score": 27
+        },
+        {
+            "name": "ValkyrieNord",
+            "score": 835
+        }
     ]
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuZonerDoner : MonoBehaviour
 {
@@ -97,6 +98,11 @@ public class MainMenuZonerDoner : MonoBehaviour
             str += $"{i}: {item.name} - {unWrappableInt}\n";
         }
         leaderboardText.text = str;
+    }
+
+    public void LoadScene(int id)
+    {
+        SceneManager.LoadScene(id);
     }
 
     public void UpdateGameSettings(float volume, int qualityLevel)

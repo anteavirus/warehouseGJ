@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "ThunderWolf", "score": 2400},
-        {"name": "BonelessPizza", "score": 1500},
-        {"name": "SyntaxOverlord", "score": 900},
-        {"name": "SirDiesALot", "score": -999},
-        {"name": "AuroraBorealis", "score": 1200},
-        {"name": "StackOverflower", "score": 1250},
-        {"name": "DogeCoinDuke", "score": 2500},
-        {"name": "FrostWyvern", "score": 2200},
-        {"name": "CtrlZedLife", "score": 600},
-        {"name": "CorruptedCartridge", "score": -600}
+        {
+            "name": "ThunderWolf",
+            "score": 173
+        },
+        {
+            "name": "BonelessPizza",
+            "score": 663
+        },
+        {
+            "name": "SyntaxOverlord",
+            "score": 671
+        },
+        {
+            "name": "SirDiesALot",
+            "score": 614
+        },
+        {
+            "name": "AuroraBorealis",
+            "score": 306
+        },
+        {
+            "name": "StackOverflower",
+            "score": -220
+        },
+        {
+            "name": "DogeCoinDuke",
+            "score": 146
+        },
+        {
+            "name": "FrostWyvern",
+            "score": 485
+        },
+        {
+            "name": "CtrlZedLife",
+            "score": 190
+        },
+        {
+            "name": "CorruptedCartridge",
+            "score": -121
+        }
     ]
 }

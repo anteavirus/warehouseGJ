@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "BirdemicShock", "score": -2010},
-        {"name": "NeilBreensFBI", "score": 1994},
-        {"name": "CoolCatSavesKids", "score": 2015},
-        {"name": "SamuraiCopAF", "score": 1991},
-        {"name": "Troll2Vegetarian", "score": 1990},
-        {"name": "ManosHandsOfFate", "score": 1966},
-        {"name": "SharkExorcist", "score": 1984},
-        {"name": "SuperBabies13", "score": -2004},
-        {"name": "TheWickerManNOTBEES", "score": 2006},
-        {"name": "Plan9FromMyBinder", "score": 1959}
+        {
+            "name": "BirdemicShock",
+            "score": 171
+        },
+        {
+            "name": "NeilBreensFBI",
+            "score": 761
+        },
+        {
+            "name": "CoolCatSavesKids",
+            "score": 404
+        },
+        {
+            "name": "SamuraiCopAF",
+            "score": 427
+        },
+        {
+            "name": "Troll2Vegetarian",
+            "score": -919
+        },
+        {
+            "name": "ManosHandsOfFate",
+            "score": 471
+        },
+        {
+            "name": "SharkExorcist",
+            "score": 76
+        },
+        {
+            "name": "SuperBabies13",
+            "score": 861
+        },
+        {
+            "name": "TheWickerManNOTBEES",
+            "score": 427
+        },
+        {
+            "name": "Plan9FromMyBinder",
+            "score": 527
+        }
     ]
 }

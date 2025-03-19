@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "QuantumCookie", "score": 950},
-        {"name": "LossMeme", "score": -1000},
-        {"name": "EclipseWarden", "score": 2100},
-        {"name": "PasswordIsTaco", "score": -1000},
-        {"name": "LootGoblin", "score": -200},
-        {"name": "8BitBandit", "score": 2500},
-        {"name": "TidalSorceress", "score": 1800},
-        {"name": "InfiniteLoop", "score": 2000},
-        {"name": "SurprisedPikachu", "score": 500},
-        {"name": "NecroBaker", "score": 800}
+        {
+            "name": "QuantumCookie",
+            "score": 630
+        },
+        {
+            "name": "LossMeme",
+            "score": 913
+        },
+        {
+            "name": "EclipseWarden",
+            "score": 78
+        },
+        {
+            "name": "PasswordIsTaco",
+            "score": -590
+        },
+        {
+            "name": "LootGoblin",
+            "score": 92
+        },
+        {
+            "name": "8BitBandit",
+            "score": 888
+        },
+        {
+            "name": "TidalSorceress",
+            "score": 267
+        },
+        {
+            "name": "InfiniteLoop",
+            "score": 18
+        },
+        {
+            "name": "SurprisedPikachu",
+            "score": 882
+        },
+        {
+            "name": "NecroBaker",
+            "score": 10
+        }
     ]
 }

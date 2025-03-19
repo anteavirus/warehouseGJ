@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "BlueScreenOfDeath", "score": -900},
-        {"name": "ArcaneJester", "score": 1800},
-        {"name": "DruidOfTheVoid", "score": 1500},
-        {"name": "BongoCat", "score": 1000},
-        {"name": "NullPointerException", "score": 2500},
-        {"name": "ShrekIsLove", "score": 3500},
-        {"name": "SolarFlare", "score": 2800},
-        {"name": "GameOverMan", "score": -300},
-        {"name": "FernsOfFury", "score": 800},
-        {"name": "DialUpDynamo", "score": 1500}
+        {
+            "name": "BlueScreenOfDeath",
+            "score": 815
+        },
+        {
+            "name": "ArcaneJester",
+            "score": 436
+        },
+        {
+            "name": "DruidOfTheVoid",
+            "score": 376
+        },
+        {
+            "name": "BongoCat",
+            "score": 976
+        },
+        {
+            "name": "NullPointerException",
+            "score": -673
+        },
+        {
+            "name": "ShrekIsLove",
+            "score": 359
+        },
+        {
+            "name": "SolarFlare",
+            "score": 765
+        },
+        {
+            "name": "GameOverMan",
+            "score": 51
+        },
+        {
+            "name": "FernsOfFury",
+            "score": 842
+        },
+        {
+            "name": "DialUpDynamo",
+            "score": 677
+        }
     ]
 }

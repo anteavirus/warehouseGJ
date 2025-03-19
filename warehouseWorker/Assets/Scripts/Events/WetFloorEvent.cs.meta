@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8d037010979eb3247a5cfcae7190f7da
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - wetPhysicMaterial: {fileID: 13400000, guid: 9d6263d28768ce24db6b02655fec311f,
+      type: 2}
+  - wetMaterial: {fileID: 2100000, guid: 9dd175ff8cc24bd4c945cce26e94026b, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

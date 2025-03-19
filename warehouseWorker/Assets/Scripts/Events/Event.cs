@@ -2,20 +2,19 @@ using UnityEngine;
 
 public class Event : MonoBehaviour
 {
-    public string eventName;
     public float duration;
     public bool isActive = false;
 
     public virtual void StartEvent()
     {
         isActive = true;
-        Debug.Log($"Event {eventName} started");
+        Debug.Log($"Event {gameObject.name} started");
     }
 
     public virtual void EndEvent()
     {
         isActive = false;
-        Debug.Log($"Event {eventName} ended");
+        Debug.Log($"Event {gameObject.name} ended");
     }
 
     public virtual void UpdateEvent()

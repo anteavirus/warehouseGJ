@@ -1,14 +1,44 @@
 {
     "entries": [
-        {"name": "DrowningInDew", "score": -100},
-        {"name": "KonamiCodeKing", "score": 2200},
-        {"name": "RickRollMaster", "score": 9999},
-        {"name": "MossyGolem", "score": 1500},
-        {"name": "404AmbitionNotFound", "score": 1500},
-        {"name": "Trollface", "score": -666},
-        {"name": "IroncladTitan", "score": 1200},
-        {"name": "ByteMeister", "score": 1850},
-        {"name": "WiltedSunflower", "score": -400},
-        {"name": "PolygonPirate", "score": 1800}
+        {
+            "name": "DrowningInDew",
+            "score": -11
+        },
+        {
+            "name": "KonamiCodeKing",
+            "score": -99
+        },
+        {
+            "name": "RickRollMaster",
+            "score": -442
+        },
+        {
+            "name": "MossyGolem",
+            "score": 182
+        },
+        {
+            "name": "404AmbitionNotFound",
+            "score": 450
+        },
+        {
+            "name": "Trollface",
+            "score": -605
+        },
+        {
+            "name": "IroncladTitan",
+            "score": -702
+        },
+        {
+            "name": "ByteMeister",
+            "score": 559
+        },
+        {
+            "name": "WiltedSunflower",
+            "score": -621
+        },
+        {
+            "name": "PolygonPirate",
+            "score": 546
+        }
     ]
 }

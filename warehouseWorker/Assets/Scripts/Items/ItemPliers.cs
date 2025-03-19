@@ -17,11 +17,8 @@ public class ItemPliers : Item
         if (slave == null)
         {
             slave = new GameObject("Bomb Slave").AddComponent<Blank>();
-        }
-        else if (!slave.TryGetComponent<Blank>(out var _))
-        {
-            Destroy(slave.gameObject);
-            slave = new GameObject("Bomb Slave").AddComponent<Blank>();
+            if (!slave.TryGetComponent<Blank>(out var _))
+                slave.AddComponent<Blank>();
         }
 
         if (!slave.TryGetComponent<AudioSource>(out var _))
@@ -46,13 +43,7 @@ public class ItemPliers : Item
 
     private void CombineWithC4(C4Item c4, Vector3 combinePosition)
     {
-        if (parentEvent.DefusedC4Prefab == null)
-        {
-            Debug.LogError("Defused C4 Prefab not configured!");
-            return;
-        }
-
-        var disarmedC4 = Instantiate(parentEvent.DefusedC4Prefab,
+        var disarmedC4 = Instantiate(parentEvent.disarmedC4Prefab,
                                    combinePosition,
                                    Quaternion.identity);
         disarmedC4.armed = false;

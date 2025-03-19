@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,6 +70,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float wobbleFrequency = 4f;
     [SerializeField] private float wobbleResetSpeed = 5f;
 
+    [Header("Slipping Mechanics")]
+    [SerializeField] private float slipRisk = 0f;
+    [SerializeField] private float slipRiskIncreasePerFootstep = 0.15f;
+    [SerializeField] private float slipRiskDecayRate = 0.1f;
+    [SerializeField] private float maxSlipRisk = 1f;
+    [SerializeField] private float slipCooldown = 3f;
+    [SerializeField] private float minSlipSpeed = 3f;
+    private float lastSlipTime;
+    private Vector3 lastMovementDirection;
+
     private Rigidbody heldItemRb;
     private Vector3 originalCameraLocalPosition;
 
@@ -102,6 +113,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (moveDirection.magnitude < 0.1f || rb.velocity.magnitude < minSlipSpeed)
+        {
+            slipRisk = Mathf.MoveTowards(slipRisk, 0f, slipRiskDecayRate * Time.deltaTime);
+        }
+
         if (!Application.isFocused || !canMove) return;
 
         if (Input.GetKeyDown(KeyCode.I)) Ragdoll();
@@ -225,8 +241,27 @@ public class PlayerController : MonoBehaviour
                 footstepTimer -= Time.deltaTime;
                 if (footstepTimer <= 0)
                 {
+                    DetectSurface();
                     PlayFootstepSound();
                     footstepTimer = footstepInterval;
+                    if (currentSurface == SurfaceType.Water && canMove)
+                    {
+                        float horizontalSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
+                        float speedFactor = Mathf.InverseLerp(minSlipSpeed, moveSpeed, horizontalSpeed);
+
+                        float directionSimilarity = Vector3.Dot(moveDirection.normalized, lastMovementDirection.normalized);
+                        slipRisk += slipRiskIncreasePerFootstep * speedFactor * (0.5f + 0.5f * directionSimilarity);
+                        
+                        lastMovementDirection = moveDirection;
+
+                        // Check for slip with weighted probability
+                        if (slipRisk >= Random.Range(0f, maxSlipRisk))
+                        {
+                            Slip(speedFactor);
+                            slipRisk = 0f; // Reset risk after slipping
+                            lastSlipTime = Time.time;
+                        }
+                    }
                 }
             }
         }
@@ -238,7 +273,6 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down,
             out RaycastHit hit, playerHeight * 0.5f + 0.2f, groundLayer))
         {
-
             if (hit.collider.TryGetComponent<GroundSurface>(out var surface))
             {
                 currentSurface = surface.surfaceType;
@@ -657,37 +691,40 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Ragdoll()
+    void Slip(float slipfactor = 1)
     {
-        StartCoroutine(RagdollAsync());
+        Ragdoll(slipfactor);
     }
 
-    IEnumerator RagdollAsync()
+    public void Ragdoll(float factor = 1)
+    {
+        StartCoroutine(RagdollAsync(factor));
+    }
+
+    IEnumerator RagdollAsync(float factor = 1)
     {
         rb.constraints = RigidbodyConstraints.None;
         canMove = false;
 
         if (slipSounds != null && slipSounds.Length > 0)
         {
+            footstepSource.pitch = Mathf.Lerp(0.9f, 1.1f, factor);
             footstepSource.PlayOneShot(slipSounds[Random.Range(0, slipSounds.Length)]);
+            footstepSource.pitch = 1f;
         }
 
-        Vector3 randomForce = new Vector3(
-            Random.Range(-1f, 1f),
-            Random.Range(-0.3f, 1f), 
-            Random.Range(-1f, 1f)
-        ).normalized * 20f; 
+        Vector3 slipDirection = Vector3.Lerp(
+            Random.onUnitSphere,
+            lastMovementDirection.normalized,
+            factor
+        ).normalized;
 
-        Vector3 randomTorque = new Vector3(
-            Random.Range(-1f, 1f),
-            Random.Range(-1f, 1f),
-            Random.Range(-1f, 1f)
-        ).normalized * 1.67f;
+        // TODO: probably could use random?
+        float slipForceMultiplier = Mathf.Lerp(10f, 25f, factor);
+        float torqueMultiplier = Mathf.Lerp(0.5f, 2f, factor);
 
-        rb.AddForce(randomForce, ForceMode.Impulse);
-        rb.AddTorque(randomTorque, ForceMode.Impulse);
-
-        yield return new WaitForSeconds(timeToGetUpAfterRagdolling);
+        rb.AddForce(slipDirection * slipForceMultiplier, ForceMode.Impulse);
+        rb.AddTorque(Random.insideUnitSphere * torqueMultiplier, ForceMode.Impulse);
 
         float maxWaitTime = 3f;
         float waitStartTime = Time.time;
