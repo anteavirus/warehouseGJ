@@ -7,6 +7,7 @@ public class BlackHoleEvent : Event
     [SerializeField] float blackHoleForce = 10f;
     [SerializeField] float rangeOfForce = 10f;
     [SerializeField] float forceMultiplierToPlayer = 5f;
+    [SerializeField] AudioClip suckingSFX;
 
     private GameObject blackHoleInstance;
     private GameObject weakerBlackHoleInstance;
@@ -26,6 +27,12 @@ public class BlackHoleEvent : Event
     {
         blackHoleInstance = Instantiate(blackHolePrefab, spawnPoint.position, Quaternion.identity);
         weakerBlackHoleInstance = Instantiate(blackHolePrefab, weakerSpawnPoint.position, Quaternion.identity);
+        var audio = weakerBlackHoleInstance.AddComponent<AudioSource>();
+        audio.maxDistance = 50;
+        audio.spatialBlend = 1;
+        audio.rolloffMode = AudioRolloffMode.Linear;
+        audio.clip = suckingSFX;
+        audio.Play();
     }
 
     public override void UpdateEvent()
@@ -43,7 +50,7 @@ public class BlackHoleEvent : Event
         }
         if (weakerBlackHoleInstance != null)
         {
-            GraviPull(weakerBlackHoleInstance.transform, 3);
+            GraviPull(weakerBlackHoleInstance.transform, 2.5f);
         }
     }
 
@@ -53,13 +60,16 @@ public class BlackHoleEvent : Event
         foreach (Collider col in colliders)
         {
             Rigidbody rb = col.GetComponent<Rigidbody>();
-            if (rb != null && !rb.isKinematic)
+            if (rb != null && !rb.isKinematic && rb.gameObject.layer != LayerMask.NameToLayer("Light"))
             {
                 Vector3 direction = (position.position - col.transform.position).normalized;
-                rb.AddForce((rb.GetComponent<PlayerController>() != null ? forceMultiplierToPlayer : 1) * (blackHoleForce / forceWeakener) * direction, ForceMode.Force);
+                float forceMultiplier = rb.GetComponent<PlayerController>() != null ? forceMultiplierToPlayer : 1;
+                Vector3 force = (blackHoleForce / forceWeakener) * forceMultiplier * Time.deltaTime * direction;
+                rb.AddForce(force, ForceMode.Force);
             }
         }
     }
+
 
     /*
     void ApplyBlackHoleForce()

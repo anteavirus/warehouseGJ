@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -5,6 +6,7 @@ public class C4Item : Item
 {
     [HideInInspector] public C4Event parentEvent;
     [SerializeField] private float explosionTime = 15f;
+    [SerializeField] AudioClip boomSfx;
     private float remainingTime;
 
     public bool armed = true;
@@ -43,8 +45,21 @@ public class C4Item : Item
 
     private void Detonate()
     {
-        // TODO: coroutine to make epic explosions effects and shit alike. oh and like uh. stop the game timer, player is gonna die.
+        StartCoroutine(nameof(explosions));
+    }
+
+    IEnumerator explosions()
+    {
+        audioSource.clip = boomSfx;
+        audioSource.Play();
+        while (audioSource.clip.length > audioSource.time)
+        {
+            yield return null;
+        }
+
+        // Boom animation here...
         GameManager.Instance.gameStarted = false; // technically yeah but. like these variable names suck ass.
         GameManager.Instance.ForceGameOver();
+        yield break;
     }
 }

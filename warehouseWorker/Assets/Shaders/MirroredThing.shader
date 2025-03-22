@@ -1,4 +1,4 @@
-Shader "Custom/DepthGradient"
+Shader "Custom/MirroredThing"
 {
     Properties
     {

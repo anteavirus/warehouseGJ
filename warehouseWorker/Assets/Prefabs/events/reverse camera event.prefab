@@ -118,8 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0fd192ef783a4e4580411ab71e6b8b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventName: upside down
-  duration: 15
+  duration: 10
   isActive: 0
   targetInversion: 1
   transitionDuration: 1

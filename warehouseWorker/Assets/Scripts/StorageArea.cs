@@ -49,8 +49,9 @@ public class StorageArea : MonoBehaviour
     public GameObject CreateNewItemForPickup()
     {
         var obj = containingObject.gameObject;
-        obj.SetActive(true);
-        // do whatever else is needed to the obj.
-        return Instantiate(obj);
+        var created = Instantiate(obj);
+        created.SetActive(true);
+        // do whatever else is needed to the created.
+        return created;
     }
 }

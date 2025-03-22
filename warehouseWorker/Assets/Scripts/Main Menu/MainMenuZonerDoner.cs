@@ -8,7 +8,9 @@ public class MainMenuZonerDoner : MonoBehaviour
 {
     [Header("Spawning Settings")]
     public GameObject[] itemPrefabs;
+    public GameObject extraSpecialPunchCardPrefab;
     public Transform spawnPoint;
+    public Transform extraSpecialPunchCardSpawnPoint;
     public float spawnInterval = 2f;
     public float minIntervalRandom = 2f;
     public float maxIntervalRandom = 6f;
@@ -23,10 +25,10 @@ public class MainMenuZonerDoner : MonoBehaviour
     [Header("UI")]
     [SerializeField] GameObject leaderboardObj;
     [SerializeField] TextMeshProUGUI leaderboardText;
-    public UIManager uiManager;
 
     private void Start()
     {
+        Time.timeScale = 1;
         spawnTimer = spawnInterval;
         GameManager.CreateLeaderBoard();
         LoadLeaderboard();
@@ -110,5 +112,10 @@ public class MainMenuZonerDoner : MonoBehaviour
         // Example settings that can be changed mid-game
         AudioListener.volume = volume;
         QualitySettings.SetQualityLevel(qualityLevel);
+    }
+
+    public void SpawnExtraSpecialPunchCard()
+    {
+        Instantiate(extraSpecialPunchCardPrefab, extraSpecialPunchCardSpawnPoint);
     }
 }

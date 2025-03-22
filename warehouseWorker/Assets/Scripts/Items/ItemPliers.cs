@@ -43,13 +43,16 @@ public class ItemPliers : Item
 
     private void CombineWithC4(C4Item c4, Vector3 combinePosition)
     {
+        if (parentEvent == null) parentEvent = FindAnyObjectByType<C4Event>();
         var disarmedC4 = Instantiate(parentEvent.disarmedC4Prefab,
-                                   combinePosition,
-                                   Quaternion.identity);
+                                    combinePosition,
+                                    Quaternion.identity);
         disarmedC4.armed = false;
         disarmedC4.parentEvent = parentEvent;
         parentEvent.activeC4 = disarmedC4;
 
+        // tbh, slave was used for this only so that it'd play the sounds. rn it's kinda useless.
+        // as we don't destroy the defuse kit.
         if (defusion != null && slave.TryGetComponent<AudioSource>(out var slaveSource))
         {
             slaveSource.PlayOneShot(defusion);
@@ -62,7 +65,5 @@ public class ItemPliers : Item
 
         controller?.ForceDropItem();
         Destroy(c4.gameObject);
-        Destroy(gameObject);
     }
-
 }

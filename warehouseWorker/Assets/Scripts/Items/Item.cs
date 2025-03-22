@@ -7,6 +7,7 @@ public class Item : MonoBehaviour
     public int ID;
     public int scoreValue;
     public bool fromShelf;
+    public int[] canUseOnID;
 
     [Header("Base Item Settings")]
     public bool isPickupable = true;
@@ -117,6 +118,16 @@ public class Item : MonoBehaviour
         {
             audioSource.PlayOneShot(parrySounds[Random.Range(0, parrySounds.Length)]);
         }
+    }
+
+    public bool CanBeUsedWith(Item item)
+    {
+        foreach (int i in canUseOnID)
+        {
+            if (item.ID == i)
+                return true;
+        }
+        return false;
     }
 
     private void OnCollisionEnter(Collision collision)

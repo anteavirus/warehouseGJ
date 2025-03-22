@@ -121,4 +121,4 @@ MonoBehaviour:
   duration: 1
   isActive: 0
   wetPhysicMaterial: {fileID: 13400000, guid: 9d6263d28768ce24db6b02655fec311f, type: 2}
-  wetMaterial: {fileID: 2100000, guid: 9dd175ff8cc24bd4c945cce26e94026b, type: 2}
+  wetMaterial: {fileID: 2100000, guid: 6f5f78ce1e6d011439619dd5016fd947, type: 2}

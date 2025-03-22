@@ -118,11 +118,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e08c56edf3c6543a0c35b46fef3fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventName: black hole event
   duration: 15
   isActive: 1
   blackHolePrefab: {fileID: 639902644409947038, guid: 7dce725888ab09d44a929bf56a235451,
     type: 3}
-  blackHoleForce: 17.2
+  blackHoleForce: 896.8
   rangeOfForce: 1924
   forceMultiplierToPlayer: 4
+  suckingSFX: {fileID: 8300000, guid: 8a0163a1e2792cb49b1860a8d7fec342, type: 3}

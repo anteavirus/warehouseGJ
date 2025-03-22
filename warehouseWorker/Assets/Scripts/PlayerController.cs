@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float airDrag = 0.5f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float playerHeight = 2f;
-    [SerializeField] private float timeToGetUpAfterRagdolling = 2f;
     
     [Header("Camera Inversion Settings")]
     public float inversionProgress = 0f;
@@ -31,7 +30,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float pickupRange = 2f;
     public LayerMask interactableLayer;
     public Transform handTransform;
-    public Transform interactionHintUI;
+    public Transform pickUpHintUI;
+    public Transform canUseOnItemHintUI;
 
     [Header("GPT Named me Combat, but actually i'm just Throwing")]
     [SerializeField] private float minThrowForce = 5f;
@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float checkRate = 0.2f;
     [SerializeField] private LayerMask hoverLayer;
     readonly string pickUpHint = "[E]";
+    readonly string useHint = "[œ Ã]";
 
     [Header("Held Item Physics")]
     [SerializeField] private float followForce = 100f;
@@ -77,9 +78,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSlipRisk = 1f;
     [SerializeField] private float slipCooldown = 3f;
     [SerializeField] private float minSlipSpeed = 3f;
-    private float lastSlipTime;
     private Vector3 lastMovementDirection;
 
+    [Header("Pause UI Menu")]
+    [SerializeField] private Animator pauseAnimator;
+    [SerializeField] PauseMenuUI pauseMenu;
+    [SerializeField] GameObject pauseUI;
+
+    public bool alive = true;
     private Rigidbody heldItemRb;
     private Vector3 originalCameraLocalPosition;
 
@@ -94,10 +100,11 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded, isHoldingToPlace, isValidPlacement, wasGrounded, canMove = true;
 
-    private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer;
+    private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer, lastTimeRagdoll;
 
     void Start()
     {
+        if (pauseMenu == null) pauseMenu = pauseUI.GetComponent<PauseMenuUI>(); 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         Cursor.lockState = CursorLockMode.Locked;
@@ -111,6 +118,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(CheckForInteractables());
     }
 
+
     void Update()
     {
         if (moveDirection.magnitude < 0.1f || rb.velocity.magnitude < minSlipSpeed)
@@ -118,10 +126,14 @@ public class PlayerController : MonoBehaviour
             slipRisk = Mathf.MoveTowards(slipRisk, 0f, slipRiskDecayRate * Time.deltaTime);
         }
 
-        if (!Application.isFocused || !canMove) return;
+        if (!alive) return;
+        HandlePauseToggle();
 
+        if (!Application.isFocused || pauseMenu.isPaused) return;
+
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.I)) Ragdoll();
-
+#endif
         HandleLook();
         HandleJump();
         UpdateDrag();
@@ -135,9 +147,25 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!alive) return;
         if (canMove) MovePlayer();
-        HandleHeldItemPhysics(); // Add physics handling for held item
+        HandleHeldItemPhysics();
     }
+
+    void HandlePauseToggle()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pauseMenu.TogglePause();
+
+            Cursor.lockState = pauseMenu.isPaused ?
+                CursorLockMode.None :
+                CursorLockMode.Locked;
+
+            Cursor.visible = pauseMenu.isPaused;
+        }
+    }
+
 
     private void MovePlayer()
     {
@@ -258,8 +286,7 @@ public class PlayerController : MonoBehaviour
                         if (slipRisk >= Random.Range(0f, maxSlipRisk))
                         {
                             Slip(speedFactor);
-                            slipRisk = 0f; // Reset risk after slipping
-                            lastSlipTime = Time.time;
+                            slipRisk = 0f;
                         }
                     }
                 }
@@ -367,7 +394,7 @@ public class PlayerController : MonoBehaviour
 
     void PickUpItem(Item item)
     {
-        if (item == null) return;
+        if (item == null && item.isPickupable) return;
 
         heldItem = item.gameObject;
         item.OnPickup(handTransform);
@@ -405,6 +432,7 @@ public class PlayerController : MonoBehaviour
         }
         heldItem = null;
         heldItemRb = null;
+        heldItem = null;
     }
 
     private void HandleThrow()
@@ -472,6 +500,7 @@ public class PlayerController : MonoBehaviour
         }
         heldItem = null;
         heldItemRb = null;
+        heldItem = null;
     }
 
     private void HandlePlacement()
@@ -541,7 +570,9 @@ public class PlayerController : MonoBehaviour
 
         bool isVerticalSurface = false;
 
-        if (isValidPlacement)
+        bool isThisActuallyNecessaryForTheGameplayLoop = false;
+
+        if (isValidPlacement && isThisActuallyNecessaryForTheGameplayLoop)
         {
             isVerticalSurface = Mathf.Abs(validHit.Value.normal.y) < 0.7f;
             isValidPlacement = !isVerticalSurface;
@@ -631,47 +662,99 @@ public class PlayerController : MonoBehaviour
     {
         while (true)
         {
-            bool hitInteractable = Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-                out RaycastHit hit, pickupRange, hoverLayer);
+            bool hitItem = Physics.Raycast(
+                playerCameraTransform.position,
+                playerCameraTransform.forward,
+                out RaycastHit hit,
+                pickupRange,
+                hoverLayer
+            );
 
-            Item newInteractable = null;
-            if (hitInteractable) hit.collider.TryGetComponent(out newInteractable);
+            Item newItem = null;
+            if (hitItem) hit.collider.TryGetComponent(out newItem);
 
-            if (newInteractable != currentInteractable)
+            bool showUseHint = heldItem != null &&
+                              newItem != null &&
+                              heldItem.GetComponent<Item>().CanBeUsedWith(newItem.GetComponent<Item>()); // fuck. Dirt.
+
+            bool showPickupHint = heldItem == null &&
+                                 newItem != null;
+
+            if (currentInteractable != newItem)
             {
                 if (currentInteractable != null)
                 {
-                    HideHint();
+                    ShowUseHint(false);
+                    ShowPickUpHint(false);
                 }
 
-                currentInteractable = newInteractable;
+                currentInteractable = newItem;
 
                 if (currentInteractable != null)
                 {
-                    ShowHint(pickUpHint);
+                    if (showUseHint) ShowUseHint(true);
+                    else if (showPickupHint && newItem.isPickupable) ShowPickUpHint(true);
                 }
             }
 
-            yield return new WaitForSecondsRealtime(checkRate);
+            yield return new WaitForSecondsRealtime(checkRate > 0 ? checkRate : 1);
         }
     }
 
-    void ShowHint(string text)
+
+    void ShowUseHint(bool saye)
     {
-        if (interactionHintUI != null)
+        if (saye)
         {
-            interactionHintUI.GetComponent<TextMeshProUGUI>().text = text;
-            interactionHintUI.gameObject.SetActive(true);
+            if (canUseOnItemHintUI != null)
+            {
+                canUseOnItemHintUI.GetComponent<TextMeshProUGUI>().text = useHint;
+                canUseOnItemHintUI.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            if (canUseOnItemHintUI != null) 
+                canUseOnItemHintUI.gameObject.SetActive(false);
         }
     }
 
-    void HideHint() {
-        if (interactionHintUI != null) interactionHintUI.gameObject.SetActive(false);
+    void ShowPickUpHint(bool saye)
+    {
+        if (saye)
+        {
+            if (pickUpHintUI != null)
+            {
+                pickUpHintUI.GetComponent<TextMeshProUGUI>().text = pickUpHint;
+                pickUpHintUI.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            if (pickUpHintUI != null) 
+                pickUpHintUI.gameObject.SetActive(false);
+        }
     }
 
     private void OnApplicationFocus(bool hasFocus)
     {
-        if (!hasFocus)
+        if (hasFocus)
+        {
+            if (pauseMenu != null)
+            {
+                Cursor.lockState = pauseMenu.isPaused ?
+                    CursorLockMode.None :
+                    CursorLockMode.Locked;
+
+                Cursor.visible = pauseMenu.isPaused;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+        else
         {
             if (isHoldingToPlace)
             {
@@ -691,6 +774,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        // Player somehow disabled. Let's throw him back into the lobby.
+        GameManager.Instance.LoadScene(0);
+    }
+
     void Slip(float slipfactor = 1)
     {
         Ragdoll(slipfactor);
@@ -698,13 +787,15 @@ public class PlayerController : MonoBehaviour
 
     public void Ragdoll(float factor = 1)
     {
-        StartCoroutine(RagdollAsync(factor));
+        if (lastTimeRagdoll > Time.time + slipCooldown) return;
+            StartCoroutine(RagdollAsync(factor));
     }
 
     IEnumerator RagdollAsync(float factor = 1)
     {
         rb.constraints = RigidbodyConstraints.None;
         canMove = false;
+        lastTimeRagdoll = Time.time;
 
         if (slipSounds != null && slipSounds.Length > 0)
         {
@@ -748,5 +839,18 @@ public class PlayerController : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
         canMove = true;
+    }
+
+    public void EndingSequence()
+    {
+        // whatever... it works? it works.
+        footstepSource.PlayOneShot((AudioClip) GetComponent<SerializableDictionaryObjectContainer>().Fetch("boom"));
+        if (pauseMenu.isPaused) HandlePauseToggle();
+        // i regret nothing
+    }
+
+    public void Die()
+    {
+        GameManager.Instance.LoadScene(0);
     }
 }

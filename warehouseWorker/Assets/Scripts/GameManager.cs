@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -37,6 +37,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioClip[] orderCompleteSound;
     [SerializeField] AudioClip[] orderFailSound;
 
+    [Header("Difficulty Settings")]
+    [SerializeField] AnimationCurve difficultyCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    [SerializeField] float maxDifficultyTime = 300f; // 5 minutes until max difficulty
+    [SerializeField] float minOrderCooldown = 8f;
+    [SerializeField] float minOrderTime = 20f;
+    [SerializeField] float minEventInterval = 25f;
+
+    private float totalGameTime;
+    private float currentDifficulty;
+
+
     readonly List<Order> activeOrders = new List<Order>();
     private float orderTimer = 0;
     private AudioSource audioSource;
@@ -46,6 +57,7 @@ public class GameManager : MonoBehaviour
     {
         public int requestedItemID;
         public float timeRemaining;
+        public float maxTime;
     }
 
     [SerializeField] List<GameObject> eventList = new List<GameObject>();
@@ -95,7 +107,8 @@ public class GameManager : MonoBehaviour
         Order newOrder = new Order
         {
             requestedItemID = itemTemplates[Random.Range(0, itemTemplates.Count)].ID,
-            timeRemaining = 45f
+            timeRemaining = Mathf.Lerp(45f, minOrderTime, currentDifficulty),
+            maxTime = Mathf.Lerp(45f, minOrderTime, currentDifficulty)
         };
 
         activeOrders.Add(newOrder);
@@ -107,15 +120,27 @@ public class GameManager : MonoBehaviour
     {
         if (activeOrders.Count < 1)
         {
-            orderListUI.text = "Íîëü çàêàçîâ.";
+            orderListUI.text = "ÐÐ¾Ð»ÑŒ Ð·Ð°ÐºÐ°Ð·Ð¾Ð².";
             return;
         }
+
         orderListUI.text = "";
         foreach (Order order in activeOrders)
         {
             Item item = ReturnItemById(order.requestedItemID);
-            orderListUI.text += $"- {item.name} ({Mathf.FloorToInt(order.timeRemaining)}s)\n";
+            float timePercent = order.timeRemaining / order.maxTime;
+            string progressBar = GetProgressBar(timePercent);
+            orderListUI.text += $"- {item.name} {progressBar} ({Mathf.FloorToInt(order.timeRemaining)}s)\n";
         }
+    }
+
+    string GetProgressBar(float percent)
+    {
+        int bars = 10;
+        int filled = Mathf.RoundToInt(bars * percent);
+        filled = Mathf.Clamp(filled, 0, bars);
+        return "<color=#FF0000>" + new string('â–ˆ', filled) + "</color>" +
+               "<color=#444444>" + new string('â–ˆ', bars - filled) + "</color>";
     }
 
     public void ProcessDelivery(Item deliveredItem, bool fromShelf)
@@ -131,7 +156,7 @@ public class GameManager : MonoBehaviour
 
                 activeOrders.Remove(order);
                 orderFound = true;
-                PlaySound(orderCompleteSound);
+                PlaySound(deliveredItem.fromShelf ? orderCompleteSound : orderFailSound);
                 break;
             }
         }
@@ -207,6 +232,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (!gameStarted) return;
+
+        totalGameTime += Time.deltaTime;
+        currentDifficulty = difficultyCurve.Evaluate(Mathf.Clamp01(totalGameTime / maxDifficultyTime));
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.O))
         {
             StartRandomEvent();
@@ -215,9 +244,9 @@ public class GameManager : MonoBehaviour
         {
             timer = maxTimer;
         }
+#endif
 
-
-        timer -= Time.deltaTime;
+        timer -= (Time.deltaTime / (currentEvent != null ? 4 : 1 ));  // slow down time if an active event's happening
         currentTime += Time.deltaTime;
 
         progressTimer = timer / maxTimer;
@@ -309,8 +338,13 @@ public class GameManager : MonoBehaviour
         GameOver();
     }
 
+    public LeaderboardEntry leaderboardEntry;
     void GameOver()
     {
+        gameStarted = false;
+        var player = FindFirstObjectByType<PlayerController>();
+        player.alive = false;
+        
         LeaderboardWrapper leaderboard = LoadLeaderboard();
         LeaderboardEntry newEntry = CreateLeaderboardEntry();
 
@@ -332,7 +366,20 @@ public class GameManager : MonoBehaviour
         }
 
         SaveLeaderboard(leaderboard);
-        SceneManager.LoadScene(0);
+
+        leaderboardEntry = newEntry;
+        player.GetComponent<Animator>().Play("GameOver");
+        Invoke(nameof(LoadScene), 10f);
+    }
+
+    public void LoadSceneOffset(int offset = 0)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + offset);
+    }
+
+    public void LoadScene(int ID = 0)
+    {
+        SceneManager.LoadScene(ID);
     }
 
     LeaderboardEntry CreateLeaderboardEntry()

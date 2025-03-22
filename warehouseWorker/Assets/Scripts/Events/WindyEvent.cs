@@ -14,7 +14,7 @@ public class WindyEvent : Event
     public override void StartEvent()
     {
         base.StartEvent();
-        slave = new GameObject("LightController").AddComponent<Blank>();
+        slave = new GameObject("WindController").AddComponent<Blank>();
 
         if (leavesParticleSystem != null)
             leavesParticleSystem.Play();
@@ -25,8 +25,12 @@ public class WindyEvent : Event
             leavesParticleSystem.Play();
         }
 
-        if (!TryGetComponent<AudioSource>(out var audioSource)) audioSource = slave.gameObject.AddComponent<AudioSource>();
-        audioSource.PlayOneShot(sfx);
+        if (!TryGetComponent<AudioSource>(out var audioSource)) 
+            audioSource = slave.gameObject.AddComponent<AudioSource>();
+        audioSource.clip = sfx;
+        audioSource.loop = true;
+        audioSource.maxDistance = 30;
+        audioSource.Play();
     }
 
     public override void UpdateEvent()
@@ -54,5 +58,10 @@ public class WindyEvent : Event
 
         if (leavesParticleSystem != null)
             leavesParticleSystem.Stop();
+
+        if (!TryGetComponent<AudioSource>(out var audioSource))
+            audioSource = slave.gameObject.AddComponent<AudioSource>();
+        audioSource.Stop();
+        Destroy(slave);
     }
 }

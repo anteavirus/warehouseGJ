@@ -87,6 +87,7 @@ public class MainMenuPlayerController : MonoBehaviour
 
     void GrabItem(Rigidbody item, Vector3 hitPoint)
     {
+        item.GetComponent<Item>().OnPickup(transform);
         heldItem = item;
         originalItemLayer = item.gameObject.layer;
         item.gameObject.layer = ignoreRaycastLayer;
@@ -140,6 +141,7 @@ public class MainMenuPlayerController : MonoBehaviour
         if (heldItem == null) return;
 
         ReleaseItem(heldItem);
+        heldItem.GetComponent<Item>().OnDrop();
         heldItem = null;
     }
 
@@ -149,7 +151,7 @@ public class MainMenuPlayerController : MonoBehaviour
 
         Vector3 throwDirection = mainCamera.transform.forward.normalized;
         ReleaseItem(heldItem);
-        heldItem.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        heldItem.GetComponent<Item>().OnThrow(throwDirection, throwForce);
         heldItem = null;
     }
 
