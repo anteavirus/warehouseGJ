@@ -15,6 +15,13 @@ public class ShutOffLightsEvent : Event
     [SerializeField] float transitionDuration = 2f;
     [SerializeField] AudioClip associatedSfx;
 
+    [Header("Outline Settings")]
+    [SerializeField] private RenderFeatureOutlineFader outlineFader;
+    [SerializeField] private float outlineStartAlpha = 1f;
+    [SerializeField] private float outlineEndAlpha = 0f;
+
+    GameObject outlineObjectInstance;
+    RenderFeatureOutlineFader outlineFaderInstance;
     private List<Light> targetLights = new List<Light>();
     private PlayerController player;
     private Coroutine activeRoutine;
@@ -23,6 +30,9 @@ public class ShutOffLightsEvent : Event
     public override void StartEvent()
     {
         base.StartEvent();
+
+        outlineObjectInstance = Instantiate(outlineFader.gameObject);
+        outlineFaderInstance = outlineObjectInstance.GetComponent<RenderFeatureOutlineFader>();
 
         player = FindObjectOfType<PlayerController>();
         if (player == null) return;
@@ -55,6 +65,10 @@ public class ShutOffLightsEvent : Event
     {
         if (!TryGetComponent<AudioSource>(out var audioSource)) audioSource = slave.AddComponent<AudioSource>();
         audioSource.PlayOneShot(associatedSfx);
+
+        if (outlineFaderInstance != null)
+            outlineFaderInstance.FadeOutline(startIntensity > endIntensity ? outlineEndAlpha : outlineStartAlpha);
+        
 
         SetLightIntensity(startIntensity);
 
@@ -99,5 +113,6 @@ public class ShutOffLightsEvent : Event
 
         slave.StartCoroutine(TransitionLights(dimInto, dimFrom, transitionDuration, slave.gameObject));
         Destroy(slave.gameObject, associatedSfx.length + 1f);
+        Destroy(outlineObjectInstance, 5f);
     }
 }

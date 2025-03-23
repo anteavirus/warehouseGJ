@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -8,9 +9,16 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
     [Header("Special Settings")]
     [SerializeField] private TMP_Text usernameDisplay; // Reference to TextMeshPro component
     [SerializeField] private Vector3 hoverStartPosition;
-    private float hoverPositionOffset = 3;
     [SerializeField] private float hoverAmplitude = 0.5f;
     [SerializeField] private float hoverSpeed = 2f;
+    public event System.Action OnDestroyed; 
+
+    [Header("Hover Settings")]
+    [SerializeField] private float riseHeight = 2f;
+    [SerializeField] private float riseDuration = 1f;
+    [SerializeField] private float rotationSpeed = 30f;
+    private Vector3 targetHoverPosition;
+    private Vector3 targetEulerRotation;
 
     Rigidbody rb;
     Coroutine bastard;
@@ -30,6 +38,7 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
         rb.useGravity = true;
         if (bastard != null) StopCoroutine(bastard);
         bastard = null;
+        transform.position = hoverStartPosition;
     }
 
     public override void OnUse(GameObject user)
@@ -47,18 +56,44 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
         bastard = StartCoroutine(HoverRoutine());
     }
 
-    private System.Collections.IEnumerator HoverRoutine()
+    public void InitializeHoverPosition(Vector3 groundPosition)
+    {
+        hoverStartPosition = groundPosition;
+        targetHoverPosition = groundPosition + Vector3.up * riseHeight;
+        StartCoroutine(RiseFromGround());
+    }
+
+    private IEnumerator RiseFromGround()
+    {
+        float elapsed = 0f;
+        Vector3 startPos = transform.position;
+
+        while (elapsed < riseDuration)
+        {
+            transform.position = Vector3.Lerp(
+                startPos,
+                targetHoverPosition,
+                elapsed / riseDuration
+            );
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        StartHoverSequence();
+    }
+
+    private IEnumerator HoverRoutine()
     {
         isHovering = true;
         float timer = 0f;
         rb.useGravity = false;
+        targetEulerRotation = transform.eulerAngles;
 
         while (isHovering)
         {
+            rb.velocity = Vector3.zero;
             float yOffset = Mathf.Sin(timer * hoverSpeed) * hoverAmplitude;
-
-            Vector3 newPos = (hoverStartPosition + new Vector3(0, hoverPositionOffset, 0)) +
-                           Vector3.up * (yOffset + hoverAmplitude);
+            Vector3 newPos = targetHoverPosition + Vector3.up * yOffset;
 
             transform.position = Vector3.Lerp(
                 transform.position,
@@ -66,8 +101,16 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
                 Time.deltaTime * 5f
             );
 
+            targetEulerRotation.y += rotationSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(targetEulerRotation);
+
             timer += Time.deltaTime;
             yield return null;
         }
+    }
+
+    private void OnDestroy()
+    {
+        OnDestroyed?.Invoke();
     }
 }

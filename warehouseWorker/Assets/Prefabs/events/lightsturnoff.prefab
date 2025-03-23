@@ -126,3 +126,7 @@ MonoBehaviour:
   dimInto: 0
   transitionDuration: 2
   associatedSfx: {fileID: 8300000, guid: d720a2df0a447c442b240db2fcbc77d6, type: 3}
+  outlineFader: {fileID: 8911027210582283305, guid: 98a7ac168df9b054699d7f2d9cc98c95,
+    type: 3}
+  outlineStartAlpha: 1
+  outlineEndAlpha: 0

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8083015383057723363}
   - component: {fileID: 7531254788333829588}
   m_Layer: 6
-  m_Name: "\u0445\u043B1\u0440\u0435\u0444\u0435\u0440\u0435\u043D\u0441"
+  m_Name: "\u0430\u0440\u0431\u0430\u043B\u0435\u0442"
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +155,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d404ca8eb54ca44eac5f75faba1292b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: -1
+  _audioConfig: {fileID: 11400000, guid: 33717acf7b8908f45903e72635801bf9, type: 2}
+  ID: 9
   scoreValue: 0
   fromShelf: 1
   canUseOnID: 

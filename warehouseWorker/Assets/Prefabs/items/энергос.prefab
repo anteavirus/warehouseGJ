@@ -148,9 +148,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d27a905e9adcad4abcb404d3c4d04a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _audioConfig: {fileID: 11400000, guid: 101253c32d7c75245bd3ac6574a19b60, type: 2}
   ID: 2
   scoreValue: 50
   fromShelf: 0
+  canUseOnID: 
   isPickupable: 1
   pickupSounds:
   - {fileID: 8300000, guid: 58782e84a5a648247ab04a629b2b2b6a, type: 3}

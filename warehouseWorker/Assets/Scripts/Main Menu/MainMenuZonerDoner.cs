@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,6 +26,12 @@ public class MainMenuZonerDoner : MonoBehaviour
     [Header("UI")]
     [SerializeField] GameObject leaderboardObj;
     [SerializeField] TextMeshProUGUI leaderboardText;
+
+    [Header("Player Positioning")]
+    public MainMenuPlayerController playerController;
+    public Transform playerDefaultPosition;
+    public Transform playerSpecialPosition;
+    private GameObject currentExtraCard;
 
     private void Start()
     {
@@ -96,7 +103,7 @@ public class MainMenuZonerDoner : MonoBehaviour
         foreach (var item in list.entries)
         {
             i++;
-            string unWrappableInt = item.score < 0 ? $"<nobr>{item.score.ToString()}</nobr>" : item.score.ToString();
+            string unWrappableInt = item.score < 0 ? $"<nobr>{item.score}</nobr>" : item.score.ToString();
             str += $"{i}: {item.name} - {unWrappableInt}\n";
         }
         leaderboardText.text = str;
@@ -116,6 +123,44 @@ public class MainMenuZonerDoner : MonoBehaviour
 
     public void SpawnExtraSpecialPunchCard()
     {
-        Instantiate(extraSpecialPunchCardPrefab, extraSpecialPunchCardSpawnPoint);
+        if (currentExtraCard != null)
+        {
+            if (currentExtraCard.TryGetComponent<MainMenuExtraSpecialPunchCard>(out var oldCard)) 
+                oldCard.OnDestroyed -= HandleCardDestroyed;
+            Destroy(currentExtraCard);
+        }
+
+        StartCoroutine(SpawnAfterPlayerMovement());
+    }
+
+    private IEnumerator SpawnAfterPlayerMovement()
+    {
+        playerController.MoveToPosition(playerSpecialPosition, () => {
+            Vector3 raycastStart = extraSpecialPunchCardSpawnPoint.position;
+            Vector3 spawnPos = extraSpecialPunchCardSpawnPoint.position;
+
+            if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hit, 20f))
+            {
+                spawnPos = hit.point + Vector3.up * 0.1f;
+            }
+
+            currentExtraCard = Instantiate(
+                extraSpecialPunchCardPrefab,
+                spawnPos,
+                Quaternion.Euler(0f, 0f, 0f)
+            );
+
+            var newCard = currentExtraCard.GetComponent<MainMenuExtraSpecialPunchCard>();
+            newCard.OnDestroyed += HandleCardDestroyed;
+            newCard.InitializeHoverPosition(spawnPos);
+        });
+
+        yield return null;
+    }
+
+    private void HandleCardDestroyed()
+    {
+        currentExtraCard = null;
+        playerController.MoveToPosition(playerDefaultPosition);
     }
 }

@@ -3,7 +3,9 @@ guid: 15850b457764df24fb53f554ed0455f2
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - pixelateFeature: {fileID: 7826272649928546941, guid: c40be3174f62c4acf8c1216858c64956,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

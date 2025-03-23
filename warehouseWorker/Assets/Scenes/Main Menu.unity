@@ -1106,6 +1106,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477914760}
   m_CullTransparentMesh: 1
+--- !u!1 &516459092
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 516459097}
+  m_Layer: 0
+  m_Name: card position
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &516459097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516459092}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.32002452, z: -0, w: 0.9474093}
+  m_LocalPosition: {x: 15.48, y: -0.04, z: 52.14}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -37.329, z: 0}
 --- !u!1 &517501368
 GameObject:
   m_ObjectHideFlags: 0
@@ -1240,6 +1271,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 517501368}
   m_CullTransparentMesh: 1
+--- !u!1 &529714983
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 529714984}
+  m_Layer: 0
+  m_Name: default position
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &529714984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529714983}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.39610803, z: -0, w: 0.91820395}
+  m_LocalPosition: {x: 30.38, y: 1.635, z: 41.55}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -46.67, z: 0}
 --- !u!1 &539431504
 GameObject:
   m_ObjectHideFlags: 0
@@ -2768,7 +2830,7 @@ PrefabInstance:
     - target: {fileID: 467248948896477123, guid: 2eb5e89c85e90234d961199ffcac3cd0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.441577
+      value: 15.96
       objectReference: {fileID: 0}
     - target: {fileID: 467248948896477123, guid: 2eb5e89c85e90234d961199ffcac3cd0,
         type: 3}
@@ -3982,7 +4044,8 @@ Transform:
   m_LocalPosition: {x: 30.38, y: 1.635, z: 41.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1726993489}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -46.67, z: 0}
 --- !u!114 &1463556177
@@ -4497,6 +4560,7 @@ MonoBehaviour:
   - {fileID: 1496665332}
   usernameInput: {fileID: 1803973378}
   difficultyDropdown: {fileID: 0}
+  playerController: {fileID: 1463556177}
 --- !u!1 &1636276109
 GameObject:
   m_ObjectHideFlags: 0
@@ -4534,7 +4598,7 @@ MonoBehaviour:
   extraSpecialPunchCardPrefab: {fileID: 6282414257990337225, guid: 98820fc41f86c50408ef44b0c1f801d6,
     type: 3}
   spawnPoint: {fileID: 353079333}
-  extraSpecialPunchCardSpawnPoint: {fileID: 8605993617177137589}
+  extraSpecialPunchCardSpawnPoint: {fileID: 1726993489}
   spawnInterval: 2
   minIntervalRandom: 2
   maxIntervalRandom: 2
@@ -4542,6 +4606,9 @@ MonoBehaviour:
   spawnZone: {fileID: 1636276111}
   leaderboardObj: {fileID: 1701809637}
   leaderboardText: {fileID: 351730115}
+  playerController: {fileID: 1463556177}
+  playerDefaultPosition: {fileID: 529714984}
+  playerSpecialPosition: {fileID: 516459097}
 --- !u!65 &1636276111
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4707,6 +4774,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1701809637}
   m_CullTransparentMesh: 1
+--- !u!1 &1726993488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1726993489}
+  m_Layer: 0
+  m_Name: specialCardSpawnPOint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1726993489
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1726993488}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.39610803, z: -0, w: 0.91820395}
+  m_LocalPosition: {x: 0.050663233, y: -0.511, z: 2.2250881}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1463556176}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1760115655
 GameObject:
   m_ObjectHideFlags: 0
@@ -5549,6 +5647,7 @@ MonoBehaviour:
   minOrderTime: 20
   minEventInterval: 25
   eventList: []
+  currentEvent: {fileID: 0}
   spawnPosition: {fileID: 0}
   blackHoleSpawnPosition: {fileID: 0}
   randomSpawnIntervalMax: 1
@@ -5721,18 +5820,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 834846cacdafb0e459a0494676bfe555, type: 3}
---- !u!4 &8605993617177137589 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4351235658744820931, guid: 834846cacdafb0e459a0494676bfe555,
-    type: 3}
-  m_PrefabInstance: {fileID: 8605993617177137588}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 8605993617177137588}
   - {fileID: 1463556176}
+  - {fileID: 516459097}
+  - {fileID: 529714984}
   - {fileID: 1636276114}
   - {fileID: 165075127}
   - {fileID: 1433931392}

@@ -130,9 +130,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4825390ea33b24b9e27635dd4aaf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 0
+  _audioConfig: {fileID: 11400000, guid: cdfa47826108dba4b85901022049f42d, type: 2}
+  ID: 8
   scoreValue: 150
   fromShelf: 0
+  canUseOnID: 
   isPickupable: 1
   pickupSounds: []
   useSounds: []
@@ -141,6 +143,8 @@ MonoBehaviour:
   throwMultiplier: 0.1
   controller: {fileID: 0}
   parentEvent: {fileID: 0}
+  explosionTime: 15
+  boomSfx: {fileID: 0}
   armed: 1
 --- !u!82 &8366397636076673259
 AudioSource:

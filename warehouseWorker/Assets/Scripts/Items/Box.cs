@@ -16,7 +16,8 @@ public class Box : Item
         newbox.transform.position = transform.position;
         var boxscript = newbox.GetComponent<Box>();
         boxscript.OnDrop();
-        boxscript.containedItem = null;
+        boxscript.containedItem = new();
+        boxscript.canUseOnID = null;
         boxscript.OnUse(user); // I wonder if race condition makes it sometimes play the sound, sometimes not.
         boxscript.useSounds = null;
 

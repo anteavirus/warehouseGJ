@@ -62,6 +62,6 @@ public class WindyEvent : Event
         if (!TryGetComponent<AudioSource>(out var audioSource))
             audioSource = slave.gameObject.AddComponent<AudioSource>();
         audioSource.Stop();
-        Destroy(slave);
+        Destroy(slave.gameObject);
     }
 }

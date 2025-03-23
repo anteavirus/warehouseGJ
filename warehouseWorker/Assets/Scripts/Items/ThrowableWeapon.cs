@@ -19,7 +19,9 @@ public class ThrowableWeapon : Item
             audioSource.PlayOneShot(clip, impactVolume);
         }
 
-        if (collision.gameObject.TryGetComponent<ZombieAI>(out var zombieAI))
+        var rb = GetComponent<Rigidbody>();
+        if (collision.gameObject.TryGetComponent<ZombieAI>(out var zombieAI) && 
+            rb.velocity.magnitude > 0.4f) // its no longer a landmine now xd
         {
             zombieAI.Die();
             Destroy(gameObject);

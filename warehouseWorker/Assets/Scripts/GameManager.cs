@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("I will kill you if you put something that doesn't have an Item Component here.")]
     [SerializeField] List<GameObject> items = new();
-    readonly List<Item> itemTemplates = new();
+    public readonly List<Item> itemTemplates = new();
 
     [Tooltip("Spawn box, user must unbox the box. Then they bring wherever they need to.")]
     [SerializeField] GameObject box;
@@ -40,9 +40,9 @@ public class GameManager : MonoBehaviour
     [Header("Difficulty Settings")]
     [SerializeField] AnimationCurve difficultyCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     [SerializeField] float maxDifficultyTime = 300f; // 5 minutes until max difficulty
-    [SerializeField] float minOrderCooldown = 8f;
+    [SerializeField] float minOrderCooldown = 8f; // unused
     [SerializeField] float minOrderTime = 20f;
-    [SerializeField] float minEventInterval = 25f;
+    [SerializeField] float minEventInterval = 25f; // unused
 
     private float totalGameTime;
     private float currentDifficulty;
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField] List<GameObject> eventList = new List<GameObject>();
-    private Event currentEvent;
+    public Event currentEvent;
 
     public Transform spawnPosition;
     public Transform blackHoleSpawnPosition;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class MainMenuPlayerController : MonoBehaviour
@@ -163,10 +164,31 @@ public class MainMenuPlayerController : MonoBehaviour
         lastReleaseTime = Time.time;
     }
 
+    private IEnumerator SmoothMoveTo(Transform target, System.Action onComplete)
+    {
+        float duration = 0.5f;
+        float elapsed = 0f;
+        transform.GetPositionAndRotation(out Vector3 startPos, out Quaternion startRot);
+        while (elapsed < duration)
+        {
+            transform.SetPositionAndRotation(Vector3.Lerp(startPos, target.position, elapsed / duration), Quaternion.Slerp(startRot, target.rotation, elapsed / duration));
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.SetPositionAndRotation(target.position, target.rotation);
+        onComplete?.Invoke();
+    }
+
     bool IsItemOnCooldown(Rigidbody item)
     {
         return item == lastReleasedItem &&
                Time.time < lastReleaseTime + repickCooldown;
+    }
+
+    public void MoveToPosition(Transform target, System.Action onComplete = null)
+    {
+        StartCoroutine(SmoothMoveTo(target, onComplete));
     }
 
     public void StopWorking(bool yeah)

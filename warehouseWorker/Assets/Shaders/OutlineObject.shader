@@ -1,10 +1,10 @@
-Shader "Custom/URP_FullOutline_PS1"
+Shader "Custom/OutlineObject"
 {
     Properties
     {
         [MainTexture] _MainTex("Main Texture", 2D) = "white" {}
         [MainColor] _Color("Color", Color) = (1,1,1,1)
-        _OutlineColor("Outline Color", Color) = (1,0,0,1)
+        [HDR]_OutlineColor("Outline Color", Color) = (1,0,0,1)
         _OutlineWidth("Outline Width", Range(0, 0.2)) = 0.05
         _PixelSize("Pixel Size", Float) = 16
         _VertexSnapping("Vertex Snap", Float) = 8
@@ -14,9 +14,9 @@ Shader "Custom/URP_FullOutline_PS1"
     {
         Tags 
         { 
-            "RenderType"="Opaque" 
+            "RenderType"="Transparent"
             "RenderPipeline"="UniversalPipeline" 
-            "Queue"="Geometry+1" 
+            "Queue"="Transparent+1"
         }
 
         // HLSLINCLUDE to share declarations between passes
@@ -45,7 +45,8 @@ Shader "Custom/URP_FullOutline_PS1"
             Cull Front
             ZTest LEqual
             ZWrite Off
-
+            Blend SrcAlpha OneMinusSrcAlpha
+           
             HLSLPROGRAM
                 #pragma vertex vert_outline
                 #pragma fragment frag_outline

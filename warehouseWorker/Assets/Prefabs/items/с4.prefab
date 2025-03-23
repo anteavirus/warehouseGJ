@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4825390ea33b24b9e27635dd4aaf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _audioConfig: {fileID: 11400000, guid: 9ec828a0426387746ab5918a5f38ab74, type: 2}
   ID: 6
   scoreValue: 150
   fromShelf: 0
@@ -143,7 +144,7 @@ MonoBehaviour:
   controller: {fileID: 0}
   parentEvent: {fileID: 0}
   explosionTime: 15
-  boomSfx: {fileID: 0}
+  boomSfx: {fileID: 8300000, guid: fb4aea39107b7bf4b93dd398d36854ac, type: 3}
   armed: 1
 --- !u!82 &2479118537430382248
 AudioSource:

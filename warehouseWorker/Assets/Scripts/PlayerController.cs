@@ -660,9 +660,10 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator CheckForInteractables()
     {
+        var waitInstruction = new WaitForSecondsRealtime(checkRate > 0 ? checkRate : 1);
         while (true)
         {
-            bool hitItem = Physics.Raycast(
+            bool hitInteractable = Physics.Raycast(
                 playerCameraTransform.position,
                 playerCameraTransform.forward,
                 out RaycastHit hit,
@@ -670,37 +671,53 @@ public class PlayerController : MonoBehaviour
                 hoverLayer
             );
 
-            Item newItem = null;
-            if (hitItem) hit.collider.TryGetComponent(out newItem);
+            Item detectedItem = null;
+            if (hitInteractable) hit.collider.TryGetComponent(out detectedItem);
 
-            bool showUseHint = heldItem != null &&
-                              newItem != null &&
-                              heldItem.GetComponent<Item>().CanBeUsedWith(newItem.GetComponent<Item>()); // fuck. Dirt.
+            Item heldItemComponent = heldItem?.GetComponent<Item>();
 
-            bool showPickupHint = heldItem == null &&
-                                 newItem != null;
+            bool hasHeldItem = heldItemComponent != null;
+            bool hasDetectedItem = detectedItem != null;
 
-            if (currentInteractable != newItem)
+            bool canUseWithOther = hasHeldItem && hasDetectedItem &&
+                                 (heldItemComponent.CanBeUsedWith(detectedItem));
+            bool canUseAlone = hasHeldItem && heldItemComponent.CanBeUsedWith(-1);
+
+            bool shouldShowUseHint = canUseWithOther || canUseAlone;
+            bool shouldShowPickupHint = !hasHeldItem && hasDetectedItem &&
+                                       detectedItem.isPickupable;
+
+            if (currentInteractable != detectedItem)
             {
-                if (currentInteractable != null)
-                {
-                    ShowUseHint(false);
-                    ShowPickUpHint(false);
-                }
-
-                currentInteractable = newItem;
-
-                if (currentInteractable != null)
-                {
-                    if (showUseHint) ShowUseHint(true);
-                    else if (showPickupHint && newItem.isPickupable) ShowPickUpHint(true);
-                }
+                currentInteractable = detectedItem;
+                ClearAllHints();
             }
 
-            yield return new WaitForSecondsRealtime(checkRate > 0 ? checkRate : 1);
+            UpdateHints(shouldShowUseHint, shouldShowPickupHint);
+
+            yield return waitInstruction;
         }
     }
 
+    private void UpdateHints(bool useHint, bool pickupHint)
+    {
+        ClearAllHints();
+
+        if (useHint)
+        {
+            ShowUseHint(true);
+        }
+        else if (pickupHint)
+        {
+            ShowPickUpHint(true);
+        }
+    }
+
+    private void ClearAllHints()
+    {
+        ShowUseHint(false);
+        ShowPickUpHint(false);
+    }
 
     void ShowUseHint(bool saye)
     {
@@ -787,7 +804,7 @@ public class PlayerController : MonoBehaviour
 
     public void Ragdoll(float factor = 1)
     {
-        if (lastTimeRagdoll > Time.time + slipCooldown) return;
+        if (Time.time < lastTimeRagdoll + slipCooldown) return;
             StartCoroutine(RagdollAsync(factor));
     }
 

@@ -189,12 +189,33 @@ public class StableHangingLight : MonoBehaviour
         ConfigurableJoint joint = bulb.AddComponent<ConfigurableJoint>();
         joint.connectedBody = ropeSegments[^1].GetComponent<Rigidbody>();
         joint.autoConfigureConnectedAnchor = false;
-        joint.anchor = Vector3.zero;
-        joint.connectedAnchor = new Vector3(0, (-segmentLength / 2) - 0.15f, 0);
+        joint.anchor = bulbPrefab != null ? new Vector3(0, 0.5f, 0) : Vector3.zero;
+        joint.connectedAnchor = bulbPrefab != null ? new Vector3(0, -0.45f, 0) : Vector3.zero;
 
         joint.xMotion = ConfigurableJointMotion.Locked;
         joint.yMotion = ConfigurableJointMotion.Locked;
         joint.zMotion = ConfigurableJointMotion.Locked;
+
+        JointDrive drive = new JointDrive
+        {
+            positionSpring = jointSpring,
+            positionDamper = jointDamper,
+            maximumForce = Mathf.Infinity
+        };
+
+        joint.angularXDrive = drive;
+        joint.angularYZDrive = drive;
+
+        SoftJointLimit limit = new SoftJointLimit
+        {
+            limit = jointLimit,
+            bounciness = 0f
+        };
+
+        joint.angularYLimit = limit;
+        joint.angularZLimit = limit;
+        joint.highAngularXLimit = limit;
+        joint.lowAngularXLimit = limit;
 
         if (!bulb.TryGetComponent(out bulbLight))
         {

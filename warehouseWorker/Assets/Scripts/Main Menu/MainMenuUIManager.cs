@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [Header("Game Settings")]
     public TMP_InputField usernameInput;
     public TMP_Dropdown difficultyDropdown;
+    public MainMenuPlayerController playerController;
 
     private void Start()
     {
@@ -68,6 +69,7 @@ public class UIManager : MonoBehaviour
 
         showUIButton.gameObject.SetActive(!visible);
         hideUIButton.gameObject.SetActive(visible);
+        playerController.STOPWORKINGIMINUI = visible;
     }
 
     public void SaveGameSettings()

@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d27a905e9adcad4abcb404d3c4d04a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _audioConfig: {fileID: 11400000, guid: 5828d1f374626a547b4519063b9aa53a, type: 2}
   ID: 4
   scoreValue: 30
   fromShelf: 0

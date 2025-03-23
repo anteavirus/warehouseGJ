@@ -50,15 +50,8 @@ public class C4Item : Item
 
     IEnumerator explosions()
     {
-        audioSource.clip = boomSfx;
-        audioSource.Play();
-        while (audioSource.clip.length > audioSource.time)
-        {
-            yield return null;
-        }
-
-        // Boom animation here...
-        GameManager.Instance.gameStarted = false; // technically yeah but. like these variable names suck ass.
+        armed = false;
+        // the boom is forced by gameover now. idk why.
         GameManager.Instance.ForceGameOver();
         yield break;
     }

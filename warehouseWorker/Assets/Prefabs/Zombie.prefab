@@ -149,11 +149,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wanderSpeed: 4.35
-  chaseSpeed: 6.01
-  wanderRadius: 15.1
+  chaseSpeed: 9.48
+  wanderRadius: 18.5
   detectionRadius: 14.5
   attackRange: 2.84
-  directionChangeCooldown: 3.62
+  directionChangeCooldown: 6.33
+  searchArriveThreshold: 1.06
   obstacleMask:
     serializedVersion: 2
     m_Bits: 72

@@ -4,6 +4,9 @@ using System.Linq;
 [RequireComponent(typeof(Rigidbody))]
 public class Item : MonoBehaviour
 {
+    [SerializeField] private DeliveryAudioConfig _audioConfig;
+    public DeliveryAudioConfig AudioConfig => _audioConfig;
+
     public int ID;
     public int scoreValue;
     public bool fromShelf;
@@ -120,14 +123,19 @@ public class Item : MonoBehaviour
         }
     }
 
-    public bool CanBeUsedWith(Item item)
+    public bool CanBeUsedWith(int ID)
     {
         foreach (int i in canUseOnID)
         {
-            if (item.ID == i)
+            if (ID == i)
                 return true;
         }
         return false;
+    }
+
+    public bool CanBeUsedWith(Item item)
+    {
+        return CanBeUsedWith(item.ID);
     }
 
     private void OnCollisionEnter(Collision collision)

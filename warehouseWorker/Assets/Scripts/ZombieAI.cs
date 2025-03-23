@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class ZombieAI : MonoBehaviour
 {
@@ -9,39 +11,80 @@ public class ZombieAI : MonoBehaviour
     public float detectionRadius = 7f;
     public float attackRange = 2f;
     public float directionChangeCooldown = 3f;
+    public float searchArriveThreshold = 1f;
+    public float rotationSpeed = 3f;
     public LayerMask obstacleMask;
     public AudioClip boomClip;
     public GameObject explosionPrefab;
 
+    [Header("Footstep Settings")]
+    public float footstepInterval = 0.5f;
+    public List<SurfaceSound> surfaceSounds = new List<SurfaceSound>();
+    public LayerMask groundLayer;
+    public float characterHeight = 2f;
+    public AudioClip[] slipSounds;
+    public float slipCooldown = 2f;
+    public float slipRiskIncreasePerFootstep = 0.1f;
+    public float maxSlipRisk = 1f;
+    public float minSlipSpeed = 1f;
+
     private Rigidbody rb;
     private Transform player;
     private Vector3 currentDirection;
-    private bool isChasing;
     private float directionTimer;
     private bool isDead;
+    private AudioSource footstepSource;
+
+    // Footstep system variables
+    private SurfaceType currentSurface;
+    private float footstepTimer;
+    private float slipRisk;
+    private Vector3 lastMovementDirection;
+    private float lastTimeRagdoll;
+    private bool canMove = true;
+    private Vector3 moveDirection;
+
+    private enum State { Wandering, Chasing, Searching }
+    private State currentState;
+    private Vector3 lastSeenPosition;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        player = FindAnyObjectByType<PlayerController>().transform;
+        player = FindObjectOfType<PlayerController>().transform;
+        footstepSource = gameObject.AddComponent<AudioSource>();
+        footstepSource.spatialBlend = 1f; // 3D sound
+
         SetRandomDirection();
         directionTimer = directionChangeCooldown;
+        currentState = State.Wandering;
+    }
+
+    void Update()
+    {
+        if (isDead) return;
+        HandleFootsteps();
     }
 
     void FixedUpdate()
     {
-        if (isDead) return;
+        if (isDead || !canMove) return;
 
         directionTimer -= Time.fixedDeltaTime;
 
-        if (isChasing)
+        switch (currentState)
         {
-            ChaseBehavior();
-        }
-        else
-        {
-            WanderBehavior();
-            CheckForPlayer();
+            case State.Wandering:
+                WanderBehavior();
+                CheckForPlayer();
+                break;
+            case State.Chasing:
+                ChaseBehavior();
+                break;
+            case State.Searching:
+                SearchBehavior();
+                CheckForPlayer();
+                break;
         }
     }
 
@@ -59,34 +102,207 @@ public class ZombieAI : MonoBehaviour
             directionTimer = directionChangeCooldown;
         }
 
-        rb.MovePosition(transform.position + currentDirection * wanderSpeed * Time.fixedDeltaTime);
+        UpdateSearchRotation(currentDirection);
+        moveDirection = currentDirection;
+        rb.MovePosition(transform.position + Time.fixedDeltaTime * wanderSpeed * currentDirection);
     }
 
     void ChaseBehavior()
     {
-        Vector3 chaseDirection = (player.position - transform.position).normalized;
+        Vector3 directionToPlayer = player.position - transform.position;
+        bool canSeePlayer = CheckLineOfSight();
 
-        if (Physics.Raycast(transform.position, chaseDirection, out RaycastHit hit, detectionRadius, obstacleMask))
+        if (canSeePlayer)
         {
-            Vector3 avoidDirection = Vector3.Cross(hit.normal, Vector3.up).normalized;
-            currentDirection = (avoidDirection + chaseDirection * 0.2f).normalized;
+            lastSeenPosition = player.position;
+            Vector3 chaseDirection = directionToPlayer.normalized;
+
+            if (Physics.Raycast(transform.position, chaseDirection, out RaycastHit hit, detectionRadius, obstacleMask))
+            {
+                Vector3 avoidDirection = Vector3.Cross(hit.normal, Vector3.up).normalized;
+                currentDirection = (avoidDirection + chaseDirection * 0.2f).normalized;
+            }
+            else
+            {
+                currentDirection = chaseDirection;
+            }
+
+            moveDirection = currentDirection;
+            rb.MovePosition(transform.position + chaseSpeed * Time.fixedDeltaTime * currentDirection);
+            transform.rotation = Quaternion.LookRotation(currentDirection);
+
+            if (directionToPlayer.magnitude <= attackRange)
+            {
+                AttackPlayer();
+            }
         }
         else
         {
-            currentDirection = chaseDirection;
+            currentState = State.Searching;
         }
+    }
 
-        rb.MovePosition(transform.position + currentDirection * chaseSpeed * Time.fixedDeltaTime);
-        transform.rotation = Quaternion.LookRotation(currentDirection);
-
-        if (Vector3.Distance(transform.position, player.position) <= attackRange)
+    void SearchBehavior()
+    {
+        Vector3 toLastSeen = lastSeenPosition - transform.position;
+        if (toLastSeen.magnitude < searchArriveThreshold)
         {
-            AttackPlayer();
-        }
-        else if (Vector3.Distance(transform.position, player.position) > detectionRadius * 1.5f)
-        {
-            isChasing = false;
+            currentState = State.Wandering;
             SetRandomDirection();
+            return;
+        }
+
+        Vector3 searchDirection = toLastSeen.normalized;
+        UpdateSearchRotation(searchDirection);
+
+        if (Physics.Raycast(transform.position, searchDirection, out RaycastHit hit, 2f, obstacleMask))
+        {
+            Vector3 avoidDirection = Vector3.Cross(hit.normal, Vector3.up).normalized;
+            searchDirection = (avoidDirection + searchDirection * 0.2f).normalized;
+        }
+
+        moveDirection = searchDirection;
+        rb.MovePosition(transform.position + chaseSpeed * Time.fixedDeltaTime * searchDirection);
+        transform.rotation = Quaternion.LookRotation(searchDirection);
+    }
+
+    void UpdateSearchRotation(Vector3 targetDirection)
+    {
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation,
+            rotationSpeed * Time.deltaTime);
+    }
+
+    void HandleFootsteps()
+    {
+        if (moveDirection != Vector3.zero && canMove)
+        {
+            footstepTimer -= Time.deltaTime;
+            if (footstepTimer <= 0)
+            {
+                DetectSurface();
+                PlayFootstepSound();
+                footstepTimer = footstepInterval;
+
+                if (currentSurface == SurfaceType.Water)
+                {
+                    float horizontalSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
+                    float speedFactor = Mathf.InverseLerp(minSlipSpeed, chaseSpeed, horizontalSpeed);
+
+                    float directionSimilarity = Vector3.Dot(moveDirection.normalized, lastMovementDirection.normalized);
+                    slipRisk += slipRiskIncreasePerFootstep * speedFactor * (0.5f + 0.5f * directionSimilarity);
+
+                    lastMovementDirection = moveDirection;
+
+                    if (slipRisk >= Random.Range(0f, maxSlipRisk))
+                    {
+                        Slip(speedFactor);
+                        slipRisk = 0f;
+                    }
+                }
+            }
+        }
+    }
+
+    void DetectSurface()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down,
+            out RaycastHit hit, characterHeight * 0.5f + 0.2f, groundLayer))
+        {
+            if (hit.collider.TryGetComponent<GroundSurface>(out var surface))
+            {
+                currentSurface = surface.surfaceType;
+            }
+        }
+    }
+
+    void PlayFootstepSound()
+    {
+        var sound = surfaceSounds.Find(s => s.surface == currentSurface);
+        if (sound != null && sound.footstepSounds.Length > 0)
+        {
+            AudioClip clip = sound.footstepSounds[Random.Range(0, sound.footstepSounds.Length)];
+            footstepSource.PlayOneShot(clip);
+        }
+    }
+
+    void Slip(float slipFactor = 1)
+    {
+        Ragdoll(slipFactor);
+    }
+
+    public void Ragdoll(float factor = 1)
+    {
+        if (Time.time < lastTimeRagdoll + slipCooldown) return;
+        StartCoroutine(RagdollAsync(factor));
+    }
+
+    IEnumerator RagdollAsync(float factor = 1)
+    {
+        rb.constraints = RigidbodyConstraints.None;
+        canMove = false;
+        lastTimeRagdoll = Time.time;
+
+        if (slipSounds != null && slipSounds.Length > 0)
+        {
+            footstepSource.pitch = Mathf.Lerp(0.9f, 1.1f, factor);
+            footstepSource.PlayOneShot(slipSounds[Random.Range(0, slipSounds.Length)]);
+            footstepSource.pitch = 1f;
+        }
+
+        Vector3 slipDirection = Vector3.Lerp(
+            Random.onUnitSphere,
+            lastMovementDirection.normalized,
+            factor
+        ).normalized;
+
+        float slipForceMultiplier = Mathf.Lerp(10f, 25f, factor);
+        float torqueMultiplier = Mathf.Lerp(0.5f, 2f, factor);
+
+        rb.AddForce(slipDirection * slipForceMultiplier, ForceMode.Impulse);
+        rb.AddTorque(Random.insideUnitSphere * torqueMultiplier, ForceMode.Impulse);
+
+        float maxWaitTime = 3f;
+        float waitStartTime = Time.time;
+        while ((rb.velocity.magnitude > 0.1f || rb.angularVelocity.magnitude > 0.1f) && Time.time - waitStartTime < maxWaitTime)
+        {
+            yield return null;
+        }
+
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+        float rotationTime = 1f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < rotationTime)
+        {
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / rotationTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        canMove = true;
+    }
+
+    bool CheckLineOfSight()
+    {
+        Vector3 directionToPlayer = player.position - transform.position;
+        if (directionToPlayer.magnitude > detectionRadius) return false;
+
+        if (Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, detectionRadius, obstacleMask))
+        {
+            return hit.collider.transform == player;
+        }
+        return true;
+    }
+
+    void CheckForPlayer()
+    {
+        if (CheckLineOfSight())
+        {
+            lastSeenPosition = player.position;
+            currentState = State.Chasing;
         }
     }
 
@@ -95,22 +311,12 @@ public class ZombieAI : MonoBehaviour
         return Physics.Raycast(transform.position, currentDirection, 1f, obstacleMask);
     }
 
-    void CheckForPlayer()
-    {
-        // yeah he knows about the player all the time. yeah that's a bad idea. yeah we're a singleplayer. so no, it's fine. for now.
-        if (Vector3.Distance(transform.position, player.position) <= detectionRadius)
-        {
-            isChasing = true;
-        }
-    }
-
     void AttackPlayer()
     {
         if (player.TryGetComponent<PlayerController>(out var controller))
         {
             controller.Ragdoll();
-
-            isChasing = false;
+            currentState = State.Wandering;
             SetRandomDirection();
         }
     }
@@ -118,10 +324,13 @@ public class ZombieAI : MonoBehaviour
     public void Die()
     {
         isDead = true;
+        canMove = false;
         rb.velocity = Vector3.zero;
 
-        var boom = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-        boom.AddComponent<AudioSource>().PlayOneShot(boomClip);
+        GameObject boom = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        AudioSource audioSource = boom.AddComponent<AudioSource>();
+        audioSource.PlayOneShot(boomClip);
+        Destroy(boom, 2f);
         Destroy(gameObject);
     }
 }

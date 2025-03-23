@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.04300436, y: 0.71491414, z: 0.068158805, w: 0.6945522}
   m_LocalPosition: {x: 25.18, y: -2.047, z: 26.807999}
-  m_LocalScale: {x: 0.17284997, y: 0.17284997, z: 0.17284997}
+  m_LocalScale: {x: 0.75251, y: 0.75251, z: 0.75251}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -231,7 +231,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: 9518cd97f5f065048acc6c70f7beec75, type: 3}
+  m_Mesh: {fileID: -2432090755550338912, guid: abdd94024d7b96449a9bb66d46ec05d8, type: 3}
 --- !u!114 &1521921737126237428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,6 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 878f2a18b51b247468744d7d57149874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _audioConfig: {fileID: 11400000, guid: d10e12296537f2f4692cc241fb597527, type: 2}
   ID: 7
   scoreValue: 0
   fromShelf: 0
