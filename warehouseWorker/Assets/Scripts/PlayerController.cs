@@ -543,6 +543,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // TODO: new issue sprung up it seems; objects can be placed on player head and infront of it. no idea why, there's basically nothing here.
     private void HandlePlacementPreview()
     {
         if (!isHoldingToPlace || previewObject == null) return;

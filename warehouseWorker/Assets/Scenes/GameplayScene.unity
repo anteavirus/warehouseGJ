@@ -10475,6 +10475,7 @@ MonoBehaviour:
   - {fileID: 3090531286242974184, guid: b51de826ff5bf4345b459ffaf7e86663, type: 3}
   - {fileID: 2707247244306727588, guid: 5450da9bb38d1a8489ab8f4312e8fd54, type: 3}
   box: {fileID: 4684404609544575223, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
+  talkingDeliveryItem: {fileID: 0}
   orderCooldown: 25
   newOrderSound:
   - {fileID: 8300000, guid: f6ba07a68425e614c8b2094578c92144, type: 3}
@@ -10520,6 +10521,7 @@ MonoBehaviour:
   - {fileID: 2967366868401370336, guid: e7e47294e59c2e24eae1e3be3060b930, type: 3}
   - {fileID: 2967366868401370336, guid: 3fb72184fa01b99468a29528109f7a87, type: 3}
   - {fileID: 2967366868401370336, guid: df335f4c893fc2d469e19b8b123714b6, type: 3}
+  - {fileID: 2967366868401370336, guid: 71bb35eb71732be41acfb6e7b72b20c6, type: 3}
   currentEvent: {fileID: 0}
   spawnPosition: {fileID: 1755453424}
   blackHoleSpawnPosition: {fileID: 1418787258}

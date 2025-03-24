@@ -256,20 +256,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7342fff4f351d74e8494d33fc645d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnCooldown: 1
-  chaseDelay: 2
-  chaseSpeed: 25
-  centerViewThreshold: 25
-  attackRange: 2
-  rotationSpeed: 5
+  vanishCooldown: 2
   obstacleMask:
     serializedVersion: 2
     m_Bits: 72
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  spawnRadius: 5
+  minSpawnDistance: 3
+  groundCheckDistance: 10
+  pushForce: 10
+  pushAfterNotSeenTime: 3
+  rotationSpeed: 5
+  vanishAfterSpawnCooldown: 2
   respawnSFX:
   - {fileID: 8300000, guid: 519158c42b2189540aefe94e7c62c7c1, type: 3}
   - {fileID: 8300000, guid: 8980b99ec76b5dc49ba5bb0bf8644583, type: 3}
   - {fileID: 8300000, guid: 45f064922c55da7478f8b5cc37bee6a3, type: 3}
   - {fileID: 8300000, guid: f549b3b944332a040bf4f5b9f9732654, type: 3}
+  viewportMargin: 0.05
+  visibilityCheckInterval: 0.1
 --- !u!82 &8064986972891814276
 AudioSource:
   m_ObjectHideFlags: 0

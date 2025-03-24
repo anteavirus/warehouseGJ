@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+// типы диалогов:
+// когда подбирают стакан
+// комментарий про предмет
 [RequireComponent(typeof(AudioSource))]
 public class TalkingDeliveryItem : MonoBehaviour
 {
@@ -15,7 +18,7 @@ public class TalkingDeliveryItem : MonoBehaviour
     public float reminderInterval = 25f;
 
     private AudioSource _audioSource;
-    private Collider _triggerZone;
+    [SerializeField] private Collider _triggerZone;
     private bool _canComment = true;
     private Coroutine _reminderRoutine;
     private Dictionary<int, DeliveryAudioConfig> _audioConfigCache;

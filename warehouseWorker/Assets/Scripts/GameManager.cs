@@ -17,10 +17,10 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("I will kill you if you put something that doesn't have an Item Component here.")]
     [SerializeField] List<GameObject> items = new();
-    public readonly List<Item> itemTemplates = new();
+    public List<Item> itemTemplates = new();
 
     [Tooltip("Spawn box, user must unbox the box. Then they bring wherever they need to.")]
-    [SerializeField] GameObject box;
+    public GameObject box;
     float timer = 30;
     static readonly float maxTimer = 30;
     int score = 0;
@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     float currentTime = 0;
 
     float eventTimer = 60;
+    public GameObject talkingDeliveryItem;
 
     [Header("Order System")]
     [SerializeField] float orderCooldown = 25f;

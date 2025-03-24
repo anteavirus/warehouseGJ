@@ -42,7 +42,6 @@ public class BoogeymanAndLightsTurnOffEvent : Event
 
         Vector3 spawnPos = GetRandomPositionInBox(spawnArea.bounds);
         realBoogey = Instantiate(boogeymanPrefab, spawnPos, Quaternion.identity);
-        realBoogey.GetComponent<BoogeymanAI>().SetSpawnArea(spawnArea);
     }
 
     void InitializeLightControl()
