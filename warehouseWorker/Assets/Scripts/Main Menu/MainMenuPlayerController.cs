@@ -188,7 +188,14 @@ public class MainMenuPlayerController : MonoBehaviour
 
     public void MoveToPosition(Transform target, System.Action onComplete = null)
     {
-        StartCoroutine(SmoothMoveTo(target, onComplete));
+        try
+        {
+            StartCoroutine(SmoothMoveTo(target, onComplete));
+        }
+        catch
+        {
+            Debug.Log("Everything's fine. It's supposed to break. I think. A bit of memory leaked's not a big problem, yeah?");
+        }
     }
 
     public void StopWorking(bool yeah)

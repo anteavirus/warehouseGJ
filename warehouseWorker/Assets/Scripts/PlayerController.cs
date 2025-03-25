@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Settings Reference")]
+    [SerializeField] private SettingsManager settingsManager;
+
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float jumpForce = 5f;
@@ -21,7 +24,9 @@ public class PlayerController : MonoBehaviour
     public float inversionTransitionSpeed = 2f;
 
     [Header("Look Settings")]
-    [SerializeField] private float mouseSensitivity = 100f;
+    [SerializeField] private float defaultMouseSensitivity = 100f;
+    private float currentMouseSensitivity => settingsManager != null ?
+        PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity) : defaultMouseSensitivity;
     [SerializeField] private Transform playerCameraTransform;
     public Camera playerCamera;
     [SerializeField] private float maxLookAngle = 90f;
@@ -104,7 +109,12 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        if (pauseMenu == null) pauseMenu = pauseUI.GetComponent<PauseMenuUI>(); 
+        if (pauseMenu == null) 
+            pauseMenu = pauseUI.GetComponent<PauseMenuUI>();
+
+        if (settingsManager == null)
+            settingsManager = FindObjectOfType<SettingsManager>();
+
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         Cursor.lockState = CursorLockMode.Locked;
@@ -328,8 +338,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLook()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * currentMouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * currentMouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
@@ -340,7 +350,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInteractions()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetButtonDown("Pickup"))
         {
             if (heldItem == null) TryPickupItem();
             else if (!isHoldingToPlace) DropItem();
@@ -349,7 +359,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleUseItem()
     {
-        if (heldItem != null && Input.GetMouseButtonDown(1)) // Right click
+        if (heldItem != null && Input.GetButtonDown("Use")) // Right click
         {
             heldItem.GetComponent<Item>().OnUse(gameObject);
         }
@@ -439,7 +449,7 @@ public class PlayerController : MonoBehaviour
     {
         if (heldItem == null) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButtonDown("Throw"))
         {
             currentChargeTime = 0f;
             DisableSpinRoutineIfReal();
@@ -447,13 +457,13 @@ public class PlayerController : MonoBehaviour
             spinRoutine = StartCoroutine(SpinWhileCharging());
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetButton("Throw"))
         {
             chargeMeter.fillAmount = Mathf.Clamp01((currentChargeTime += Time.deltaTime) / maxChargeTime);
             chargedThrowForce = Mathf.Lerp(minThrowForce, maxThrowForce, chargeMeter.fillAmount);
         }
 
-        if (Input.GetMouseButtonUp(0) && spinRoutine != null)
+        if (Input.GetButtonUp("Throw") && spinRoutine != null)
         {
             DestroyPreview();
             ThrowItem(chargedThrowForce);
@@ -509,17 +519,18 @@ public class PlayerController : MonoBehaviour
         HandlePlacementPreview();
     }
 
+    // TODO: fucking fix this
     private void HandlePlacementInput()
     {
         if (heldItem == null || !Application.isFocused) return;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetButtonDown("Place"))
         {
             isHoldingToPlace = true;
             CreatePreview();
         }
 
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetButtonUp("Place"))
         {
             if (isHoldingToPlace)
             {
@@ -536,7 +547,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButtonDown("Throw"))
         {
             DestroyPreview();
             isHoldingToPlace = false;
@@ -796,6 +807,12 @@ public class PlayerController : MonoBehaviour
     {
         // Player somehow disabled. Let's throw him back into the lobby.
         GameManager.Instance.LoadScene(0);
+    }
+
+    private void OnSettingsChanged()
+    {
+        PlayerPrefs.Save(); // TODO: ... fucking do your pause shit. and more! that wind event tho gotta be purged or revamped.
+        // Add any real-time settings updates here if needed
     }
 
     void Slip(float slipfactor = 1)

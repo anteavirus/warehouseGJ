@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuExtraSpecialPunchCard : PunchCard
 {
@@ -44,7 +45,7 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
     public override void OnUse(GameObject user)
     {
         if (!user.TryGetComponent<PunchClock>(out var _)) return;
-        GameManager.Instance.LoadScene(1);
+        if (SceneManager.GetActiveScene().buildIndex != 1) GameManager.Instance.LoadScene(1);
     }
 
     private void StartHoverSequence()

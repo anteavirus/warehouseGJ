@@ -1,95 +1,101 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("Tabs")]
-    public GameObject mainMenuTab;
-    public GameObject settingsTab;
-    public GameObject statisticsTab;
-    public GameObject gameSettingsTab;
+    [Header("UI Animation")]
+    [SerializeField] private Animator menuAnimator;
+    [SerializeField] private GameObject menuVisuals;
+    [SerializeField] private string visibleState = "Visible";
 
     [Header("UI Controls")]
-    public Button showUIButton;
-    public Button hideUIButton;
-    public GameObject[] uiElementsToHide;
+    [SerializeField] private Button showUIButton;
+    [SerializeField] private Button hideUIButton;
 
     [Header("Game Settings")]
     public TMP_InputField usernameInput;
     public TMP_Dropdown difficultyDropdown;
     public MainMenuPlayerController playerController;
 
+    private Coroutine animationRoutine;
+    private bool isMenuVisible;
+
     private void Start()
     {
-        // Initialize UI state
-        ShowMainMenu();
-        UpdateUIVisibility(true);
-        LoadGameSettings();
+        InitializeUI();
+        if (usernameInput) LoadGameSettings();
+        else Debug.LogWarning("No username input. ALLOW THE PLAYERS TO PLAY THE GAME YOU DUMB");
+
+        showUIButton.onClick.AddListener(() => SetMenuState(true));
+        hideUIButton.onClick.AddListener(() => SetMenuState(false));
     }
 
-    public void ShowMainMenu()
+    void InitializeUI()
     {
-        SetAllTabsInactive();
-        mainMenuTab.SetActive(true);
+        menuVisuals.SetActive(true);
+        menuAnimator.Play("ShowEverything", 0, 125f);
+        menuAnimator.Update(0f);
+        isMenuVisible = true;
     }
 
-    public void ShowSettings()
+    public void SetMenuState(bool visible)
     {
-        SetAllTabsInactive();
-        settingsTab.SetActive(true);
+        if (animationRoutine != null) return;
+
+        isMenuVisible = visible;
+        menuAnimator.SetBool(visibleState, visible);
+        animationRoutine = StartCoroutine(AnimateMenuTransition());
     }
 
-    public void ShowStatistics()
+    IEnumerator AnimateMenuTransition()
     {
-        SetAllTabsInactive();
-        statisticsTab.SetActive(true);
+        menuAnimator.SetBool("animationComplete", false);
+        if (isMenuVisible) menuVisuals.SetActive(true);
+
+        yield return new WaitUntil(() =>
+            menuAnimator.GetBool("animationComplete"));
+
+        if (!isMenuVisible) menuVisuals.SetActive(false);
+        menuAnimator.SetBool("animationComplete", false);
+
+        playerController.STOPWORKINGIMINUI = isMenuVisible;
+
+        animationRoutine = null;
     }
 
-    public void ShowGameSettings()
-    {
-        SetAllTabsInactive();
-        gameSettingsTab.SetActive(true);
-    }
-
-    private void SetAllTabsInactive()
-    {
-        mainMenuTab.SetActive(false);
-        settingsTab.SetActive(false);
-        statisticsTab.SetActive(false);
-        gameSettingsTab.SetActive(false);
-    }
-
-    public void UpdateUIVisibility(bool visible)
-    {
-        foreach (var element in uiElementsToHide)
-        {
-            element.SetActive(visible);
-        }
-
-        showUIButton.gameObject.SetActive(!visible);
-        hideUIButton.gameObject.SetActive(visible);
-        playerController.STOPWORKINGIMINUI = visible;
-    }
+    /// <summary> I don't actually use this. It doesn't quite work? Use SelfAnimator thing instead. </summary>
+    public void MarkAnimationComplete() =>
+        menuAnimator.SetBool("AnimationComplete", true);
 
     public void SaveGameSettings()
     {
         PlayerPrefs.SetString("CurrentUsername", usernameInput.text);
-        //PlayerPrefs.SetInt("GameDifficulty", difficultyDropdown.value);
         PlayerPrefs.Save();
     }
 
-    public void LoadGameSettings()
+    public void LoadGameSettings() =>
+        usernameInput.text = PlayerPrefs.GetString("CurrentUsername", "Player") ?? GameManager.GetRandomTauntingName();
+
+    public void StartGame() =>
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+    public void SpawnTheFuckingPaper()
     {
-        usernameInput.text = PlayerPrefs.GetString("CurrentUsername", "Player");
-        //difficultyDropdown.value = PlayerPrefs.GetInt("GameDifficulty", 0);
+        SetMenuState(false);
+        SaveGameSettings();
+        FindFirstObjectByType<MainMenuZonerDoner>().SpawnExtraSpecialPunchCard();
     }
 
-    public void StartGame()
+    public bool FuckingDie()
     {
-        // Load your game scene here
-        Debug.Log("Starting game with settings:");
-        Debug.Log("Username: " + PlayerPrefs.GetString("CurrentUsername"));
-        Debug.Log("Difficulty: " + PlayerPrefs.GetInt("GameDifficulty"));
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+        return false; // we didn't die.
     }
 }

@@ -398,7 +398,7 @@ public class GameManager : MonoBehaviour
         };
     }
 
-    string GetRandomTauntingName()
+    public static string GetRandomTauntingName()
     {
         string[] tauntingNames = { 
             "OofEnthusiast", "SweatySocks", "Bunnyhopper", "FumbleChamp", "ConfettiCannon", 

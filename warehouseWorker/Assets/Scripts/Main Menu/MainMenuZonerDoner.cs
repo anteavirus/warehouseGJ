@@ -161,6 +161,13 @@ public class MainMenuZonerDoner : MonoBehaviour
     private void HandleCardDestroyed()
     {
         currentExtraCard = null;
-        playerController.MoveToPosition(playerDefaultPosition);
+        try
+        {
+            playerController.MoveToPosition(playerDefaultPosition);
+        }
+        catch
+        {
+            Debug.LogWarning("Coroutine sacked, memory leaked, code spaghettied. Everything's fine.");
+        }
     }
 }

@@ -1,5 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource), typeof(Animator))]
 public class MainMenuExitDoor : MonoBehaviour
@@ -22,16 +25,25 @@ public class MainMenuExitDoor : MonoBehaviour
 
     private void OnMouseOver()
     {
+        if (IsPointerOverUI()) return;
+        animator.SetBool("open", true);
+    }
+
+    private void OnMouseEnter()
+    {
+        if (IsPointerOverUI()) return;
         animator.SetBool("open", true);
     }
 
     private void OnMouseExit()
     {
+        if (IsPointerOverUI()) return;
         animator.SetBool("open", false);
     }
 
     private void OnMouseDown()
     {
+        if (IsPointerOverUI()) return;
         if (!isExiting)
         {
             StartExitSequence();
@@ -69,5 +81,28 @@ public class MainMenuExitDoor : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+    
+
+    private bool IsPointerOverUI()
+    {
+        if (EventSystem.current == null)
+            return false;
+
+        // Check against all UI elements using GraphicRaycaster
+        PointerEventData eventData = new(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        List<RaycastResult> results = new();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        // Return true ONLY if a UI element is hit (filtered by GraphicRaycaster)
+        foreach (RaycastResult result in results)
+        {
+            if (result.module is GraphicRaycaster)
+                return true;
+        }
+        return false;
     }
 }
