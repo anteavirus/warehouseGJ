@@ -10,12 +10,12 @@ public class PunchClock : Item
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<MainMenuExtraSpecialPunchCard>(out var card))
+        if (other.TryGetComponent<MainMenuExtraSpecialPunchCard>(out var specilCard))
         {
-            card.OnUse(gameObject);
-            return;
+            specilCard.OnUse(gameObject);
+            // Do we even need the return?
         }
-        if (other.TryGetComponent<PunchCard>(out var _))
+        if (other.TryGetComponent<PunchCard>(out var _) || specilCard)
         {
             OnUse(other.gameObject);
         }

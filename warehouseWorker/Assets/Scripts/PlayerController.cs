@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static SettingsManager;
 
 public class PlayerController : MonoBehaviour
 {
@@ -62,8 +62,8 @@ public class PlayerController : MonoBehaviour
     [Header("Hover Over Settings")]
     [SerializeField] private float checkRate = 0.2f;
     [SerializeField] private LayerMask hoverLayer;
-    readonly string pickUpHint = "[E]";
-    readonly string useHint = "[œ Ã]";
+    string pickUpHint;
+    string useHint;
 
     [Header("Held Item Physics")]
     [SerializeField] private float followForce = 100f;
@@ -114,6 +114,11 @@ public class PlayerController : MonoBehaviour
 
         if (settingsManager == null)
             settingsManager = FindObjectOfType<SettingsManager>();
+
+        KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
+        KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
+        pickUpHint = pickupBind?.currentKey.ToString() ?? KeyCode.E.ToString();
+        useHint = useBind?.currentKey.ToString() ?? KeyCode.Mouse1.ToString();
 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
@@ -233,7 +238,7 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, Vector3.down,
             playerHeight * 0.5f + 0.2f, groundLayer);
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (settingsManager.GetActionDown("Jump") && isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -350,7 +355,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInteractions()
     {
-        if (Input.GetButtonDown("Pickup"))
+        if (settingsManager.GetActionDown("Pickup"))
         {
             if (heldItem == null) TryPickupItem();
             else if (!isHoldingToPlace) DropItem();
@@ -359,7 +364,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleUseItem()
     {
-        if (heldItem != null && Input.GetButtonDown("Use")) // Right click
+        if (heldItem != null && settingsManager.GetActionDown("Use")) // Right click
         {
             heldItem.GetComponent<Item>().OnUse(gameObject);
         }
@@ -449,7 +454,7 @@ public class PlayerController : MonoBehaviour
     {
         if (heldItem == null) return;
 
-        if (Input.GetButtonDown("Throw"))
+        if (settingsManager.GetActionDown("Throw"))
         {
             currentChargeTime = 0f;
             DisableSpinRoutineIfReal();
@@ -457,13 +462,13 @@ public class PlayerController : MonoBehaviour
             spinRoutine = StartCoroutine(SpinWhileCharging());
         }
 
-        if (Input.GetButton("Throw"))
+        if (settingsManager.GetAction("Throw"))
         {
             chargeMeter.fillAmount = Mathf.Clamp01((currentChargeTime += Time.deltaTime) / maxChargeTime);
             chargedThrowForce = Mathf.Lerp(minThrowForce, maxThrowForce, chargeMeter.fillAmount);
         }
 
-        if (Input.GetButtonUp("Throw") && spinRoutine != null)
+        if (settingsManager.GetActionUp("Throw") && spinRoutine != null)
         {
             DestroyPreview();
             ThrowItem(chargedThrowForce);
@@ -524,13 +529,13 @@ public class PlayerController : MonoBehaviour
     {
         if (heldItem == null || !Application.isFocused) return;
 
-        if (Input.GetButtonDown("Place"))
+        if (settingsManager.GetActionDown("Place"))
         {
             isHoldingToPlace = true;
             CreatePreview();
         }
 
-        if (Input.GetButtonUp("Place"))
+        if (settingsManager.GetActionUp("Place"))
         {
             if (isHoldingToPlace)
             {
@@ -547,7 +552,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Throw"))
+        if (settingsManager.GetActionDown("Throw"))
         {
             DestroyPreview();
             isHoldingToPlace = false;

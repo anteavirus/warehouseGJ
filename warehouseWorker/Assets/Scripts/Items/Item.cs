@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Audio;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Item : MonoBehaviour
@@ -20,6 +22,7 @@ public class Item : MonoBehaviour
     public AudioClip[] useSounds;
     public AudioClip[] collisionSounds;
     public AudioClip[] parrySounds;
+    public AudioMixerGroup mixerGroup;
 
     [Header("Settings that exist")]
     [SerializeField] float throwMultiplier = 0.1f;
@@ -30,10 +33,17 @@ public class Item : MonoBehaviour
     protected virtual void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
+        if (!audioSource)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
         audioSource.spatialBlend = 1;
         audioSource.rolloffMode = AudioRolloffMode.Linear;
         audioSource.maxDistance = 30;
+    }
+
+    private void Start()
+    {
+        audioSource.outputAudioMixerGroup = mixerGroup;
     }
 
     public virtual void OnPickup(Transform holder)

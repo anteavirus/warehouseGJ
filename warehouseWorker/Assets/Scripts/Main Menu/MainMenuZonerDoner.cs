@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class MainMenuZonerDoner : MonoBehaviour
@@ -32,6 +33,8 @@ public class MainMenuZonerDoner : MonoBehaviour
     public Transform playerDefaultPosition;
     public Transform playerSpecialPosition;
     private GameObject currentExtraCard;
+
+    public AudioMixerGroup sfx;
 
     private void Start()
     {
@@ -73,7 +76,7 @@ public class MainMenuZonerDoner : MonoBehaviour
         }
 
         Item itemComponent = newItem.AddComponent<Item>();
-
+        itemComponent.mixerGroup = sfx;
         activeItems.Add(newItem);
     }
 

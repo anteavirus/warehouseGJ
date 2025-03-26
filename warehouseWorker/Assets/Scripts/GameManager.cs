@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -28,7 +29,7 @@ public class GameManager : MonoBehaviour
     float progressTimer;
 
     float currentTime = 0;
-
+    public AudioMixerGroup sfx;
     float eventTimer = 60;
     public GameObject talkingDeliveryItem;
 
@@ -90,7 +91,9 @@ public class GameManager : MonoBehaviour
             var obj=Instantiate(item);
             obj.name = obj.name.Replace("(Clone)", "");
             obj.transform.parent = parent.transform;
-            itemTemplates.Add(obj.GetComponent<Item>());
+            var itemComp = obj.GetComponent<Item>();
+            itemComp.mixerGroup = sfx;
+            itemTemplates.Add(itemComp);
             obj.SetActive(false);
         }
 

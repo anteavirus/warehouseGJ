@@ -335,7 +335,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.95
-    functionName: ToggleTriggerToAnimator
+    functionName: SetTrigger
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

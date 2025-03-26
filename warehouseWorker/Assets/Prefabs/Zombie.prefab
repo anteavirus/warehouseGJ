@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 7281144123825142274}
   - component: {fileID: 4651239197213605636}
   - component: {fileID: 2948297273562730122}
-  - component: {fileID: 5113538829475009980}
   - component: {fileID: 4645900363409689541}
   - component: {fileID: 3251988803700072016}
+  - component: {fileID: 2291198694954084271}
+  - component: {fileID: 7488090281238281431}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Player
@@ -30,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 3684526152076748746}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.7, y: 0.4, z: 29.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 18.7, y: 0.45521, z: 29.1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -43,7 +44,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3684526152076748746}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5495902117074765545, guid: 156e3e6c6c57c864b8d77be97841b435, type: 3}
 --- !u!23 &2948297273562730122
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -86,29 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &5113538829475009980
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3684526152076748746}
-  m_Material: {fileID: 13400000, guid: 937b4e32934e5a34dad58b92a4c31cfa, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4645900363409689541
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -155,9 +133,71 @@ MonoBehaviour:
   attackRange: 2.84
   directionChangeCooldown: 6.33
   searchArriveThreshold: 1.06
+  rotationSpeed: 3
   obstacleMask:
     serializedVersion: 2
     m_Bits: 72
   boomClip: {fileID: 8300000, guid: fb4aea39107b7bf4b93dd398d36854ac, type: 3}
   explosionPrefab: {fileID: 353018167862528395, guid: 45383b2a19eb8874b9559772ce0a952c,
     type: 3}
+  footstepInterval: 0.5
+  surfaceSounds:
+  - surface: 0
+    footstepSounds:
+    - {fileID: 8300000, guid: 73885d769764b974ba9dbded2b6c63ee, type: 3}
+    - {fileID: 8300000, guid: 748bfd966275ab0438e1b03cc9b6cca7, type: 3}
+    landingSounds: []
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  characterHeight: 2
+  slipSounds:
+  - {fileID: 8300000, guid: d3d18bd5d186cda4680e2eda97615d9c, type: 3}
+  slipCooldown: 2
+  slipRiskIncreasePerFootstep: 0.1
+  maxSlipRisk: 1
+  minSlipSpeed: 1
+  animator: {fileID: 7488090281238281431}
+--- !u!64 &2291198694954084271
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684526152076748746}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5495902117074765545, guid: 156e3e6c6c57c864b8d77be97841b435, type: 3}
+--- !u!95 &7488090281238281431
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684526152076748746}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 156e3e6c6c57c864b8d77be97841b435, type: 3}
+  m_Controller: {fileID: 9100000, guid: d708added14b34d4398d83e5873fc178, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

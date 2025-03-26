@@ -43,6 +43,7 @@ public class ZombieAI : MonoBehaviour
     private float lastTimeRagdoll;
     private bool canMove = true;
     private Vector3 moveDirection;
+    public Animator animator; // Added animator reference
 
     private enum State { Wandering, Chasing, Searching }
     private State currentState;
@@ -50,6 +51,7 @@ public class ZombieAI : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         player = FindObjectOfType<PlayerController>().transform;
         footstepSource = gameObject.AddComponent<AudioSource>();
@@ -64,6 +66,13 @@ public class ZombieAI : MonoBehaviour
     {
         if (isDead) return;
         HandleFootsteps();
+
+        if (animator != null)
+        {
+            Vector3 speed = transform.position + wanderSpeed * currentDirection;
+            float horizontalSpeed = canMove ? Mathf.Abs(speed.x) + Mathf.Abs(speed.z) : 0f;
+            animator.SetFloat("Speed", horizontalSpeed);
+        }
     }
 
     void FixedUpdate()
@@ -222,7 +231,8 @@ public class ZombieAI : MonoBehaviour
         if (sound != null && sound.footstepSounds.Length > 0)
         {
             AudioClip clip = sound.footstepSounds[Random.Range(0, sound.footstepSounds.Length)];
-            footstepSource.PlayOneShot(clip);
+            if (clip)
+                footstepSource.PlayOneShot(clip);
         }
     }
 

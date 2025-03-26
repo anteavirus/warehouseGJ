@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -20,12 +21,17 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private List<GameObject> settingsPanels = new List<GameObject>();
     [SerializeField] private TMP_Dropdown resolutionDropdown;
     [SerializeField] private TMP_Dropdown qualityDropdown;
-    [SerializeField] private Slider volumeSlider;
     [SerializeField] private GameObject rebindPanel;
     [SerializeField] private TMP_Text rebindText;
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private Slider masterSlider;
+    [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider musicSlider;
+
     [Header("Key Bindings")]
-    [SerializeField] private List<KeyBind> keyBinds = new List<KeyBind>();
+    public List<KeyBind> keyBinds = new List<KeyBind>();
     [SerializeField] private GameObject keyBindButtonPrefab;
     [SerializeField] private Transform keyBindContainer;
 
@@ -47,9 +53,9 @@ public class SettingsManager : MonoBehaviour
         InitializeResolutions();
         InitializeQuality();
         InitializeVolume();
+        LoadSettings();
         CreateKeyBindUI();
         CreateCategoryButtons();
-        LoadSettings();
         ShowFirstPanel();
     }
 
@@ -92,8 +98,14 @@ public class SettingsManager : MonoBehaviour
 
     void InitializeVolume()
     {
-        volumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
-        AudioListener.volume = volumeSlider.value;
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        SetVolume(masterSlider, "Master");
+
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        SetVolume(sfxSlider, "SFX");
+
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        SetVolume(musicSlider, "Music");
     }
 
     void CreateKeyBindUI()
@@ -153,6 +165,12 @@ public class SettingsManager : MonoBehaviour
     #endregion
 
     #region Graphics Settings
+
+    public void SetQuality(TMP_Dropdown qualityIndex)
+    {
+        QualitySettings.SetQualityLevel(qualityIndex.value);
+    }
+
     public void SetQuality(int qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex);
@@ -164,19 +182,70 @@ public class SettingsManager : MonoBehaviour
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 
+    public void SetResolution(TMP_Dropdown resolutionIndex)
+    {
+        Resolution resolution = resolutions[resolutionIndex.value];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+
     public void SetFullscreen(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+    }
+
+    public void SetFullscreen(Toggle isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
     }
     #endregion
 
     #region Audio Settings
-    public void SetVolume(float volume)
+    public void SetVolume(Slider who, string category)
     {
-        AudioListener.volume = volume;
-        PlayerPrefs.SetFloat("MasterVolume", volume);
+        float volume = who.value;
+        SetVolume(volume, category);
+    }
+
+    public void SetVolume(float volume, string category)
+    {
+        float dB = volume > 0.0001f ? 20f * Mathf.Log10(volume) : -80f;
+
+        switch (category)
+        {
+            case "Master":
+                audioMixer.SetFloat("Master", dB);
+                PlayerPrefs.SetFloat("MasterVolume", volume);
+                break;
+            case "SFX":
+                audioMixer.SetFloat("SFX", dB);
+                PlayerPrefs.SetFloat("SFXVolume", volume);
+                break;
+            case "Music":
+                audioMixer.SetFloat("MUS", dB);
+                PlayerPrefs.SetFloat("MusicVolume", volume);
+                break;
+            default:
+                Debug.LogWarning("Invalid audio category: " + category);
+                break;
+        }
+    }
+
+    public void SetMasterVolume(Slider who)
+    {
+        SetVolume(who, "Master");
+    }
+
+    public void SetSFXVolume(Slider who)
+    {
+        SetVolume(who, "SFX");
+    }
+
+    public void SetMusicVolume(Slider who)
+    {
+        SetVolume(who, "Music");
     }
     #endregion
+
 
     #region Key Rebinding
     public void StartRebinding(KeyBind bind, TMP_Text keyText)
@@ -253,7 +322,9 @@ public class SettingsManager : MonoBehaviour
     void LoadSettings()
     {
         LoadKeyBinds();
-        volumeSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
         qualityDropdown.value = PlayerPrefs.GetInt("QualityLevel", QualitySettings.GetQualityLevel());
     }
 
@@ -263,7 +334,12 @@ public class SettingsManager : MonoBehaviour
         {
             bind.currentKey = bind.defaultKey;
         }
+
         AudioListener.volume = 1f;
+        SetVolume(1f, "Master");
+        SetVolume(1f, "SFX");
+        SetVolume(1f, "Music");
+
         QualitySettings.SetQualityLevel(2);
         PlayerPrefs.DeleteAll();
         CreateKeyBindUI();
@@ -281,6 +357,12 @@ public class SettingsManager : MonoBehaviour
     {
         KeyBind bind = keyBinds.Find(b => b.actionName == actionName);
         return bind != null && Input.GetKeyDown(bind.currentKey);
+    }
+
+    public bool GetActionUp(string actionName)
+    {
+        KeyBind bind = keyBinds.Find(b => b.actionName == actionName);
+        return bind != null && Input.GetKeyUp(bind.currentKey);
     }
     #endregion
     // im stupid

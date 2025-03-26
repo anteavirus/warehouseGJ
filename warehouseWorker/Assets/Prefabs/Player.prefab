@@ -412,6 +412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3909deb6595f7df48aadfb7bb2c0b41c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingsManager: {fileID: 0}
   moveSpeed: 20
   jumpForce: 5
   airControlFactor: 0.5
@@ -423,7 +424,7 @@ MonoBehaviour:
   playerHeight: 2
   inversionProgress: 0
   inversionTransitionSpeed: 2
-  mouseSensitivity: 100
+  defaultMouseSensitivity: 100
   playerCameraTransform: {fileID: 5656950899774948969}
   playerCamera: {fileID: 5656950899774948969}
   maxLookAngle: 90
