@@ -33,6 +33,9 @@ public class BoogeymanAndLightsTurnOffEvent : Event
         base.StartEvent();
         SpawnBoogey();
         InitializeLightControl();
+
+        player = FindObjectOfType<PlayerController>();
+        player.musicSource.Pause();
     }
 
     void SpawnBoogey()
@@ -52,7 +55,6 @@ public class BoogeymanAndLightsTurnOffEvent : Event
             outlineFaderInstance = outlineObjectInstance.GetComponent<RenderFeatureOutlineFader>();
         }
 
-        player = FindObjectOfType<PlayerController>();
         if (player == null) return;
 
         slave = new GameObject("LightController").AddComponent<Blank>();
@@ -121,6 +123,8 @@ public class BoogeymanAndLightsTurnOffEvent : Event
     public override void EndEvent()
     {
         base.EndEvent();
+
+        player.musicSource.UnPause();
 
         if (realBoogey != null) Destroy(realBoogey);
 

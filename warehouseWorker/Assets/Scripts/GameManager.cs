@@ -250,7 +250,7 @@ public class GameManager : MonoBehaviour
         }
 #endif
 
-        timer -= Time.deltaTime / (currentEvent != null ? 4 : 1 ) + (score == 0 ? 2 : 1);  // slow down time if an active event's happening or score IS 0
+        timer -= Time.deltaTime / ((currentEvent != null ? 4 : 1 ) + (score == 0 ? 2 : 1));  // slow down time if an active event's happening or score IS 0
         currentTime += Time.deltaTime;
 
         progressTimer = timer / maxTimer;
@@ -343,8 +343,10 @@ public class GameManager : MonoBehaviour
     }
 
     public LeaderboardEntry leaderboardEntry;
+
     void GameOver()
     {
+        if (!gameStarted) return;  // oh no.
         gameStarted = false;
         var player = FindFirstObjectByType<PlayerController>();
         player.alive = false;

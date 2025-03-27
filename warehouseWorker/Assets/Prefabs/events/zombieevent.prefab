@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 15
   isActive: 0
-  zombiePrefab: {fileID: 3684526152076748746, guid: 53dacb68ea51f1f4aa353134fa5dfb2e,
+  zombiePrefab: {fileID: 8288833385887010158, guid: 9b6d977cd4442d34ba45941caf8723db,
     type: 3}
   spawnArea: {fileID: 0}
   numberOfZombies: 1

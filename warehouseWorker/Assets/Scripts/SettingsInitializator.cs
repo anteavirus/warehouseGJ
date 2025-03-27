@@ -61,7 +61,9 @@ public class SettingsManager : MonoBehaviour
 
     private void InitializeMouseSettings()
     {
-        mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
+        float sensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
+        mouseSensitivitySlider.value = sensitivity;
+        SetMouseSensitivity(sensitivity);
     }
 
     void InitializeResolutions()
@@ -228,6 +230,7 @@ public class SettingsManager : MonoBehaviour
                 Debug.LogWarning("Invalid audio category: " + category);
                 break;
         }
+        PlayerPrefs.Save();
     }
 
     public void SetMasterVolume(Slider who)
@@ -322,17 +325,22 @@ public class SettingsManager : MonoBehaviour
     public void LoadSettings()
     {
         LoadKeyBinds();
-        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", .5f);
         SetVolume(masterSlider.value, "Master");
 
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", .5f);
         SetVolume(sfxSlider.value, "Master");
 
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .5f);
         SetVolume(musicSlider.value, "Master");
 
         qualityDropdown.value = PlayerPrefs.GetInt("QualityLevel", QualitySettings.GetQualityLevel());
         QualitySettings.SetQualityLevel(qualityDropdown.value);
+
+        mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
+        SetMouseSensitivity(mouseSensitivitySlider.value);
+
+        PlayerPrefs.Save();
     }
 
     public void ResetToDefault()
@@ -343,9 +351,12 @@ public class SettingsManager : MonoBehaviour
         }
 
         AudioListener.volume = 1f;
-        SetVolume(1f, "Master");
-        SetVolume(1f, "SFX");
-        SetVolume(1f, "Music");
+        SetVolume(.5f, "Master");
+        SetVolume(.5f, "SFX");
+        SetVolume(.5f, "Music");
+
+        mouseSensitivitySlider.value = 100f;
+        SetMouseSensitivity(100f);
 
         QualitySettings.SetQualityLevel(2);
         PlayerPrefs.DeleteAll();
@@ -373,8 +384,13 @@ public class SettingsManager : MonoBehaviour
     }
     #endregion
     // im stupid
+    public void SetMouseSensitivity(Slider slider)
+    {
+        SetMouseSensitivity(slider.value);
+    }
     public void SetMouseSensitivity(float sensitivity)
     {
         PlayerPrefs.SetFloat("MouseSensitivity", sensitivity);
+        PlayerPrefs.Save();
     }
 }

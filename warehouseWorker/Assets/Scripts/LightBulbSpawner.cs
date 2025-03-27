@@ -10,6 +10,7 @@ public class StableHangingLight : MonoBehaviour
     public Color lightColor = Color.yellow;
     public GameObject bulbPrefab;
     public Material bulbMaterial;
+    public Material wireMaterial;
 
     [Header("Rope Physics")]
     [Range(3, 15)] public int segments = 6;
@@ -112,6 +113,7 @@ public class StableHangingLight : MonoBehaviour
         visual.transform.parent = segment.transform;
         visual.transform.localPosition = Vector3.zero;
         visual.transform.localScale = new Vector3(ropeThickness, segmentLength, ropeThickness);
+        visual.GetComponent<MeshRenderer>().material = wireMaterial;
         Destroy(visual.GetComponent<Collider>());
 
         return segment;

@@ -852,6 +852,7 @@ MonoBehaviour:
   useSounds: []
   collisionSounds: []
   parrySounds: []
+  mixerGroup: {fileID: 0}
   throwMultiplier: 0.1
   controller: {fileID: 0}
   usernameDisplay: {fileID: 3911919763120000507}

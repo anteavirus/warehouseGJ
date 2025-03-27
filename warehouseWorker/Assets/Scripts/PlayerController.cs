@@ -89,6 +89,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator pauseAnimator;
     [SerializeField] PauseMenuUI pauseMenu;
     [SerializeField] GameObject pauseUI;
+    public AudioSource musicSource;
 
     public bool alive = true;
     private Rigidbody heldItemRb;
@@ -132,7 +133,6 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Checklater()
     {
-        settingsManager.LoadSettings();
         yield return new WaitForSecondsRealtime(1f);
         KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
         KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
