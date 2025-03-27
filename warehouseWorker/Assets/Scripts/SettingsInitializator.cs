@@ -319,13 +319,20 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    void LoadSettings()
+    public void LoadSettings()
     {
         LoadKeyBinds();
         masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        SetVolume(masterSlider.value, "Master");
+
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        SetVolume(sfxSlider.value, "Master");
+
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        SetVolume(musicSlider.value, "Master");
+
         qualityDropdown.value = PlayerPrefs.GetInt("QualityLevel", QualitySettings.GetQualityLevel());
+        QualitySettings.SetQualityLevel(qualityDropdown.value);
     }
 
     public void ResetToDefault()

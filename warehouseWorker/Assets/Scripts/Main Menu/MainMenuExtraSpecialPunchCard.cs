@@ -25,12 +25,11 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
     Coroutine bastard;
     void Start()
     {
-        hoverStartPosition = transform.position;
         rb = GetComponent<Rigidbody>();
         if (usernameDisplay != null)
             usernameDisplay.text = PlayerPrefs.GetString("CurrentUsername");
 
-        StartHoverSequence();
+        InitializeHoverPosition(hoverStartPosition);
     }
 
     public override void OnPickup(Transform holder)

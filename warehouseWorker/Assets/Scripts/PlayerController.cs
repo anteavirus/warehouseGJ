@@ -115,11 +115,6 @@ public class PlayerController : MonoBehaviour
         if (settingsManager == null)
             settingsManager = FindObjectOfType<SettingsManager>();
 
-        KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
-        KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
-        pickUpHint = pickupBind?.currentKey.ToString() ?? KeyCode.E.ToString();
-        useHint = useBind?.currentKey.ToString() ?? KeyCode.Mouse1.ToString();
-
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         Cursor.lockState = CursorLockMode.Locked;
@@ -131,8 +126,19 @@ public class PlayerController : MonoBehaviour
         originalCameraLocalPosition = playerCameraTransform.localPosition;
 
         StartCoroutine(CheckForInteractables());
+        StartCoroutine(Checklater());
     }
 
+
+    IEnumerator Checklater()
+    {
+        settingsManager.LoadSettings();
+        yield return new WaitForSecondsRealtime(1f);
+        KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
+        KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
+        pickUpHint = pickupBind?.currentKey.ToString() ?? pickupBind.defaultKey.ToString();
+        useHint = useBind?.currentKey.ToString() ?? useBind.defaultKey.ToString();
+    }
 
     void Update()
     {
