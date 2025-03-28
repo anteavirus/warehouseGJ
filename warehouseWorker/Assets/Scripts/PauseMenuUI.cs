@@ -57,12 +57,19 @@ public class PauseMenuUI : MonoBehaviour
 
     public void LoadScene(int id)
     {
+        int value = id;
+        SceneManager.LoadScene(value);
+    }
+
+    public void LoadScene(string id)
+    {
         SceneManager.LoadScene(id);
     }
 
     public void LoadSceneOffset(int offset)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + offset);
+        int value = offset;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + value);
     }
 
     public void ChangeColorOfScroll()

@@ -16,6 +16,7 @@ public class Item : MonoBehaviour
 
     [Header("Base Item Settings")]
     public bool isPickupable = true;
+    public bool createdOnShelf = false;
 
     [Header("Audio Settings")]
     public AudioClip[] pickupSounds;

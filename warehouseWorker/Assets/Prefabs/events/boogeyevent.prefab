@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 10
   isActive: 0
-  boogeymanPrefab: {fileID: 3684526152076748746, guid: d1a86013039dd544793cf55c9937d06b,
+  boogeymanPrefab: {fileID: 9053893109206789351, guid: 471e09e3ad9710f40afc3242d3761503,
     type: 3}
   spawnArea: {fileID: 0}
   lightParents: []

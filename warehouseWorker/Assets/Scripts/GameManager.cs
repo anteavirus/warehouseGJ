@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Spawn box, user must unbox the box. Then they bring wherever they need to.")]
     public GameObject box;
-    float timer = 30;
+    float timer = maxTimer;
     static readonly float maxTimer = 30;
     int score = 0;
 
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     float currentTime = 0;
     public AudioMixerGroup sfx;
-    float eventTimer = 60;
+    float eventTimer = 40;
     public GameObject talkingDeliveryItem;
 
     [Header("Order System")]
@@ -41,14 +41,13 @@ public class GameManager : MonoBehaviour
 
     [Header("Difficulty Settings")]
     [SerializeField] AnimationCurve difficultyCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-    [SerializeField] float maxDifficultyTime = 300f; // 5 minutes until max difficulty
-    [SerializeField] float minOrderCooldown = 8f; // unused
+    [SerializeField] float maxDifficultyTime = 120f;
     [SerializeField] float minOrderTime = 20f;
-    [SerializeField] float minEventInterval = 25f; // unused
+    [SerializeField] float minRandomTimeEventDecrease = 1, maxRandomTimeEventDecrease = 15;
 
+    float selectedRandomTimeEventDecrease = 0;
     private float totalGameTime;
     private float currentDifficulty;
-
 
     readonly List<Order> activeOrders = new List<Order>();
     private float orderTimer = 0;
@@ -63,7 +62,7 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField] List<GameObject> eventList = new List<GameObject>();
-    public Event currentEvent;
+    public List<Event> activeEvents = new List<Event>();
 
     public Transform spawnPosition;
     public Transform blackHoleSpawnPosition;
@@ -88,7 +87,7 @@ public class GameManager : MonoBehaviour
         var parent = new GameObject("[Template]s Parent");
         foreach (var item in items)
         {
-            var obj=Instantiate(item);
+            var obj = Instantiate(item);
             obj.name = obj.name.Replace("(Clone)", "");
             obj.transform.parent = parent.transform;
             var itemComp = obj.GetComponent<Item>();
@@ -202,7 +201,7 @@ public class GameManager : MonoBehaviour
     {
         this.score += amount;
         if (scoreUI != null)
-        scoreUI.text = this.score.ToString();
+            scoreUI.text = this.score.ToString();
         if (resetTimer)
         {
             setdownItem = true;
@@ -231,6 +230,7 @@ public class GameManager : MonoBehaviour
         int randomIndex = Random.Range(0, items.Count);
         var box = Instantiate(this.box, spawnPosition.transform.position, Quaternion.identity);
         box.GetComponent<Box>().containedItem = items[randomIndex];
+        box.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
     }
 
     void Update()
@@ -239,24 +239,14 @@ public class GameManager : MonoBehaviour
 
         totalGameTime += Time.deltaTime;
         currentDifficulty = difficultyCurve.Evaluate(Mathf.Clamp01(totalGameTime / maxDifficultyTime));
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            StartRandomEvent();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            timer = maxTimer;
-        }
-#endif
 
-        timer -= Time.deltaTime / ((currentEvent != null ? 4 : 1 ) + (score == 0 ? 2 : 1));  // slow down time if an active event's happening or score IS 0
-        currentTime += Time.deltaTime;
+        timer -= Time.deltaTime / (((activeEvents.Count > 0 || score == 0) ? Mathf.Lerp(3f, 2f, currentDifficulty) : Mathf.Lerp(3f, 0.5f, currentDifficulty)) + 0.01f);
+
+        currentTime += Time.deltaTime * (score != 0 ? Mathf.Lerp(3f, .5f, currentDifficulty) : 1f);
 
         progressTimer = timer / maxTimer;
         timerUI.fillAmount = progressTimer;
 
-        // Bad!
         var color = timerUI.color;
         color.a = progressTimer;
         timerUI.color = color;
@@ -266,19 +256,21 @@ public class GameManager : MonoBehaviour
             GameOver();
         }
 
-        if (currentEvent != null)
+        foreach (var evt in activeEvents.ToList())
         {
-            if (currentEvent.isActive)
+            if (evt.isActive)
             {
-                currentEvent.UpdateEvent();
+                evt.UpdateEvent();
             }
         }
-        else
+        if (currentTime >= eventTimer - selectedRandomTimeEventDecrease)
         {
-            if (currentTime >= eventTimer)
+            bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
+            if (extremeMode || activeEvents.Count == 0)
             {
                 StartRandomEvent();
                 currentTime = 0;
+                selectedRandomTimeEventDecrease = Random.Range(minRandomTimeEventDecrease, maxRandomTimeEventDecrease);
             }
         }
 
@@ -307,18 +299,25 @@ public class GameManager : MonoBehaviour
     {
         if (eventList.Count == 0) return;
 
-        if (currentEvent != null)
+        bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
+
+        if (!extremeMode)
         {
-            currentEvent.EndEvent();
-            Destroy(currentEvent.gameObject);
+            foreach (var evt in activeEvents)
+            {
+                evt.EndEvent();
+                Destroy(evt.gameObject);
+            }
+            activeEvents.Clear();
         }
 
         int randomIndex = Random.Range(0, eventList.Count);
         GameObject eventInstance = Instantiate(eventList[randomIndex]);
-        currentEvent = eventInstance.GetComponent<Event>();
-        currentEvent.StartEvent();
+        Event newEvent = eventInstance.GetComponent<Event>();
+        newEvent.StartEvent();
+        activeEvents.Add(newEvent);
 
-        StartCoroutine(EndEventAfterDuration(currentEvent));
+        StartCoroutine(EndEventAfterDuration(newEvent));
     }
 
     public void ResetEventTimer()
@@ -329,10 +328,10 @@ public class GameManager : MonoBehaviour
     IEnumerator EndEventAfterDuration(Event evt)
     {
         yield return new WaitForSeconds(evt.duration);
-        if (currentEvent == evt)
+        if (activeEvents.Contains(evt))
         {
             evt.EndEvent();
-            currentEvent = null;
+            activeEvents.Remove(evt);
             Destroy(evt.gameObject);
         }
     }
@@ -347,10 +346,18 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         if (!gameStarted) return;  // oh no.
+
+        foreach (var evt in activeEvents)
+        {
+            evt.EndEvent();
+            Destroy(evt.gameObject);
+        }
+        activeEvents.Clear();
+
         gameStarted = false;
         var player = FindFirstObjectByType<PlayerController>();
         player.alive = false;
-        
+
         LeaderboardWrapper leaderboard = LoadLeaderboard();
         LeaderboardEntry newEntry = CreateLeaderboardEntry();
 
@@ -405,8 +412,8 @@ public class GameManager : MonoBehaviour
 
     public static string GetRandomTauntingName()
     {
-        string[] tauntingNames = { 
-            "OofEnthusiast", "SweatySocks", "Bunnyhopper", "FumbleChamp", "ConfettiCannon", 
+        string[] tauntingNames = {
+            "OofEnthusiast", "SweatySocks", "Bunnyhopper", "FumbleChamp", "ConfettiCannon",
             "PotatoAim", "ProSK8R", "LootGnoblin", "CertifiedDerp", "ParticipationPrize"
         };
 

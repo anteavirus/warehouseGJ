@@ -51,7 +51,6 @@ public class SettingsManager : MonoBehaviour
     {
         InitializeMouseSettings();
         InitializeResolutions();
-        InitializeQuality();
         InitializeVolume();
         LoadSettings();
         CreateKeyBindUI();
@@ -88,14 +87,6 @@ public class SettingsManager : MonoBehaviour
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentIndex;
         resolutionDropdown.RefreshShownValue();
-    }
-
-    void InitializeQuality()
-    {
-        qualityDropdown.ClearOptions();
-        qualityDropdown.AddOptions(new List<string>(QualitySettings.names));
-        qualityDropdown.value = QualitySettings.GetQualityLevel();
-        qualityDropdown.RefreshShownValue();
     }
 
     void InitializeVolume()
@@ -197,7 +188,7 @@ public class SettingsManager : MonoBehaviour
 
     public void SetFullscreen(Toggle isFullscreen)
     {
-        Screen.fullScreen = isFullscreen;
+        Screen.fullScreen = isFullscreen.isOn;
     }
     #endregion
 
@@ -333,9 +324,6 @@ public class SettingsManager : MonoBehaviour
 
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .5f);
         SetVolume(musicSlider.value, "Master");
-
-        qualityDropdown.value = PlayerPrefs.GetInt("QualityLevel", QualitySettings.GetQualityLevel());
-        QualitySettings.SetQualityLevel(qualityDropdown.value);
 
         mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
         SetMouseSensitivity(mouseSensitivitySlider.value);

@@ -102,7 +102,11 @@ public class ZombieAI : MonoBehaviour
         currentDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
         transform.rotation = Quaternion.LookRotation(currentDirection);
     }
-
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down,
+            characterHeight * 0.5f + 0.1f, groundLayer);
+    }
     void WanderBehavior()
     {
         if (directionTimer <= 0 || CheckForObstacle())
@@ -113,7 +117,17 @@ public class ZombieAI : MonoBehaviour
 
         UpdateSearchRotation(currentDirection);
         moveDirection = currentDirection;
-        rb.MovePosition(transform.position + Time.fixedDeltaTime * wanderSpeed * currentDirection);
+        Vector3 horizontalVelocity = currentDirection * wanderSpeed;
+        rb.velocity = new Vector3(
+            horizontalVelocity.x,
+            rb.velocity.y,
+            horizontalVelocity.z
+        );
+
+        if (!IsGrounded())
+        {
+            rb.AddForce(Vector3.down * 100f, ForceMode.Acceleration);
+        }
     }
 
     void ChaseBehavior()
@@ -137,7 +151,8 @@ public class ZombieAI : MonoBehaviour
             }
 
             moveDirection = currentDirection;
-            rb.MovePosition(transform.position + chaseSpeed * Time.fixedDeltaTime * currentDirection);
+            Vector3 horizontalVelocity = currentDirection * chaseSpeed;
+            rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
             transform.rotation = Quaternion.LookRotation(currentDirection);
 
             if (directionToPlayer.magnitude <= attackRange)
@@ -171,7 +186,8 @@ public class ZombieAI : MonoBehaviour
         }
 
         moveDirection = searchDirection;
-        rb.MovePosition(transform.position + chaseSpeed * Time.fixedDeltaTime * searchDirection);
+        Vector3 horizontalVelocity = searchDirection * chaseSpeed;
+        rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
         transform.rotation = Quaternion.LookRotation(searchDirection);
     }
 

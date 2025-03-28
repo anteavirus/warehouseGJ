@@ -33,7 +33,7 @@ public class StorageArea : MonoBehaviour
         if (isVelocityUnderLimit)
         {
             Item item = other.GetComponent<Item>();
-            if (item != null && item.ID == ID)
+            if (item != null && item.ID == ID && !item.createdOnShelf)
             {
                 if (GameManager.Instance != null && !item.fromShelf)
                 {

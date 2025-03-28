@@ -46,6 +46,7 @@ public class UIManager : MonoBehaviour
         if (animationRoutine != null) return;
 
         isMenuVisible = visible;
+        playerController.STOPWORKINGIMINUI = isMenuVisible;
         menuAnimator.SetBool(visibleState, visible);
         animationRoutine = StartCoroutine(AnimateMenuTransition());
     }
@@ -61,11 +62,21 @@ public class UIManager : MonoBehaviour
         if (!isMenuVisible) menuVisuals.SetActive(false);
         menuAnimator.SetBool("animationComplete", false);
 
-        playerController.STOPWORKINGIMINUI = isMenuVisible;
 
         animationRoutine = null;
     }
 
+    string playerPrefKey;
+    public void SetPlayerPrefKey(string key)
+    {
+        playerPrefKey = key;
+    }
+
+    public void SetPlayerPrefInt(int val)
+    {
+        PlayerPrefs.SetInt(playerPrefKey, val);
+        PlayerPrefs.Save();
+    }
     /// <summary> I don't actually use this. It doesn't quite work? Use SelfAnimator thing instead. </summary>
     public void MarkAnimationComplete() =>
         menuAnimator.SetBool("AnimationComplete", true);
@@ -77,7 +88,7 @@ public class UIManager : MonoBehaviour
     }
 
     public void LoadGameSettings() =>
-        usernameInput.text = PlayerPrefs.GetString("CurrentUsername", "Player") ?? GameManager.GetRandomTauntingName();
+        usernameInput.text = PlayerPrefs.GetString("CurrentUsername", "Он") ?? GameManager.GetRandomTauntingName();
 
     public void StartGame() =>
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

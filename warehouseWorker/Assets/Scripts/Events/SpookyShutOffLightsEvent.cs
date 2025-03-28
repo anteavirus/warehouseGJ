@@ -55,7 +55,7 @@ public class BoogeymanAndLightsTurnOffEvent : Event
             outlineFaderInstance = outlineObjectInstance.GetComponent<RenderFeatureOutlineFader>();
         }
 
-        if (player == null) return;
+        if (player == null) player = FindAnyObjectByType<PlayerController>();
 
         slave = new GameObject("LightController").AddComponent<Blank>();
         slave.transform.SetParent(player.transform);

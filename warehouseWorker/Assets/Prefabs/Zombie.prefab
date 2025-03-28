@@ -1146,7 +1146,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &2905824139972556073
 MonoBehaviour:
@@ -1170,7 +1170,7 @@ MonoBehaviour:
   rotationSpeed: 3
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 72
   boomClip: {fileID: 8300000, guid: fb4aea39107b7bf4b93dd398d36854ac, type: 3}
   explosionPrefab: {fileID: 353018167862528395, guid: 45383b2a19eb8874b9559772ce0a952c,
     type: 3}
@@ -1183,8 +1183,8 @@ MonoBehaviour:
     landingSounds: []
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  characterHeight: 2
+    m_Bits: 8
+  characterHeight: -0.2
   slipSounds:
   - {fileID: 8300000, guid: effaf28828fbb4d4da06a68c285422ce, type: 3}
   slipCooldown: 2

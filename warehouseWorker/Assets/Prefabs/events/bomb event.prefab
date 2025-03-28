@@ -118,14 +118,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14e34bf54900d7c47b5e1fc486f194ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 15
+  duration: 30
   isActive: 1
   c4Prefab: {fileID: 2377480699299705579, guid: fb366738f233beb479d9e9259db1a152,
     type: 3}
   disarmedC4Prefab: {fileID: 2140473877698300169, guid: a6e9151eb4875ef48ad2cd87975050d6,
     type: 3}
-  PrefabPlier: {fileID: 1521921737126237428, guid: 788c881790c460845b7facf0bbcf4d5f,
-    type: 3}
   c4SpawnPoint: {fileID: 0}
-  SpawnPointPlier: {fileID: 0}
   activeC4: {fileID: 0}

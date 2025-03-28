@@ -27,6 +27,7 @@ public class Box : Item
         item.transform.position = transform.position;
         item.SetActive(true);
         item.GetComponent<Item>().fromShelf = false;
+        item.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         containedItem = null;
         Destroy(this.gameObject);

@@ -44,6 +44,7 @@ public class PunchClock : Item
         soundsrc.maxDistance = 30;
         soundsrc.rolloffMode = AudioRolloffMode.Linear;
         soundsrc.spatialBlend = 1;
+        soundsrc.volume = .5f;
 
         Vector3 startPos = objectToMove.position;
         float distanceMoved = 0f;

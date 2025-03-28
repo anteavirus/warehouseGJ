@@ -73,17 +73,24 @@ public class TalkingDeliveryItem : MonoBehaviour
     private bool TryGetCurrentEventItem(out Item item)
     {
         item = null;
-        if (GameManager.Instance.currentEvent is DeliveryEvent deliveryEvent)
+        foreach (var i in GameManager.Instance.activeEvents)
         {
-            item = deliveryEvent.MainItem;
-            return true;
+            if (i is DeliveryEvent deliveryEvent)
+            {
+                item = deliveryEvent.MainItem;
+                return true;
+            }
         }
         return false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!_canComment || !(GameManager.Instance.currentEvent is DeliveryEvent)) return;
+        if (!_canComment) return;
+        foreach (var i in GameManager.Instance.activeEvents)
+        {
+            if (i is not DeliveryEvent) return;
+        }
 
         Item item = other.GetComponent<Item>();
         if (item != null)
@@ -96,7 +103,17 @@ public class TalkingDeliveryItem : MonoBehaviour
     {
         _canComment = false;
 
-        var deliveryEvent = (DeliveryEvent)GameManager.Instance.currentEvent;
+        DeliveryEvent deliveryEvent = null;
+        foreach (var i in GameManager.Instance.activeEvents)
+        {
+            if (i is DeliveryEvent a)
+            {
+                deliveryEvent = a;
+                break;
+            }
+        }
+        if (deliveryEvent == null) yield break;
+
         bool isCorrect = item.ID == deliveryEvent.MainItem.ID;
 
         var itemConfig = GetAudioConfigForItem(item);

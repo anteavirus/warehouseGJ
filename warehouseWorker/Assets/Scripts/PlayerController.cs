@@ -134,10 +134,11 @@ public class PlayerController : MonoBehaviour
     IEnumerator Checklater()
     {
         yield return new WaitForSecondsRealtime(1f);
+        settingsManager.LoadSettings();
         KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
         KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
-        pickUpHint = pickupBind?.currentKey.ToString() ?? pickupBind.defaultKey.ToString();
-        useHint = useBind?.currentKey.ToString() ?? useBind.defaultKey.ToString();
+        pickUpHint = (pickupBind.currentKey != KeyCode.None ? pickupBind.currentKey : pickupBind.defaultKey).ToString();
+        useHint = (useBind.currentKey != KeyCode.None ? useBind.currentKey : useBind.defaultKey).ToString();
     }
 
     void Update()
@@ -447,6 +448,7 @@ public class PlayerController : MonoBehaviour
         // Reset physics properties
         if (heldItemRb != null)
         {
+            heldItemRb.velocity = Vector3.zero;
             heldItemRb.useGravity = true;
             heldItemRb.drag = 0f;
             heldItemRb.angularDrag = 0.05f;
@@ -630,6 +632,7 @@ public class PlayerController : MonoBehaviour
     private void CreatePreview()
     {
         previewObject = Instantiate(heldItem);
+        previewObject.tag = "IgnoreRaycast";
         previewObject.GetComponent<Rigidbody>().isKinematic = true;
         foreach (Collider col in previewObject.GetComponentsInChildren<Collider>())
             col.enabled = false;
