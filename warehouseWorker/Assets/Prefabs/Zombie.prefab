@@ -1160,14 +1160,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6e510df5f1a22468a70dcb4b16349b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wanderSpeed: 2
-  chaseSpeed: 4
-  wanderRadius: 10
-  detectionRadius: 7
+  wanderSpeed: 4
+  chaseSpeed: 6
+  wanderRadius: 15
+  detectionRadius: 14
   attackRange: 2
-  directionChangeCooldown: 3
+  directionChangeCooldown: 4
   searchArriveThreshold: 1
-  rotationSpeed: 3
+  rotationSpeed: 2
   obstacleMask:
     serializedVersion: 2
     m_Bits: 72

@@ -57,9 +57,24 @@ public class ZombieAI : MonoBehaviour
         footstepSource = gameObject.AddComponent<AudioSource>();
         footstepSource.spatialBlend = 1f; // 3D sound
 
+        SpawnAtGround();
         SetRandomDirection();
         directionTimer = directionChangeCooldown;
         currentState = State.Wandering;
+    }
+
+    void SpawnAtGround()
+    {
+
+        Vector3 spawnPosition = transform.position + Vector3.up * 10f; 
+        if (Physics.Raycast(spawnPosition, Vector3.down, out RaycastHit hit, 20f, groundLayer))
+        {
+            transform.position = hit.point + Vector3.up * 0.5f;
+        }
+        else
+        {
+            Debug.LogWarning("No ground found to spawn the zombie.");
+        }
     }
 
     void Update()

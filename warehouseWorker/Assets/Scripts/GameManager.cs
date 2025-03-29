@@ -242,7 +242,7 @@ public class GameManager : MonoBehaviour
 
         timer -= Time.deltaTime / (((activeEvents.Count > 0 || score == 0) ? Mathf.Lerp(3f, 2f, currentDifficulty) : Mathf.Lerp(3f, 0.5f, currentDifficulty)) + 0.01f);
 
-        currentTime += Time.deltaTime * (score != 0 ? Mathf.Lerp(3f, .5f, currentDifficulty) : 1f);
+        currentTime += Time.deltaTime * (score != 0 ? Mathf.Lerp(3f, .8f, currentDifficulty) : 1f);
 
         progressTimer = timer / maxTimer;
         timerUI.fillAmount = progressTimer;
