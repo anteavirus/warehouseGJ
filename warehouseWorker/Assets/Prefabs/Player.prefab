@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1551129560291985054}
   - component: {fileID: 2209314514006350624}
+  - component: {fileID: 7690122053035309622}
+  - component: {fileID: 8676053326896660475}
   m_Layer: 0
   m_Name: feet
   m_TagString: Untagged
@@ -130,6 +132,41 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &7690122053035309622
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710265850478488255}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: -0.48, z: 0}
+--- !u!114 &8676053326896660475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710265850478488255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19551c895fe53c04198a08610e22b478, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGrounded: 0
+  objects: []
 --- !u!1 &2129633045628198106
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,15 +452,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsManager: {fileID: 8086924707916658341}
-  moveSpeed: 20
-  jumpForce: 9
-  airControlFactor: 0.5
+  moveSpeed: 200
+  jumpForce: 250
+  airControlFactor: 0.14
   groundDrag: 5
-  airDrag: 3
+  airDrag: 1
   groundLayer:
     serializedVersion: 2
     m_Bits: 72
-  playerHeight: 2
   inversionProgress: 0
   inversionTransitionSpeed: 2
   defaultMouseSensitivity: 100
@@ -513,7 +549,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3684526152076748746}
   serializedVersion: 4
-  m_Mass: 3
+  m_Mass: 30
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -980,6 +1016,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5558297584675945779, guid: 9bf4a83e8722a994f80c160083a717aa,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5558297584675945779, guid: 9bf4a83e8722a994f80c160083a717aa,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -48.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5558297584675945779, guid: 9bf4a83e8722a994f80c160083a717aa,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -95.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

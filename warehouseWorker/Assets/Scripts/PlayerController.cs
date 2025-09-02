@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundDrag = 5f;
     [SerializeField] private float airDrag = 0.5f;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float playerHeight = 2f;
     
     [Header("Camera Inversion Settings")]
     public float inversionProgress = 0f;
@@ -108,6 +107,8 @@ public class PlayerController : MonoBehaviour
 
     private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer, lastTimeRagdoll;
 
+    PlayerFeetScript feet;
+
     void Start()
     {
         if (pauseMenu == null) 
@@ -116,6 +117,9 @@ public class PlayerController : MonoBehaviour
         if (settingsManager == null)
             settingsManager = FindObjectOfType<SettingsManager>();
 
+        if (feet == null)
+            feet = transform.Find("feet")?.GetComponent<PlayerFeetScript>();
+        
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         Cursor.lockState = CursorLockMode.Locked;
@@ -147,6 +151,8 @@ public class PlayerController : MonoBehaviour
         {
             slipRisk = Mathf.MoveTowards(slipRisk, 0f, slipRiskDecayRate * Time.deltaTime);
         }
+
+        isGrounded = feet.isGrounded;
 
         if (!alive) return;
         HandlePauseToggle();
@@ -242,13 +248,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down,
-            playerHeight * 0.5f + 0.2f, groundLayer);
-
         if (settingsManager.GetActionDown("Jump") && isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            slipRisk += 5; // nope not gonna cap it at 100 i'll see the players annoyed
         }
     }
 
@@ -320,7 +324,7 @@ public class PlayerController : MonoBehaviour
     private void DetectSurface()
     {
         if (Physics.Raycast(transform.position, Vector3.down,
-            out RaycastHit hit, playerHeight * 0.5f + 0.2f, groundLayer))
+            out RaycastHit hit, transform.localScale.y * .66f, groundLayer))
         {
             if (hit.collider.TryGetComponent<GroundSurface>(out var surface))
             {

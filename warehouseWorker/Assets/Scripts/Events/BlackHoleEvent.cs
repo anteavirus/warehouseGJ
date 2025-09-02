@@ -28,6 +28,7 @@ public class BlackHoleEvent : Event
         blackHoleInstance = Instantiate(blackHolePrefab, spawnPoint.position, Quaternion.identity);
         weakerBlackHoleInstance = Instantiate(blackHolePrefab, weakerSpawnPoint.position, Quaternion.identity);
         var audio = weakerBlackHoleInstance.AddComponent<AudioSource>();
+        audio.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
         audio.maxDistance = 50;
         audio.spatialBlend = 1;
         audio.rolloffMode = AudioRolloffMode.Linear;

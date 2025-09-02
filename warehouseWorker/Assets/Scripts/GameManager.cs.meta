@@ -3,7 +3,15 @@ guid: e191d6fd33bf5b647bf8fc98abb453ba
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - scoreUI: {instanceID: 0}
+  - timerUI: {instanceID: 0}
+  - orderListUI: {instanceID: 0}
+  - box: {instanceID: 0}
+  - sfx: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5, type: 2}
+  - talkingDeliveryItem: {instanceID: 0}
+  - spawnPosition: {instanceID: 0}
+  - blackHoleSpawnPosition: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

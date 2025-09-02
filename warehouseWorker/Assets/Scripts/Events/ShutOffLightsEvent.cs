@@ -63,7 +63,11 @@ public class ShutOffLightsEvent : Event
 
     IEnumerator TransitionLights(float startIntensity, float endIntensity, float duration, GameObject slave)
     {
-        if (!TryGetComponent<AudioSource>(out var audioSource)) audioSource = slave.AddComponent<AudioSource>();
+        if (!TryGetComponent<AudioSource>(out var audioSource))
+        {
+            audioSource = slave.AddComponent<AudioSource>();
+            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
+        }
         audioSource.PlayOneShot(associatedSfx);
 
         if (outlineFaderInstance != null)

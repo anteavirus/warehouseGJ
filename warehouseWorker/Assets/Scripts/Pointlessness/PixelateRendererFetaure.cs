@@ -42,7 +42,7 @@ public class PixelateRendererFetaure : ScriptableRendererFeature
             if (_material == null) return;
 
             CommandBuffer cmd = CommandBufferPool.Get("PixelatePass");
-            RenderTargetIdentifier source = renderingData.cameraData.renderer.cameraColorTarget;
+            RenderTargetIdentifier source = renderingData.cameraData.renderer.cameraColorTargetHandle;
 
             RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
             descriptor.depthBufferBits = 0;

@@ -26,7 +26,10 @@ public class EarthquakeEvent : Event
         StartCoroutine(ShakeCamera());
 
         if (!TryGetComponent<AudioSource>(out var audioSource))
+        {
             audioSource = slave.gameObject.AddComponent<AudioSource>();
+            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx;
+        }
         audioSource.PlayOneShot(sfx);
 
         elapsedTime = 0f;

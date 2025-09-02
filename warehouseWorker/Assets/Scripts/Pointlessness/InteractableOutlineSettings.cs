@@ -4,6 +4,7 @@ using System.Collections;
 
 public class RenderFeatureOutlineFader : MonoBehaviour
 {
+    // TODO: some day, some how, patch in a solution where i can actually CREATE A DUPLICATE OF A MATERIAL that CAN BE USED instead of just lingering unused in the memory.
     private static readonly int OutlineColorID = Shader.PropertyToID("_OutlineColor");
 
     [Header("References")]
@@ -13,7 +14,9 @@ public class RenderFeatureOutlineFader : MonoBehaviour
     [SerializeField] private float fadeDuration = 1f;
 
     private Coroutine currentFadeRoutine;
-    private Color originalOutlineColor;
+    private Color originalOutlineColor = Color.white; 
+    [SerializeField] private Color defaultOutlineColor = Color.white;   // ????: Safeguard() in OnValidate() needs??? THIS to NOT turn into a `new(0,0,0,0)`
+                                                                        // But not always??? for some reason it didn't turn into black w/o this all. :/
 
     void Awake()
     {
@@ -24,8 +27,10 @@ public class RenderFeatureOutlineFader : MonoBehaviour
         }
 
         if (outlineFeature.settings.overrideMaterial != null)
-            originalOutlineColor = outlineFeature.settings.overrideMaterial.GetColor(OutlineColorID);
-        
+        {
+            originalOutlineColor = defaultOutlineColor;
+            outlineFeature.settings.overrideMaterial.SetColor(OutlineColorID, defaultOutlineColor);
+        }
     }
 
     public void FadeOutline(float targetAlpha)
@@ -70,12 +75,32 @@ public class RenderFeatureOutlineFader : MonoBehaviour
         ));
     }
 
+    void OnApplicationQuit()
+    {
+        Safeguard();
+    }
+
+    void OnValidate()
+    {
+        Safeguard();
+    }
+
+    void OnDisable()
+    {
+        Safeguard();
+    }
+
     void OnDestroy()
+    {
+        Safeguard();
+    }
+
+    void Safeguard()
     {
         // Revert to original alpha ONLY if this was the last active fader
         if (originalOutlineColor.a != outlineFeature.settings.overrideMaterial.GetColor(OutlineColorID).a)
         {
-            outlineFeature.settings.overrideMaterial.SetColor(OutlineColorID, originalOutlineColor);
+            outlineFeature.settings.overrideMaterial.SetColor(OutlineColorID, defaultOutlineColor);
         }
     }
 }

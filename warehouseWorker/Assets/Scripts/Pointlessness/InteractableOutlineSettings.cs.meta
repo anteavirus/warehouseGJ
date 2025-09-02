@@ -4,8 +4,8 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - pixelateFeature: {fileID: 7826272649928546941, guid: c40be3174f62c4acf8c1216858c64956,
-      type: 2}
+  - outlineFeature: {instanceID: 0}
+  - instanceMaterial: {fileID: 2100000, guid: 7f55b852a6d4d784d8c6dba725606fb7, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -25,8 +25,11 @@ public class WindyEvent : Event
             leavesParticleSystem.Play();
         }
 
-        if (!TryGetComponent<AudioSource>(out var audioSource)) 
+        if (!TryGetComponent<AudioSource>(out var audioSource))
+        {
             audioSource = slave.gameObject.AddComponent<AudioSource>();
+            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx;
+        }
         audioSource.clip = sfx;
         audioSource.loop = true;
         audioSource.maxDistance = 30;

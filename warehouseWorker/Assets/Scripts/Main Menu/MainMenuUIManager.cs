@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Game Settings")]
     public TMP_InputField usernameInput;
-    public TMP_Dropdown difficultyDropdown;
+    public Toggle difficulty;
     public MainMenuPlayerController playerController;
 
     private Coroutine animationRoutine;
@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
 
         showUIButton.onClick.AddListener(() => SetMenuState(true));
         hideUIButton.onClick.AddListener(() => SetMenuState(false));
+        difficulty.isOn = PlayerPrefs.GetInt("extremeDifficulty") > 0;  // TODO: FUC K YOU. CREATE A SAVE FILE! SETTINGS DELETE ALL PLAYERPREFS! FUCK YOU!
     }
 
     void InitializeUI()
@@ -75,6 +76,12 @@ public class UIManager : MonoBehaviour
     public void SetPlayerPrefInt(int val)
     {
         PlayerPrefs.SetInt(playerPrefKey, val);
+        PlayerPrefs.Save();
+    }
+
+    public void SetPlayerPrefBoolToggle(Toggle toggle)
+    {
+        PlayerPrefs.SetInt(playerPrefKey, toggle.isOn ? 1 : 0);
         PlayerPrefs.Save();
     }
     /// <summary> I don't actually use this. It doesn't quite work? Use SelfAnimator thing instead. </summary>

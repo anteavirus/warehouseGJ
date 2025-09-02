@@ -1,0 +1,1940 @@
+fileFormatVersion: 2
+guid: ae753d2e31c5bdb4d8a8a8e370c457ee
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: firespritesheet135x276_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3588
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92fc21f0a9d34e2419953a8de307bdfc
+      internalID: 581667988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_1
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 3588
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d908a13b7a19b0499582d6b8c68bb70
+      internalID: -2093729584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_2
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 3588
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad4944ce9c41d094fac7414e74d6c21b
+      internalID: 1720355383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_3
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 3588
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e3c527ca8a91e44c91950526b402688
+      internalID: -1112754504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_4
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 3588
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2b93e69877e25146aab0d25bf28bc32
+      internalID: 1096165394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_5
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 3588
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 866de6c47b43ca346985f2185b07a2f0
+      internalID: 1762954644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3312
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55902cd7f0f28be4795853901d03eb8a
+      internalID: 1338204876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_7
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 3312
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0410a20577cb25649addc0ae9693d7da
+      internalID: -1260428525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_8
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 3312
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 832d73b5fe04e3442bdd665c6b441e99
+      internalID: 879783571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_9
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 3312
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35e3e9862a9da974583cbb35f896063e
+      internalID: -955988341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_10
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 3312
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f6f88b30ec89624f806811bb6ed136a
+      internalID: 186384605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_11
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 3312
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3c3b9f1b8d99314b94c700341629472
+      internalID: -687901337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3036
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2113a0ab232d4048911e6132280572e
+      internalID: -648505256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_13
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 3036
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7531f4b50b94b2a4dbb2f14d67a6197c
+      internalID: 2034607948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_14
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 3036
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72d91995208a16743847fbb0d055e2cb
+      internalID: -107696157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_15
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 3036
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 373041ae465d04d488f98dccc065246d
+      internalID: 823856287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_16
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 3036
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bd43b9fd8f32b244b04ead4ef3fec95
+      internalID: -1060036617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_17
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 3036
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd2731237e2aca6478e3096a7511f5d7
+      internalID: 468412927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2760
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de00923539b642944a37024767f60141
+      internalID: 1974079240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_19
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 2760
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf7aee119b8fa274d81ba37a3cf2e02f
+      internalID: 1434835471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_20
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 2760
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 365f9f32355c3f84d83d3d58a4ab793c
+      internalID: 1622414207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_21
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 2760
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 123c9d68d4dea3740be12e378d15ec68
+      internalID: -460302136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_22
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 2760
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f50716c659d3da4caf5af266a8e4794
+      internalID: 882195021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_23
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 2760
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 393fe4b3c80a30643bf6b8add43e718c
+      internalID: -2146638127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2484
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e64bd68565d8e44ea54a1bbf36ce981
+      internalID: -502760188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_25
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 2484
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea76f4c75b07526408f57b6b605214a9
+      internalID: -1720138275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_26
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 2484
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0a0cb8ccba47074e9170eaed8e6fd3f
+      internalID: 1820508331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_27
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 2484
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 403ab57dc1f54f04ea1f908ac91afb46
+      internalID: 1830332402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_28
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 2484
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b09b335177773e244b7df1cea9f6361b
+      internalID: 547206438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_29
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 2484
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b107fd2e1be6eeb48aa8d9d106ed07b7
+      internalID: -367129274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2208
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8c2fff63fac174419498a3350f86daf
+      internalID: -305267524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_31
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 2208
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 632da51152bbfde4783d80c800dcc3d8
+      internalID: 1811569400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_32
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 2208
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f69d7280ae3822840bb5987b67e3bfa7
+      internalID: -1382455369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_33
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 2208
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17e246733a801c640a4ad8fe0791cd40
+      internalID: -720082402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_34
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 2208
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 721e2a8172aa0ac408087eb6613dabaf
+      internalID: -843733462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_35
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 2208
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 709a6541d1f26a548a28a04aa5361b58
+      internalID: 1218858292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1932
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c1b17c320d7e224a94cfde298980a6d
+      internalID: -1211106189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_37
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 1932
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5abdebfb6db60054eb851bb0d45621a6
+      internalID: -2016320324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_38
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1932
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2c9eda060fed8a468eea946125b2330
+      internalID: -630044202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_39
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 1932
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 653dcfd6b3dfcf846bee2c8895f74202
+      internalID: -902364686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_40
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 1932
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42f9e33fc38048f4893c0f2c398ab3ae
+      internalID: 970178179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_41
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 1932
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac2bdf6ec8502a2439ea3e1497697367
+      internalID: 1267432536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_42
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1656
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f59f1a6bed4a2364083212d8ef031009
+      internalID: -539897749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_43
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 1656
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2085dcad51df172498111a686c5e1f7b
+      internalID: -1612679036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_44
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1656
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90317745343abd1439f9cd19665503ca
+      internalID: -1383539921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_45
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 1656
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 964df0460d55d5c4e8d52c0cd372f888
+      internalID: 716261054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_46
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 1656
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba7fb67b4c8332a4784a65ceda9ce1fa
+      internalID: 1568787045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_47
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 1656
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ad6daddbaa00004688c7f57b20cc185
+      internalID: 637431910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_48
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1380
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 754a0f2fe6fc9ef438d9a299f695d60e
+      internalID: -1566482507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_49
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 1380
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4de2f778a8dda574186d8a51422f3232
+      internalID: 361619375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_50
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1380
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd3726027b9365448a0cb73b3df7a668
+      internalID: -2034807723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_51
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 1380
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8218b77ba6992e488a4c3eb28cf1a23
+      internalID: 902572590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_52
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 1380
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80b84d30bbe125f42bae36c3f9e2eb03
+      internalID: 1634592478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_53
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 1380
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f3f119c253a89a46a9bfce7809274ca
+      internalID: 187192769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_54
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1104
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cb1c4644135d434094e6c5f0bff972c
+      internalID: 1689901952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_55
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 1104
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea85de49c9c9764408c7fd79cb484785
+      internalID: -1594150426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_56
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1104
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29c60dd1b7edfcb47a8e3c6e98ef19bb
+      internalID: -1559383237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_57
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 1104
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7240ef6eb5feb084f8d22a8cc4843fec
+      internalID: -2121017937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_58
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 1104
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 318dd738c36216f48b14569b2bd30396
+      internalID: -1541931847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_59
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 1104
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86eb9050d4a274748983635e2fdf2289
+      internalID: 1527148535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 828
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c33a5d25c35fb54082fb0010975ab20
+      internalID: -103564300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_61
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 828
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6fc47970a4b34c4c9706390ae929e16
+      internalID: 1063859449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_62
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 828
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8218cac4cb1b3ab45a61bc470c2b98af
+      internalID: 7809485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_63
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 828
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e472c1a1ca79b64fa526cc4ef6fe25f
+      internalID: 350496081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_64
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 828
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0e101db1c94cae42b69245e8acd81b4
+      internalID: -1212573575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_65
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 828
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4830c3eee60c3ad44b0c55bf5cb8b273
+      internalID: 1117396395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_66
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 552
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46e02d44679915a4da15a22a2c16ff87
+      internalID: 1076493609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_67
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 552
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e39ab3ba74f307498bef89751932e8c
+      internalID: -689619578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_68
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 552
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ec089fdd8b071d418dc6bf5e4712d1e
+      internalID: -1695544256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_69
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 552
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77738b812ff60ff4b9ba2be08fb64db2
+      internalID: 332015582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_70
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 552
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83404b5328113f34397f7711eb490051
+      internalID: 1430679091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_71
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 552
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e1670a5206c66544a7a0876f9c0357a
+      internalID: 1064768830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_72
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 276
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c10e29f94afac8542a6e847b1a0d598e
+      internalID: 130613923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_73
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 276
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dfa1f1ddd13aae43a247b76e8c6fd5a
+      internalID: -219931258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_74
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 276
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e0c7d5cccf4bba49a685da46d639a33
+      internalID: -726529032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_75
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 276
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 787161776342c3648ae87e4b857f5de1
+      internalID: -978473995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_76
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 276
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5db0497a2a4dc542a64eb2f197bc273
+      internalID: 877041495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_77
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 276
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2088110bba6dddc4da4eccf93b038e93
+      internalID: -723677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_78
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5326825d377a1348a13b6a1c39b13d6
+      internalID: 1923734861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_79
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 0
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cc77a13de35b384596ce679bbe21f9b
+      internalID: -347486482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_80
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 0
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b88a9594208ff754bb7cb166e21760dd
+      internalID: 1413051588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_81
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 0
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08e812d63b90ffe4f83eecc4e6b069ec
+      internalID: 1480047062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: firespritesheet135x276_82
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 0
+        width: 135
+        height: 276
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5d60f51c13ba544588b44963394b923
+      internalID: 805708199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: ce78f530e659dec4ea9b3887cc209172
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      firespritesheet135x276_0: 581667988
+      firespritesheet135x276_1: -2093729584
+      firespritesheet135x276_10: 186384605
+      firespritesheet135x276_11: -687901337
+      firespritesheet135x276_12: -648505256
+      firespritesheet135x276_13: 2034607948
+      firespritesheet135x276_14: -107696157
+      firespritesheet135x276_15: 823856287
+      firespritesheet135x276_16: -1060036617
+      firespritesheet135x276_17: 468412927
+      firespritesheet135x276_18: 1974079240
+      firespritesheet135x276_19: 1434835471
+      firespritesheet135x276_2: 1720355383
+      firespritesheet135x276_20: 1622414207
+      firespritesheet135x276_21: -460302136
+      firespritesheet135x276_22: 882195021
+      firespritesheet135x276_23: -2146638127
+      firespritesheet135x276_24: -502760188
+      firespritesheet135x276_25: -1720138275
+      firespritesheet135x276_26: 1820508331
+      firespritesheet135x276_27: 1830332402
+      firespritesheet135x276_28: 547206438
+      firespritesheet135x276_29: -367129274
+      firespritesheet135x276_3: -1112754504
+      firespritesheet135x276_30: -305267524
+      firespritesheet135x276_31: 1811569400
+      firespritesheet135x276_32: -1382455369
+      firespritesheet135x276_33: -720082402
+      firespritesheet135x276_34: -843733462
+      firespritesheet135x276_35: 1218858292
+      firespritesheet135x276_36: -1211106189
+      firespritesheet135x276_37: -2016320324
+      firespritesheet135x276_38: -630044202
+      firespritesheet135x276_39: -902364686
+      firespritesheet135x276_4: 1096165394
+      firespritesheet135x276_40: 970178179
+      firespritesheet135x276_41: 1267432536
+      firespritesheet135x276_42: -539897749
+      firespritesheet135x276_43: -1612679036
+      firespritesheet135x276_44: -1383539921
+      firespritesheet135x276_45: 716261054
+      firespritesheet135x276_46: 1568787045
+      firespritesheet135x276_47: 637431910
+      firespritesheet135x276_48: -1566482507
+      firespritesheet135x276_49: 361619375
+      firespritesheet135x276_5: 1762954644
+      firespritesheet135x276_50: -2034807723
+      firespritesheet135x276_51: 902572590
+      firespritesheet135x276_52: 1634592478
+      firespritesheet135x276_53: 187192769
+      firespritesheet135x276_54: 1689901952
+      firespritesheet135x276_55: -1594150426
+      firespritesheet135x276_56: -1559383237
+      firespritesheet135x276_57: -2121017937
+      firespritesheet135x276_58: -1541931847
+      firespritesheet135x276_59: 1527148535
+      firespritesheet135x276_6: 1338204876
+      firespritesheet135x276_60: -103564300
+      firespritesheet135x276_61: 1063859449
+      firespritesheet135x276_62: 7809485
+      firespritesheet135x276_63: 350496081
+      firespritesheet135x276_64: -1212573575
+      firespritesheet135x276_65: 1117396395
+      firespritesheet135x276_66: 1076493609
+      firespritesheet135x276_67: -689619578
+      firespritesheet135x276_68: -1695544256
+      firespritesheet135x276_69: 332015582
+      firespritesheet135x276_7: -1260428525
+      firespritesheet135x276_70: 1430679091
+      firespritesheet135x276_71: 1064768830
+      firespritesheet135x276_72: 130613923
+      firespritesheet135x276_73: -219931258
+      firespritesheet135x276_74: -726529032
+      firespritesheet135x276_75: -978473995
+      firespritesheet135x276_76: 877041495
+      firespritesheet135x276_77: -723677
+      firespritesheet135x276_78: 1923734861
+      firespritesheet135x276_79: -347486482
+      firespritesheet135x276_8: 879783571
+      firespritesheet135x276_80: 1413051588
+      firespritesheet135x276_81: 1480047062
+      firespritesheet135x276_82: 805708199
+      firespritesheet135x276_9: -955988341
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

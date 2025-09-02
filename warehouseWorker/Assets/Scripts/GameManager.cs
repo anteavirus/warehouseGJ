@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -18,10 +19,13 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("I will kill you if you put something that doesn't have an Item Component here.")]
     [SerializeField] List<GameObject> items = new();
+
+    [Tooltip("Please touch the items list instead, this will fill out from there and other components will use this instead. It's a Gamejam solution that I'll keep in place until it fucks everything so bad I'll have to rework it. Must stay in inspector just incase I fuck it up again.")]
     public List<Item> itemTemplates = new();
 
-    [Tooltip("Spawn box, user must unbox the box. Then they bring wherever they need to.")]
+    [Tooltip("Box prefab here, so basically anything that acts like a box and preferrably looks like a box.")]
     public GameObject box;
+
     float timer = maxTimer;
     static readonly float maxTimer = 30;
     int score = 0;
@@ -265,7 +269,7 @@ public class GameManager : MonoBehaviour
         }
         if (currentTime >= eventTimer - selectedRandomTimeEventDecrease)
         {
-            bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
+            bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0; // TODO: FUC K YOU. CREATE A SAVE FILE! SETTINGS DELETE ALL PLAYERPREFS! FUCK YOU!
             if (extremeMode || activeEvents.Count == 0)
             {
                 StartRandomEvent();

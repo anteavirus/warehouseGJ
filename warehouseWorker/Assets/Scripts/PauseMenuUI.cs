@@ -29,6 +29,7 @@ public class PauseMenuUI : MonoBehaviour
             AnimatorUpdateMode.Normal;
 
         pauseAnimator.SetBool("Visible", isPaused);
+        pauseAnimator.SetInteger("requestedWindow", 0);
         pauseRoutine = StartCoroutine(PauseStateUpdate());
     }
 

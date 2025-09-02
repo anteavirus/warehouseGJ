@@ -26,8 +26,11 @@ public class UpsideDownCameraEvent : Event
         if (player == null || slave == null || rotato == null)
             yield break;
 
-        if (!slave.TryGetComponent<AudioSource>(out var audioSource)) 
-            audioSource = slave.AddComponent<AudioSource>();
+        if (!slave.TryGetComponent<AudioSource>(out var audioSource))
+        {
+            audioSource = slave.gameObject.AddComponent<AudioSource>();
+            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
+        }
         audioSource.PlayOneShot(rotato);
 
         float elapsed = 0f;

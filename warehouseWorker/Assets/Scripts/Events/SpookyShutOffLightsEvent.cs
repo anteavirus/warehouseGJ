@@ -88,7 +88,10 @@ public class BoogeymanAndLightsTurnOffEvent : Event
     IEnumerator TransitionLights(float startIntensity, float endIntensity, float duration)
     {
         if (!TryGetComponent<AudioSource>(out var audioSource))
+        {
             audioSource = slave.gameObject.AddComponent<AudioSource>();
+            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
+        }
 
         audioSource.PlayOneShot(associatedSfx);
 
