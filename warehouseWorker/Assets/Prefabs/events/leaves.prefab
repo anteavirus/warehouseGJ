@@ -121,7 +121,7 @@ MonoBehaviour:
   duration: 15
   isActive: 0
   leavesParticleSystem: {fileID: 0}
-  windDirection: {x: 0, y: 0, z: 1}
+  windDirection: {x: 0, y: 0, z: -1}
   windStrength: 5
   swayFrequency: 1
   swayAmplitude: 0.5

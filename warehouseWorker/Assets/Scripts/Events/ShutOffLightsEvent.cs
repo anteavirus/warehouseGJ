@@ -52,7 +52,7 @@ public class ShutOffLightsEvent : Event
         {
             foreach (var item in FindObjectsOfType<Light>())
             {
-                if (!item.CompareTag("IgnoreComponent"))
+                if (!item.CompareTag("IgnoreComponent") || item.GetComponent<StupidHitboxToMakeGameManagerRestartTimer>())
                     targetLights.Add(item); // Fuck it. Shitcode. Kill me.
             }
         }

@@ -11407,6 +11407,18 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &416250871 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8112145219114583627, guid: 36fa5b879b809674c92ca1d6340ed2a5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1268440991}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &435354423
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27825,6 +27837,9 @@ MonoBehaviour:
   box: {fileID: 4684404609544575223, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
   sfx: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5, type: 2}
   talkingDeliveryItem: {fileID: 0}
+  difficultyImage: {fileID: 416250871}
+  minimalDifficulty: 1.1
+  maximumDifficulty: 2.4
   orderCooldown: 25
   newOrderSound:
   - {fileID: 8300000, guid: f6ba07a68425e614c8b2094578c92144, type: 3}
@@ -27845,10 +27860,10 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 1.0041789
-      value: 0.78773516
-      inSlope: 2
-      outSlope: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -29522,7 +29537,7 @@ PrefabInstance:
     - target: {fileID: 8164078558771037576, guid: 9557dfc6206fc914b8e32f051316c22b,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 9557dfc6206fc914b8e32f051316c22b,
         type: 3}
@@ -30187,9 +30202,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1478572418}
   - component: {fileID: 1478572419}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: SpookySpawn
-  m_TagString: Untagged
+  m_TagString: IgnoreRaycast
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34696,11 +34711,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Resting Place
       objectReference: {fileID: 0}
-    - target: {fileID: 8444971821494956303, guid: 834846cacdafb0e459a0494676bfe555,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 654001fad8803074c8c0f2b9318d570e, type: 2}
     - target: {fileID: 9156832149424367348, guid: 834846cacdafb0e459a0494676bfe555,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -41949,7 +41959,7 @@ PrefabInstance:
     - target: {fileID: 8164078558771037576, guid: 9557dfc6206fc914b8e32f051316c22b,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 9557dfc6206fc914b8e32f051316c22b,
         type: 3}

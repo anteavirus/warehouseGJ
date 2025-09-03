@@ -27,7 +27,7 @@ MonoBehaviour:
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0
     overrideMode: 1
-    overrideDepthState: 0
+    overrideDepthState: 1
     depthCompareFunction: 4
     enableWrite: 1
     stencilSettings:
@@ -39,8 +39,8 @@ MonoBehaviour:
       zFailOperation: 0
     cameraSettings:
       overrideCamera: 0
-      restoreCamera: 1
-      offset: {x: 0, y: 0, z: 0, w: 0}
+      restoreCamera: 0
+      offset: {x: 0.03, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
@@ -61,8 +61,8 @@ MonoBehaviour:
     AfterOpaque: 0
     Source: 1
     NormalSamples: 1
-    Intensity: 0.9
-    DirectLightingStrength: 0.682
+    Intensity: 1.9
+    DirectLightingStrength: 0.993
     Radius: 0.41
     Samples: 0
     BlurQuality: 0

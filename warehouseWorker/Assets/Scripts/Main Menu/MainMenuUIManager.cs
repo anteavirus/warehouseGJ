@@ -29,8 +29,6 @@ public class UIManager : MonoBehaviour
         if (usernameInput) LoadGameSettings();
         else Debug.LogWarning("No username input. ALLOW THE PLAYERS TO PLAY THE GAME YOU DUMB");
 
-        showUIButton.onClick.AddListener(() => SetMenuState(true));
-        hideUIButton.onClick.AddListener(() => SetMenuState(false));
         difficulty.isOn = PlayerPrefs.GetInt("extremeDifficulty") > 0;  // TODO: FUC K YOU. CREATE A SAVE FILE! SETTINGS DELETE ALL PLAYERPREFS! FUCK YOU!
     }
 

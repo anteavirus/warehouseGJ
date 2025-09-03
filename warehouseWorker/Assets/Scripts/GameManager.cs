@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     public AudioMixerGroup sfx;
     float eventTimer = 40;
     public GameObject talkingDeliveryItem;
+    public Image difficultyImage;
+    [SerializeField] float minimalDifficulty = 2, maximumDifficulty = 3;
 
     [Header("Order System")]
     [SerializeField] float orderCooldown = 25f;
@@ -243,8 +245,10 @@ public class GameManager : MonoBehaviour
 
         totalGameTime += Time.deltaTime;
         currentDifficulty = difficultyCurve.Evaluate(Mathf.Clamp01(totalGameTime / maxDifficultyTime));
+        
+        difficultyImage.color = new Color(difficultyImage.color.r, difficultyImage.color.g, difficultyImage.color.b, currentDifficulty); // this line sucks
 
-        timer -= Time.deltaTime / (((activeEvents.Count > 0 || score == 0) ? Mathf.Lerp(3f, 2f, currentDifficulty) : Mathf.Lerp(3f, 0.5f, currentDifficulty)) + 0.01f);
+        timer -= Time.deltaTime / (((activeEvents.Count > 0 || score == 0) ? Mathf.Lerp(maximumDifficulty, minimalDifficulty, currentDifficulty) : Mathf.Lerp(maximumDifficulty, minimalDifficulty / 4, currentDifficulty)) + 0.01f);
 
         currentTime += Time.deltaTime * (score != 0 ? Mathf.Lerp(3f, .8f, currentDifficulty) : 1f);
 

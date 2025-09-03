@@ -6,12 +6,7 @@ public class DeliveryArea : MonoBehaviour
     {
         if (other.TryGetComponent<Item>(out var item))
         {
-            bool fromShelf = false;
-            if (item.TryGetComponent<Item>(out var itemScript))
-            {
-                fromShelf = itemScript.fromShelf;
-            }
-
+            bool fromShelf = item.fromShelf; // why did i do a double check??
             GameManager.Instance.ProcessDelivery(item, fromShelf);
             Destroy(other.gameObject);
         }

@@ -7,9 +7,7 @@ using static SettingsManager;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Settings Reference")]
-    [SerializeField] private SettingsManager settingsManager;
-
+    // === CAN BE CHANGED ===
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float jumpForce = 5f;
@@ -17,30 +15,30 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundDrag = 5f;
     [SerializeField] private float airDrag = 0.5f;
     [SerializeField] private LayerMask groundLayer;
-    
+
     [Header("Camera Inversion Settings")]
     public float inversionProgress = 0f;
     public float inversionTransitionSpeed = 2f;
 
     [Header("Look Settings")]
     [SerializeField] private float defaultMouseSensitivity = 100f;
-    private float currentMouseSensitivity => settingsManager != null ?
-        PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity) : defaultMouseSensitivity;
     [SerializeField] private Transform playerCameraTransform;
     public Camera playerCamera;
     [SerializeField] private float maxLookAngle = 90f;
 
     [Header("Interaction Settings")]
-    [SerializeField] private float pickupRange = 2f;
+    public float pickupRange = 2f;
     public LayerMask interactableLayer;
     public Transform handTransform;
     public Transform pickUpHintUI;
     public Transform canUseOnItemHintUI;
 
-    [Header("GPT Named me Combat, but actually i'm just Throwing")]
+    [Header("Throwing")]
     [SerializeField] private float minThrowForce = 5f;
     [SerializeField] private float maxThrowForce = 25f;
     [SerializeField] private float maxChargeTime = 1.5f;
+    [SerializeField] private GameObject chargeMeterUI;
+    [SerializeField] private Image chargeMeter;
 
     [Header("Placement Settings")]
     [SerializeField] private Material previewMaterial;
@@ -48,8 +46,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask placementLayer;
     [SerializeField] private Vector3 placementOffset = new Vector3(0, 0.1f, 0);
     [SerializeField] private float rotationSpeed = 10f;
-    [SerializeField] private GameObject chargeMeterUI;
-    [SerializeField] private Image chargeMeter;
 
     [Header("Audio Settings")]
     [SerializeField] private AudioSource footstepSource;
@@ -57,12 +53,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float footstepInterval = 0.4f;
     [SerializeField] private List<SurfaceSound> surfaceSounds = new();
     [SerializeField] private AudioClip[] slipSounds;
-
-    [Header("Hover Over Settings")]
-    [SerializeField] private float checkRate = 0.2f;
-    [SerializeField] private LayerMask hoverLayer;
-    string pickUpHint;
-    string useHint;
 
     [Header("Held Item Physics")]
     [SerializeField] private float followForce = 100f;
@@ -82,12 +72,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSlipRisk = 1f;
     [SerializeField] private float slipCooldown = 3f;
     [SerializeField] private float minSlipSpeed = 3f;
+
+    [Space]
+    // === MUST BE CHANGED ===
+    [Header("Settings Reference")]
+    [SerializeField] private SettingsManager settingsManager;
+    
+    // === SHOULD BE INSPECTED ONLY ===
+    [Space]
+    string pickUpHint;
+    string useHint;
+
+    private float currentMouseSensitivity => settingsManager != null ?
+        PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity) : defaultMouseSensitivity;
+
     private Vector3 lastMovementDirection;
 
     [Header("Pause UI Menu")]
     [SerializeField] private Animator pauseAnimator;
-    [SerializeField] PauseMenuUI pauseMenu;
-    [SerializeField] GameObject pauseUI;
+    [SerializeField] private PauseMenuUI pauseMenu;
+    [SerializeField] private GameObject pauseUI;
     public AudioSource musicSource;
 
     public bool alive = true;
@@ -100,7 +104,6 @@ public class PlayerController : MonoBehaviour
     private GameObject heldItem, previewObject;
     private Item currentInteractable;
     private Coroutine spinRoutine;
-
     private SurfaceType currentSurface;
 
     private bool isGrounded, isHoldingToPlace, isValidPlacement, wasGrounded, canMove = true;
@@ -108,6 +111,8 @@ public class PlayerController : MonoBehaviour
     private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer, lastTimeRagdoll;
 
     PlayerFeetScript feet;
+    PlayerGrabbyScript grabby;
+
 
     void Start()
     {
@@ -119,7 +124,13 @@ public class PlayerController : MonoBehaviour
 
         if (feet == null)
             feet = transform.Find("feet")?.GetComponent<PlayerFeetScript>();
-        
+
+        if (grabby == null)
+        {
+            grabby = transform.Find("Main Camera").Find("grabbyHitbox")?.GetComponent<PlayerGrabbyScript>();
+            grabby.controller = this;
+        }
+
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         Cursor.lockState = CursorLockMode.Locked;
@@ -130,19 +141,18 @@ public class PlayerController : MonoBehaviour
         playerCameraTransform = playerCamera.transform;
         originalCameraLocalPosition = playerCameraTransform.localPosition;
 
-        StartCoroutine(CheckForInteractables());
-        StartCoroutine(Checklater());
+        StartCoroutine(FindBindsNamesLater());
     }
 
 
-    IEnumerator Checklater()
+    IEnumerator FindBindsNamesLater()
     {
         yield return new WaitForSecondsRealtime(1f);
         settingsManager.LoadSettings();
         KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
         KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
-        pickUpHint = (pickupBind.currentKey != KeyCode.None ? pickupBind.currentKey : pickupBind.defaultKey).ToString();
-        useHint = (useBind.currentKey != KeyCode.None ? useBind.currentKey : useBind.defaultKey).ToString();
+        pickUpHint = $"[{(pickupBind.currentKey != KeyCode.None ? pickupBind.currentKey : pickupBind.defaultKey)}]";
+        useHint = $"[{(useBind.currentKey != KeyCode.None ? useBind.currentKey : useBind.defaultKey)}]";
     }
 
     void Update()
@@ -368,7 +378,7 @@ public class PlayerController : MonoBehaviour
     {
         if (settingsManager.GetActionDown("Pickup"))
         {
-            if (heldItem == null) TryPickupItem();
+            if (heldItem == null) TryPickupItem(grabby.Pop());
             else if (!isHoldingToPlace) DropItem();
         }
     }
@@ -391,14 +401,16 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
             out RaycastHit hit, pickupRange, interactableLayer))
         {
-            if (hit.transform.TryGetComponent<Item>(out var item))
+            if (hit.collider.TryGetComponent<Item>(out var item))
             {
                 if (item.isPickupable)
                 {
                     PickUpItem(item);
+                    return;
                 }
             }
-            else if (stupidShit != null)
+            // May lord not see this mess, for his punishment'd be death by choking hanging.
+            if (stupidShit != null)
             {
                 if (stupidShit.isPickupable)
                 {
@@ -408,12 +420,14 @@ public class PlayerController : MonoBehaviour
             }
 
 
+
             if (hit.transform.TryGetComponent<StorageArea>(out var area))
             {
                 var newItem = area.CreateNewItemForPickup();
                 newItem.SetActive(true);
                 Item itemScript = newItem.GetComponent<Item>();
                 TryPickupItem(itemScript);
+                return;
             }
         }
     }
@@ -434,6 +448,7 @@ public class PlayerController : MonoBehaviour
             heldItemRb.drag = 5f;
             heldItemRb.angularDrag = 5f;
         }
+        UpdateHints(false, grabby.focusedTarget != null);
     }
 
     public void ForceDropItem()
@@ -460,6 +475,8 @@ public class PlayerController : MonoBehaviour
         heldItem = null;
         heldItemRb = null;
         heldItem = null;
+
+        UpdateHints(false, grabby.focusedTarget != null);
     }
 
     private void HandleThrow()
@@ -528,6 +545,7 @@ public class PlayerController : MonoBehaviour
         heldItem = null;
         heldItemRb = null;
         heldItem = null;
+        UpdateHints(false, grabby.focusedTarget != null);
     }
 
     private void HandlePlacement()
@@ -571,7 +589,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // TODO: new issue sprung up it seems; objects can be placed on player head and infront of it. no idea why, there's basically nothing here.
     private void HandlePlacementPreview()
     {
         if (!isHoldingToPlace || previewObject == null) return;
@@ -588,7 +605,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit? validHit = null;
         foreach (RaycastHit hit in hits)
         {
-            if (!hit.collider.CompareTag("IgnoreRaycast"))
+            if (!(hit.collider.CompareTag("IgnoreRaycast") || hit.collider.CompareTag("Player")))
             {
                 validHit = hit;
                 break;
@@ -670,6 +687,7 @@ public class PlayerController : MonoBehaviour
         item.OnPlace(previewObject.transform.position, previewObject.transform.rotation);
         heldItem = null;
         DisableSpinRoutineIfReal();
+        UpdateHints(false, grabby.focusedTarget != null);
     }
 
     private float GetObjectBottomOffset(GameObject obj)
@@ -688,48 +706,7 @@ public class PlayerController : MonoBehaviour
         if (previewObject != null) Destroy(previewObject);
     }
 
-    IEnumerator CheckForInteractables()
-    {
-        var waitInstruction = new WaitForSecondsRealtime(checkRate > 0 ? checkRate : 1);
-        while (true)
-        {
-            bool hitInteractable = Physics.Raycast(
-                playerCameraTransform.position,
-                playerCameraTransform.forward,
-                out RaycastHit hit,
-                pickupRange,
-                hoverLayer
-            );
-
-            Item detectedItem = null;
-            if (hitInteractable) hit.collider.TryGetComponent(out detectedItem);
-
-            Item heldItemComponent = heldItem?.GetComponent<Item>();
-
-            bool hasHeldItem = heldItemComponent != null;
-            bool hasDetectedItem = detectedItem != null;
-
-            bool canUseWithOther = hasHeldItem && hasDetectedItem &&
-                                 (heldItemComponent.CanBeUsedWith(detectedItem));
-            bool canUseAlone = hasHeldItem && heldItemComponent.CanBeUsedWith(-1);
-
-            bool shouldShowUseHint = canUseWithOther || canUseAlone;
-            bool shouldShowPickupHint = !hasHeldItem && hasDetectedItem &&
-                                       detectedItem.isPickupable;
-
-            if (currentInteractable != detectedItem)
-            {
-                currentInteractable = detectedItem;
-                ClearAllHints();
-            }
-
-            UpdateHints(shouldShowUseHint, shouldShowPickupHint);
-
-            yield return waitInstruction;
-        }
-    }
-
-    private void UpdateHints(bool useHint, bool pickupHint)
+    public void UpdateHints(bool useHint, bool pickupHint)
     {
         ClearAllHints();
 
@@ -892,6 +869,7 @@ public class PlayerController : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
         canMove = true;
+        yield break;
     }
 
     public void EndingSequence()

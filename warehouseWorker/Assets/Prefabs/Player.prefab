@@ -151,7 +151,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.39, y: 1, z: 0.47}
   m_Center: {x: 0, y: -0.48, z: 0}
 --- !u!114 &8676053326896660475
 MonoBehaviour:
@@ -451,7 +451,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3909deb6595f7df48aadfb7bb2c0b41c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settingsManager: {fileID: 8086924707916658341}
   moveSpeed: 200
   jumpForce: 250
   airControlFactor: 0.14
@@ -476,6 +475,8 @@ MonoBehaviour:
   minThrowForce: 5
   maxThrowForce: 25
   maxChargeTime: 1.5
+  chargeMeterUI: {fileID: 372417427155422074}
+  chargeMeter: {fileID: 3374242626005044086}
   previewMaterial: {fileID: 2100000, guid: 26c62d6399b99b34da92ac79e7f154c4, type: 2}
   placementMaxDistance: 3
   placementLayer:
@@ -483,8 +484,6 @@ MonoBehaviour:
     m_Bits: 72
   placementOffset: {x: 0, y: 0.05, z: 0}
   rotationSpeed: 10
-  chargeMeterUI: {fileID: 372417427155422074}
-  chargeMeter: {fileID: 3374242626005044086}
   footstepSource: {fileID: 2209314514006350624}
   landingSource: {fileID: 2209314514006350624}
   footstepInterval: 0.4
@@ -519,10 +518,6 @@ MonoBehaviour:
   slipSounds:
   - {fileID: 8300000, guid: 1535062021c5fd54baf2ccc51972ec0c, type: 3}
   - {fileID: 8300000, guid: effaf28828fbb4d4da06a68c285422ce, type: 3}
-  checkRate: 0.2
-  hoverLayer:
-    serializedVersion: 2
-    m_Bits: 64
   followForce: 400
   maxHoldDistance: 1.5
   damping: 1
@@ -536,6 +531,7 @@ MonoBehaviour:
   maxSlipRisk: 1.5
   slipCooldown: 3
   minSlipSpeed: 5
+  settingsManager: {fileID: 8086924707916658341}
   pauseAnimator: {fileID: 2325271019118415834}
   pauseMenu: {fileID: 4177467593501480285}
   pauseUI: {fileID: 3246104486971949686}
@@ -712,8 +708,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6001914628832752546}
   - component: {fileID: 6738606170406195690}
+  - component: {fileID: 7620786230106761867}
   m_Layer: 0
-  m_Name: hand
+  m_Name: grabbyHitbox
   m_TagString: IgnoreRaycast
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -751,10 +748,27 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.55, y: 2.14, z: 3.16}
+  m_Size: {x: 0.39, y: 0.28, z: 3.16}
   m_Center: {x: -1, y: 0.65, z: 0.94}
+--- !u!114 &7620786230106761867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5302836129600631033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ace0ddfbd72acf4ea3ed523d7af81aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 9165553183659771581}
+  indicatorSprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  rotationSpeed: 90
+  spriteScale: 1
+  raycastRefreshInterval: 0.1
 --- !u!1 &6788166984360108490
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,8 +11,10 @@ public class PlayerFeetScript : MonoBehaviour
     {
         for (int i = 0; i < objects.Count; i++)
         {
-            if (objects[i] == null) 
-                objects[i] = null;
+            if (objects[i] == null)
+            {
+                objects.RemoveAt(i);
+            }
         }
     }
 
