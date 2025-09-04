@@ -50,6 +50,7 @@ public class StorageArea : MonoBehaviour
     {
         var obj = containingObject.gameObject;
         var created = Instantiate(obj);
+        created.name = containingObject.name;
         created.SetActive(true);
         // do whatever else is needed to the created.
         return created;

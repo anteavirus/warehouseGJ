@@ -296,4 +296,26 @@ public class StableHangingLight : MonoBehaviour
             }
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 anchorPos = transform.position + Vector3.up * (segments * segmentLength);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(anchorPos, ropeThickness * 1.2f);
+
+        Gizmos.color = Color.gray;
+        Vector3 lastPos = anchorPos;
+        for (int i = 0; i < segments; i++)
+        {
+            Vector3 segPos = anchorPos + Vector3.down * segmentLength * (i + 1);
+            Gizmos.DrawLine(lastPos, segPos);
+            Gizmos.DrawSphere(segPos, ropeThickness);
+            lastPos = segPos;
+        }
+
+        Vector3 bulbPos = anchorPos + Vector3.down * segmentLength * segments;
+        Gizmos.color = new Color(1f, 0.6f, 0.15f, 1f); // orange/yellow
+        Gizmos.DrawSphere(bulbPos, 0.15f);
+    }
+
 }

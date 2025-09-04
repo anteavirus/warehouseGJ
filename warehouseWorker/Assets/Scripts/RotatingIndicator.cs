@@ -17,6 +17,7 @@ public class RotatingIndicator : MonoBehaviour
 
     public void Initialize(Transform target, Sprite spriteAsset, float speed, float yScale = 1f, float bounceHeight = .5f, float bounceDuration = 4.0f)
     {
+        gameObject.layer = LayerMask.NameToLayer("Interactable");
         targetTransform = target;
         rotationSpeed = speed;
         this.bounceHeight = bounceHeight;

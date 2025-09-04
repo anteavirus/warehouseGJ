@@ -21,15 +21,18 @@ public class Box : Item
         boxscript.OnUse(user); // I wonder if race condition makes it sometimes play the sound, sometimes not.
         boxscript.useSounds = null;
 
-        user.GetComponent<PlayerController>().ForceDropItem();
+        var player = user.GetComponent<PlayerController>();
+        player.ForceDropItem();
 
         var item = Instantiate(containedItem);
+        item.name = containedItem.name;
         item.transform.position = transform.position;
         item.SetActive(true);
         item.GetComponent<Item>().fromShelf = false;
         item.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         containedItem = null;
+        player.ForcePickupItem(boxscript);
         Destroy(this.gameObject);
     }
 

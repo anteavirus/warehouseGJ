@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerGrabbyScript : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class PlayerGrabbyScript : MonoBehaviour
 
     [Header("Refresh Settings")]
     public float raycastRefreshInterval = 0.1f;
+
+    [Header("Grabbing Interaction")]
+    [SerializeField] Image grabbyIndicator;
+    [SerializeField] Image itemToGrabIndicator;
+    [SerializeField] Sprite noItem, someItem, grabbedItem;
 
     private List<object> nearbyObjects = new();
     private RotatingIndicator currentIndicator;
@@ -37,26 +43,110 @@ public class PlayerGrabbyScript : MonoBehaviour
             controller.playerCamera.transform.forward, out RaycastHit hit,
             controller.pickupRange, controller.interactableLayer))
         {
-            if (hit.collider.TryGetComponent<Item>(out var item)) return item;
-            if (hit.collider.TryGetComponent<StorageArea>(out var area)) return area;
+            if (hit.collider.TryGetComponent<Item>(out var item))
+            {
+                if (item.isPickupable)           
+                    return item;
+            }
+
+            if (hit.collider.TryGetComponent<StorageArea>(out var area))
+                return area;
         }
 
-        // Fall back to nearest object
         CleanupNullObjects();
-        return nearbyObjects.Count > 0 ? nearbyObjects : null;
+        if (nearbyObjects.Count > 0)
+        {
+            return GetNearestObject();
+        }
+
+        return null;
     }
+
+    private object GetNearestObject()
+    {
+        if (nearbyObjects.Count == 0) return null;
+        if (nearbyObjects.Count == 1)
+        {
+            var single = nearbyObjects[^1];
+            if (single is Item i && !i.isPickupable) return null;
+            return single;
+        }
+
+        var cameraPos = controller.playerCamera.transform.position;
+        object nearest = null;
+        float nearestDistance = float.MaxValue;
+
+        foreach (var obj in nearbyObjects)
+        {
+            if (obj is Item item && !item.isPickupable)
+                continue;
+
+            var transform = GetTransform(obj);
+            if (transform == null) continue;
+
+            float distance = Vector3.Distance(cameraPos, transform.position);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearest = obj;
+            }
+        }
+
+        return nearest;
+    }
+
 
     private void RefreshFocus()
     {
         UpdateIndicator();
-        controller.UpdateHints(false, focusedTarget != null);
+
+        if (controller.heldItem != null)
+        {
+            grabbyIndicator.sprite = grabbedItem;
+            itemToGrabIndicator.gameObject.SetActive(true);
+
+            var heldItemSprite = GameManager.Instance.previewSprites
+                .Find(i => i != null && i.name == controller.heldItem.name);
+            // Fallback if no match found
+            itemToGrabIndicator.sprite = heldItemSprite ?? GameManager.Instance.previewSprites[^1];
+
+            // Place the preview below the main indicator (adjust as desired)
+            var heldOffset = new Vector2(0, -16f);
+            itemToGrabIndicator.rectTransform.anchoredPosition = grabbyIndicator.rectTransform.anchoredPosition + heldOffset;
+            grabbyIndicator.transform.SetAsLastSibling();
+
+            return;
+        }
+
+        var item = focusedItem;
+        if (item != null)
+        {
+            grabbyIndicator.sprite = someItem;
+            itemToGrabIndicator.gameObject.SetActive(true);
+
+            var previewSprite = GameManager.Instance.previewSprites
+                .Find(i => i != null && i.name == item.name);
+            itemToGrabIndicator.sprite = previewSprite ?? GameManager.Instance.previewSprites[^1];
+            var heldOffset = new Vector2(0, -grabbyIndicator.rectTransform.rect.height / 2f);
+
+            itemToGrabIndicator.rectTransform.anchoredPosition = grabbyIndicator.rectTransform.anchoredPosition;
+            itemToGrabIndicator.transform.SetAsLastSibling();
+
+            return;
+        }
+
+        grabbyIndicator.sprite = noItem;
+        itemToGrabIndicator.gameObject.SetActive(false);
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
+        CleanupNullObjects();
         var obj = GetInteractableObject(other);
         if (obj != null && !nearbyObjects.Contains(obj))
         {
+            if (obj is Item item && !item.isPickupable) return;
             nearbyObjects.Add(obj);
             RefreshFocus();
         }
@@ -64,6 +154,7 @@ public class PlayerGrabbyScript : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        CleanupNullObjects();
         var obj = GetInteractableObject(other);
         if (obj != null)
         {
@@ -89,13 +180,18 @@ public class PlayerGrabbyScript : MonoBehaviour
         if (target is Item item)
         {
             nearbyObjects.Remove(item);
+            RefreshFocus();
             return item;
         }
 
         if (target is StorageArea area)
         {
             var spawned = area.CreateNewItemForPickup();
-            return spawned?.GetComponent<Item>();
+            if (spawned != null)
+            {
+                RefreshFocus();
+                return spawned.GetComponent<Item>();
+            }
         }
 
         return null;
@@ -143,19 +239,34 @@ public class PlayerGrabbyScript : MonoBehaviour
         }
     }
 
-    private Transform GetTransform(object obj)
+    Transform GetTransform(object target)
     {
-        return obj switch
+        if (target == null) return null;
+
+        if (target is IEnumerable<object> list && target is not string) // we probably hit the nearbyObjects list.
         {
-            Item item => item?.transform,
-            StorageArea area => area?.transform,
-            _ => null
-        };
+            foreach (var boba in list)
+            {
+                if (boba == null) continue;
+                if (boba is GameObject ass) return ass.transform;
+                if (boba is Component blast) return blast.transform;
+            }
+            return null;
+        }
+
+        if (target is GameObject go) return go.transform;
+        if (target is Component comp) return comp.transform;
+
+        return null;
     }
 
     private void CleanupNullObjects()
     {
-        nearbyObjects.RemoveAll(obj => obj == null);
+        nearbyObjects.RemoveAll(obj =>
+            obj == null ||      // removes pure nulls
+            (obj is UnityEngine.Object unityObj && unityObj == null) // removes destroyed Unity objects
+        );
+
     }
 
     private void OnDestroy()

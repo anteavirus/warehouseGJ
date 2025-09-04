@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuZonerDoner : MonoBehaviour
 {
     [Header("Spawning Settings")]
+    public GameObject boxPrefab;
     public GameObject[] itemPrefabs;
     public GameObject extraSpecialPunchCardPrefab;
     public Transform spawnPoint;
@@ -17,9 +18,6 @@ public class MainMenuZonerDoner : MonoBehaviour
     public float minIntervalRandom = 2f;
     public float maxIntervalRandom = 6f;
     public Vector2 spawnForceRange = new Vector2(1f, 3f);
-
-    [Header("Zone Settings")]
-    public Collider spawnZone;
 
     private float spawnTimer;
     private List<GameObject> activeItems = new List<GameObject>();
@@ -58,8 +56,20 @@ public class MainMenuZonerDoner : MonoBehaviour
     {
         if (itemPrefabs.Length == 0) return;
 
+        GameObject newObject;
+        if (boxPrefab != null)
+        {
+            GameObject newBox = Instantiate(boxPrefab);
+            newBox.GetComponent<Box>().containedItem = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
+            newObject = newBox;
+        }
+        else
+        {
+            newObject = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
+        }
+
         GameObject newItem = Instantiate(
-            itemPrefabs[Random.Range(0, itemPrefabs.Length)],
+            newObject,
             spawnPoint.position,
             Random.rotation
         );

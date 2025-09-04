@@ -7,9 +7,11 @@ MonoImporter:
   - scoreUI: {instanceID: 0}
   - timerUI: {instanceID: 0}
   - orderListUI: {instanceID: 0}
+  - defaultPreview: {fileID: 2800000, guid: 6473b743c0cc5ac4ea81d2a1fd6ba5f3, type: 3}
   - box: {instanceID: 0}
   - sfx: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5, type: 2}
   - talkingDeliveryItem: {instanceID: 0}
+  - difficultyImage: {instanceID: 0}
   - spawnPosition: {instanceID: 0}
   - blackHoleSpawnPosition: {instanceID: 0}
   executionOrder: 0

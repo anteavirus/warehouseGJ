@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
   m_LocalPosition: {x: 27.453, y: -3, z: 35.343}
-  m_LocalScale: {x: 1.4359133, y: 1.4359133, z: 1.4359133}
+  m_LocalScale: {x: 1.1820726, y: 1.1820726, z: 1.1820726}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -155,6 +155,7 @@ MonoBehaviour:
   fromShelf: 0
   canUseOnID: 
   isPickupable: 1
+  createdOnShelf: 0
   pickupSounds:
   - {fileID: 8300000, guid: a2a335d137c904f42b28134454ed7cb3, type: 3}
   useSounds: []
@@ -162,7 +163,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3c7fd170579cd9e479c67e2e6ccffd73, type: 3}
   - {fileID: 8300000, guid: e9d748de3e618d8468e490d9e8f91655, type: 3}
   - {fileID: 8300000, guid: c5bbf14399c49914cbe69b79cb267423, type: 3}
-  parrySounds: []
   mixerGroup: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5,
     type: 2}
   throwMultiplier: 0.1

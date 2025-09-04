@@ -101,8 +101,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float xRotation;
     private Vector3 moveDirection;
-    private GameObject heldItem, previewObject;
-    private Item currentInteractable;
+    public GameObject heldItem, previewObject;
     private Coroutine spinRoutine;
     private SurfaceType currentSurface;
 
@@ -385,9 +384,20 @@ public class PlayerController : MonoBehaviour
 
     private void HandleUseItem()
     {
-        if (heldItem != null && settingsManager.GetActionDown("Use")) // Right click
+        if (settingsManager.GetActionDown("Use"))// Right click
         {
-            heldItem.GetComponent<Item>().OnUse(gameObject);
+            if (heldItem != null) 
+            {
+                heldItem.GetComponent<Item>().OnUse(gameObject);
+                return;
+            }
+            if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
+                out RaycastHit hit, pickupRange, interactableLayer))
+            {
+                /// TODO
+                hit.transform.GetComponent<Item>().OnUse(gameObject);
+                return;
+            }
         }
     }
 
@@ -430,6 +440,16 @@ public class PlayerController : MonoBehaviour
                 return;
             }
         }
+
+        // May lord not see this mess, for his punishment'd be death by choking hanging.
+        if (stupidShit != null)
+        {
+            if (stupidShit.isPickupable)
+            {
+                PickUpItem(stupidShit);
+                return;
+            }
+        }
     }
 
     void PickUpItem(Item item)
@@ -448,7 +468,13 @@ public class PlayerController : MonoBehaviour
             heldItemRb.drag = 5f;
             heldItemRb.angularDrag = 5f;
         }
-        UpdateHints(false, grabby.focusedTarget != null);
+
+        try
+        {
+            feet.objects.Remove(item.GetComponent<Collider>());
+        }
+        catch { Debug.Log("Failed to remove feet or something. Whatever this is fine"); }
+        // TODO: This bug can still occur under slimmest of circumstances. I think? I just had it break! This is fucking stupid, whatever
     }
 
     public void ForceDropItem()
@@ -475,8 +501,6 @@ public class PlayerController : MonoBehaviour
         heldItem = null;
         heldItemRb = null;
         heldItem = null;
-
-        UpdateHints(false, grabby.focusedTarget != null);
     }
 
     private void HandleThrow()
@@ -545,7 +569,6 @@ public class PlayerController : MonoBehaviour
         heldItem = null;
         heldItemRb = null;
         heldItem = null;
-        UpdateHints(false, grabby.focusedTarget != null);
     }
 
     private void HandlePlacement()
@@ -602,20 +625,11 @@ public class PlayerController : MonoBehaviour
             placementLayer
         );
 
-        RaycastHit? validHit = null;
-        foreach (RaycastHit hit in hits)
-        {
-            if (!(hit.collider.CompareTag("IgnoreRaycast") || hit.collider.CompareTag("Player")))
-            {
-                validHit = hit;
-                break;
-            }
-        }
+        RaycastHit? validHit = GetPriorityHit(hits);
 
         isValidPlacement = validHit.HasValue;
 
         bool isVerticalSurface = false;
-
         bool isThisActuallyNecessaryForTheGameplayLoop = false;
 
         if (isValidPlacement && isThisActuallyNecessaryForTheGameplayLoop)
@@ -648,6 +662,46 @@ public class PlayerController : MonoBehaviour
         previewObject.transform.SetPositionAndRotation(targetPos, targetRot);
         UpdatePreviewAppearance();
     }
+
+    private RaycastHit? GetPriorityHit(RaycastHit[] hits)
+    {
+        RaycastHit? interactableHit = null;
+        RaycastHit? grassHit = null;
+        RaycastHit? fallbackHit = null;
+
+        foreach (RaycastHit hit in hits)
+        {
+            // Skip ignored objects
+            if (hit.collider.CompareTag("IgnoreRaycast") || hit.collider.CompareTag("Player"))
+                continue;
+
+            // Check layer priority
+            if (IsOnLayer(hit.collider.gameObject, "Interactable"))
+            {
+                if (!interactableHit.HasValue || hit.distance < interactableHit.Value.distance)
+                    interactableHit = hit;
+            }
+            else if (IsOnLayer(hit.collider.gameObject, "Grass"))
+            {
+                if (!grassHit.HasValue || hit.distance < grassHit.Value.distance)
+                    grassHit = hit;
+            }
+            else
+            {
+                if (!fallbackHit.HasValue || hit.distance < fallbackHit.Value.distance)
+                    fallbackHit = hit;
+            }
+        }
+
+        // Return in priority order: Interactable > Grass > Other
+        return interactableHit ?? grassHit ?? fallbackHit;
+    }
+
+    private bool IsOnLayer(GameObject obj, string layerName)
+    {
+        return obj.layer == LayerMask.NameToLayer(layerName);
+    }
+
 
 
     private void CreatePreview()
@@ -687,77 +741,36 @@ public class PlayerController : MonoBehaviour
         item.OnPlace(previewObject.transform.position, previewObject.transform.rotation);
         heldItem = null;
         DisableSpinRoutineIfReal();
-        UpdateHints(false, grabby.focusedTarget != null);
     }
 
     private float GetObjectBottomOffset(GameObject obj)
     {
         if (obj == null) return 0f;
 
-        if (obj.TryGetComponent<Collider>(out var col)) return col.bounds.extents.y;
-        // TODO: These two seem to return 0 most, if not all the time... may need to be fixed but. meh. below works as well
-        if (obj.TryGetComponent<Renderer>(out var rend)) return rend.bounds.extents.y;
+        Bounds? bounds = null;
+        if (obj.TryGetComponent<Collider>(out var col))
+        {
+            bounds = col.bounds;
+        }
+        else if (obj.TryGetComponent<Renderer>(out var rend) && rend.bounds.size.sqrMagnitude > 0)
+        {
+            bounds = rend.bounds;
+        }
 
-        return obj.transform.lossyScale.y / 2; // it's something... i guess.
+        if (bounds.HasValue)
+        {
+            float pivotY = obj.transform.position.y;
+            float bottomY = bounds.Value.min.y;
+            return pivotY - bottomY;
+        }
+
+        return obj.transform.lossyScale.y / 2;
     }
+
 
     private void DestroyPreview()
     {
         if (previewObject != null) Destroy(previewObject);
-    }
-
-    public void UpdateHints(bool useHint, bool pickupHint)
-    {
-        ClearAllHints();
-
-        if (useHint)
-        {
-            ShowUseHint(true);
-        }
-        else if (pickupHint)
-        {
-            ShowPickUpHint(true);
-        }
-    }
-
-    private void ClearAllHints()
-    {
-        ShowUseHint(false);
-        ShowPickUpHint(false);
-    }
-
-    void ShowUseHint(bool saye)
-    {
-        if (saye)
-        {
-            if (canUseOnItemHintUI != null)
-            {
-                canUseOnItemHintUI.GetComponent<TextMeshProUGUI>().text = useHint;
-                canUseOnItemHintUI.gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            if (canUseOnItemHintUI != null) 
-                canUseOnItemHintUI.gameObject.SetActive(false);
-        }
-    }
-
-    void ShowPickUpHint(bool saye)
-    {
-        if (saye)
-        {
-            if (pickUpHintUI != null)
-            {
-                pickUpHintUI.GetComponent<TextMeshProUGUI>().text = pickUpHint;
-                pickUpHintUI.gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            if (pickUpHintUI != null) 
-                pickUpHintUI.gameObject.SetActive(false);
-        }
     }
 
     private void OnApplicationFocus(bool hasFocus)

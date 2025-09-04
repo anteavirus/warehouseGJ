@@ -256,10 +256,10 @@ MonoBehaviour:
   fromShelf: 0
   canUseOnID: 
   isPickupable: 1
+  createdOnShelf: 0
   pickupSounds: []
   useSounds: []
   collisionSounds: []
-  parrySounds: []
   mixerGroup: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5,
     type: 2}
   throwMultiplier: 0.1

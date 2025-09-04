@@ -8,7 +8,7 @@ public class ZombieAI : MonoBehaviour
     public float wanderSpeed = 2f;
     public float chaseSpeed = 4f;
     public float wanderRadius = 10f;
-    public float detectionRadius = 7f;
+    public float detectionRadius = 15f;
     public float attackRange = 2f;
     public float directionChangeCooldown = 3f;
     public float searchArriveThreshold = 1f;
@@ -32,7 +32,7 @@ public class ZombieAI : MonoBehaviour
     private Transform player;
     private Vector3 currentDirection;
     private float directionTimer;
-    private bool isDead;
+    public bool isDead;
     private AudioSource footstepSource;
 
     // Footstep system variables
@@ -55,26 +55,12 @@ public class ZombieAI : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         player = FindObjectOfType<PlayerController>().transform;
         footstepSource = gameObject.AddComponent<AudioSource>();
-        footstepSource.spatialBlend = 1f; // 3D sound
+        footstepSource.spatialBlend = 1f;
+        footstepSource.outputAudioMixerGroup = GameManager.Instance.sfx;
 
-        SpawnAtGround();
         SetRandomDirection();
         directionTimer = directionChangeCooldown;
         currentState = State.Wandering;
-    }
-
-    void SpawnAtGround()
-    {
-
-        Vector3 spawnPosition = transform.position + Vector3.up * 10f; 
-        if (Physics.Raycast(spawnPosition, Vector3.down, out RaycastHit hit, 20f, groundLayer))
-        {
-            transform.position = hit.point + Vector3.up * 0.5f;
-        }
-        else
-        {
-            Debug.LogWarning("No ground found to spawn the zombie.");
-        }
     }
 
     void Update()
@@ -370,6 +356,7 @@ public class ZombieAI : MonoBehaviour
 
         GameObject boom = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         AudioSource audioSource = boom.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = GameManager.Instance.sfx;
         audioSource.PlayOneShot(boomClip);
         Destroy(boom, 2f);
         Destroy(gameObject);

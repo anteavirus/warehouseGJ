@@ -22,7 +22,7 @@ public class PlayerFeetScript : MonoBehaviour
     {
         if (other.isTrigger) return;
         // Check if layer is 3 (grass) or 6 (interactable)
-        if ((other.gameObject.layer == 3 || other.gameObject.layer == 6) &&
+        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
             !objects.Contains(other))
         {
             objects.Add(other);
@@ -33,7 +33,7 @@ public class PlayerFeetScript : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         CleanUp();
-        if ((other.gameObject.layer == 3 || other.gameObject.layer == 6) &&
+        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
             objects.Contains(other))
         {
             objects.Remove(other);

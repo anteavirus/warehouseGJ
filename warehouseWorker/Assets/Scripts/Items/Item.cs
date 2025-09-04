@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Item : MonoBehaviour
@@ -22,7 +21,6 @@ public class Item : MonoBehaviour
     public AudioClip[] pickupSounds;
     public AudioClip[] useSounds;
     public AudioClip[] collisionSounds;
-    public AudioClip[] parrySounds;
     public AudioMixerGroup mixerGroup;
 
     [Header("Settings that exist")]
@@ -124,14 +122,6 @@ public class Item : MonoBehaviour
     {
         transform.SetPositionAndRotation(position, rotation);
         OnDrop();
-    }
-
-    public virtual void OnParry()
-    {
-        if (parrySounds != null && parrySounds.Length > 0)
-        {
-            audioSource.PlayOneShot(parrySounds[Random.Range(0, parrySounds.Length)]);
-        }
     }
 
     public bool CanBeUsedWith(int ID)

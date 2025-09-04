@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2948297273562730122}
   - component: {fileID: 5113538829475009980}
   - component: {fileID: 4645900363409689541}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: wireSegment
   m_TagString: Player
   m_Icon: {fileID: 0}

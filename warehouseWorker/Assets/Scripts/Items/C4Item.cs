@@ -22,10 +22,7 @@ public class C4Item : Item
     {
         if (!armed) return;
 
-        if (audioSource.isPlaying)
-            remainingTime = audioSource.clip.length - audioSource.time;
-        else
-            remainingTime -= Time.deltaTime;
+        remainingTime -= Time.deltaTime;
 
         if (remainingTime <= 0f)
             Detonate();

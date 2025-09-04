@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4047371279238537570}
   - component: {fileID: 2156416159845972888}
   - component: {fileID: 1943352245237232670}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "\u043B\u0430\u043C\u043F\u043E\u0447\u043A\u0430"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,5 +131,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.59375
-  m_Center: {x: 0, y: 0.40625, z: 0}
+  m_Radius: 0.35
+  m_Center: {x: 0, y: 0.24, z: 0}

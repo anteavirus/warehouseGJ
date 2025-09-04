@@ -23,7 +23,8 @@ public class ItemPliers : Item
 
         if (!slave.TryGetComponent<AudioSource>(out var _))
         {
-            slave.gameObject.AddComponent<AudioSource>();
+            var audioSlave = slave.gameObject.AddComponent<AudioSource>();
+            audioSlave.outputAudioMixerGroup = mixerGroup;
         }
 
         slave.transform.SetParent(player.transform, true);
