@@ -9,13 +9,13 @@ public class Item : MonoBehaviour
     public DeliveryAudioConfig AudioConfig => _audioConfig;
 
     public int ID;
+    public string Name; // TODO: create a translatable class a-la meinkrampft to throw together other languages in the same game
     public int scoreValue;
     public bool fromShelf;
     public int[] canUseOnID;
 
     [Header("Base Item Settings")]
     public bool isPickupable = true;
-    public bool createdOnShelf = false;
 
     [Header("Audio Settings")]
     public AudioClip[] pickupSounds;

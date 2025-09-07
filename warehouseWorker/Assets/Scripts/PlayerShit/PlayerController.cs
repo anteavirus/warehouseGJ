@@ -434,6 +434,7 @@ public class PlayerController : MonoBehaviour
             if (hit.transform.TryGetComponent<StorageArea>(out var area))
             {
                 var newItem = area.CreateNewItemForPickup();
+                if (newItem == null) return; // :)
                 newItem.SetActive(true);
                 Item itemScript = newItem.GetComponent<Item>();
                 TryPickupItem(itemScript);

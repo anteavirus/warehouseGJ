@@ -36,34 +36,6 @@ public class Box : Item
         Destroy(this.gameObject);
     }
 
-    private void ToggleColliders(bool state)
-    {
-        foreach (Collider col in GetComponentsInChildren<Collider>())
-        {
-            col.enabled = state;
-        }
-    }
-
-    // keep outdated just in case
-    private void TogglePhysics(bool state)
-    {
-        if (TryGetComponent<Rigidbody>(out var rb))
-        {
-            rb.isKinematic = !state;
-            rb.detectCollisions = state;
-            if (state)
-            {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-        }
-
-        foreach (Collider col in GetComponentsInChildren<Collider>())
-        {
-            col.enabled = state;
-        }
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collisionSounds != null && collisionSounds.Length > 0)

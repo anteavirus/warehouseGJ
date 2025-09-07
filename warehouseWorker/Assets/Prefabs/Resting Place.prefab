@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4053858497669436809}
   m_Layer: 2
   m_Name: GameObject
-  m_TagString: Untagged
+  m_TagString: IgnoreComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5365,7 +5365,6 @@ MonoBehaviour:
   fromShelf: 0
   canUseOnID: 
   isPickupable: 0
-  createdOnShelf: 0
   pickupSounds: []
   useSounds:
   - {fileID: 8300000, guid: 7b04f9367a8f74b4a94fe3e738f23700, type: 3}

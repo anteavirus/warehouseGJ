@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    ShelvesStockManager shelvesStockManager;
     public bool setdownItem;
     public bool gameStarted;
     [SerializeField] TextMeshProUGUI scoreUI;
@@ -113,6 +114,12 @@ public class GameManager : MonoBehaviour
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        shelvesStockManager = GetComponent<ShelvesStockManager>();
+        if (shelvesStockManager != null)
+        {
+            shelvesStockManager.Work();
         }
         GeneratePreviews();
     }

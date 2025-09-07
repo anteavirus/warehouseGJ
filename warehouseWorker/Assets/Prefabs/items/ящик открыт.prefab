@@ -169,7 +169,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1ff0fc296ab4dba4a9d75bf5c92e562d, type: 3}
   - {fileID: 8300000, guid: d63e18f584a410c48a3d5bafd3d30bd8, type: 3}
   - {fileID: 8300000, guid: 50d83e5e3f10ae24f80b0c69819c9d9d, type: 3}
-  parrySounds: []
   mixerGroup: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5,
     type: 2}
   throwMultiplier: 0.1

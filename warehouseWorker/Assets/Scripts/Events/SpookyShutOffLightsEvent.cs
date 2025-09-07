@@ -79,7 +79,7 @@ public class BoogeymanAndLightsTurnOffEvent : Event
         {
             foreach (var item in FindObjectsOfType<Light>())
             {
-                if (!item.CompareTag("IgnoreComponent") || item.GetComponent<StupidHitboxToMakeGameManagerRestartTimer>())
+                if (!item.CompareTag("IgnoreComponent"))
                     targetLights.Add(item);
             }
         }
