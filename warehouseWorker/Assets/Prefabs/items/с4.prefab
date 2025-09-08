@@ -252,11 +252,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 9ec828a0426387746ab5918a5f38ab74, type: 2}
   ID: 6
+  Name: c4
   scoreValue: 150
   fromShelf: 0
   canUseOnID: 
   isPickupable: 1
-  createdOnShelf: 0
   pickupSounds: []
   useSounds: []
   collisionSounds: []

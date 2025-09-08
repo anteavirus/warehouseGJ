@@ -45,12 +45,15 @@ public class PlayerGrabbyScript : MonoBehaviour
         {
             if (hit.collider.TryGetComponent<Item>(out var item))
             {
-                if (item.isPickupable)           
+                if (item.isActiveAndEnabled && item.isPickupable)           
                     return item;
             }
 
             if (hit.collider.TryGetComponent<StorageArea>(out var area))
-                return area;
+            {
+                if (area.isActiveAndEnabled)
+                    return area;
+            }
         }
 
         CleanupNullObjects();
@@ -118,15 +121,19 @@ public class PlayerGrabbyScript : MonoBehaviour
             return;
         }
 
-        var item = focusedItem;
-        if (item != null)
+        var target = focusedTarget;
+        if (target != null)
         {
             grabbyIndicator.sprite = someItem;
-            itemToGrabIndicator.gameObject.SetActive(true);
 
-            var previewSprite = GameManager.Instance.previewSprites
-                .Find(i => i != null && i.name == item.name);
-            itemToGrabIndicator.sprite = previewSprite ?? GameManager.Instance.previewSprites[^1];
+            if (target is Item item)
+            {
+                itemToGrabIndicator.gameObject.SetActive(true);
+                var previewSprite = GameManager.Instance.previewSprites
+                    .Find(i => i != null && i.name == item.Name);
+                itemToGrabIndicator.sprite = previewSprite ?? GameManager.Instance.previewSprites[^1];
+            }
+
             var heldOffset = new Vector2(0, -grabbyIndicator.rectTransform.rect.height / 2f);
 
             itemToGrabIndicator.rectTransform.anchoredPosition = grabbyIndicator.rectTransform.anchoredPosition;
@@ -165,8 +172,16 @@ public class PlayerGrabbyScript : MonoBehaviour
 
     private object GetInteractableObject(Collider collider)
     {
-        if (collider.TryGetComponent<Item>(out var item)) return item;
-        if (collider.TryGetComponent<StorageArea>(out var area)) return area;
+        if (collider.TryGetComponent<Item>(out var item))
+        {
+            if (item.isActiveAndEnabled && item.isPickupable)
+                return item;
+        }
+        if (collider.TryGetComponent<StorageArea>(out var area))
+        {
+            if (area.isActiveAndEnabled)
+                return area;
+        }
         return null;
     }
 
@@ -248,8 +263,16 @@ public class PlayerGrabbyScript : MonoBehaviour
             foreach (var boba in list)
             {
                 if (boba == null) continue;
-                if (boba is GameObject ass) return ass.transform;
-                if (boba is Component blast) return blast.transform;
+                if (boba is GameObject ass)
+                {
+                    if (ass.activeSelf)
+                        return ass.transform;
+                    continue;
+                }
+                if (boba is Component blast)
+                {
+                    return blast.transform;
+                }
             }
             return null;
         }

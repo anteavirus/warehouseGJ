@@ -151,6 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 101253c32d7c75245bd3ac6574a19b60, type: 2}
   ID: 2
+  Name: "\u044D\u043D\u0435\u0440\u0433\u043E\u0441"
   scoreValue: 50
   fromShelf: 0
   canUseOnID: 
@@ -162,8 +163,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 840d3831c52633b45838ca110016aac9, type: 3}
   - {fileID: 8300000, guid: 1405e6b5a5b933d4483e8aedf1ea3675, type: 3}
   - {fileID: 8300000, guid: 9cae6c7086cf725439334a67e260039d, type: 3}
-  parrySounds:
-  - {fileID: 0}
   mixerGroup: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5,
     type: 2}
   throwMultiplier: 0.1

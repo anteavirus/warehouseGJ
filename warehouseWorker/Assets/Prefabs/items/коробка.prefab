@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 0}
   ID: 0
+  Name: "\u043A\u043E\u0440\u043E\u0431\u043A\u0430"
   scoreValue: 0
   fromShelf: 1
   canUseOnID: 
@@ -157,7 +158,6 @@ MonoBehaviour:
   pickupSounds: []
   useSounds: []
   collisionSounds: []
-  parrySounds: []
   mixerGroup: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5,
     type: 2}
   throwMultiplier: 0.1

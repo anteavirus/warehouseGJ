@@ -151,11 +151,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 5828d1f374626a547b4519063b9aa53a, type: 2}
   ID: 4
+  Name: "\u0432\u043E\u043B\u043B\u0435\u0439\u0431\u043E\u0439\u043D\u044B\u0439
+    \u043C\u044F\u0447"
   scoreValue: 30
   fromShelf: 0
   canUseOnID: 
   isPickupable: 1
-  createdOnShelf: 0
   pickupSounds:
   - {fileID: 8300000, guid: a2a335d137c904f42b28134454ed7cb3, type: 3}
   useSounds: []

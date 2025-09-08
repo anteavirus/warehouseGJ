@@ -119,7 +119,12 @@ public class MainMenuZonerDoner : MonoBehaviour
             string unWrappableInt = item.score < 0 ? $"<nobr>{item.score}</nobr>" : item.score.ToString();
             str += $"{i}: {item.name} - {unWrappableInt}\n";
         }
+        try
+        {
+
         leaderboardText.text = str;
+        }
+        catch { /*kick balls*/}
     }
 
     public void LoadScene(int id)

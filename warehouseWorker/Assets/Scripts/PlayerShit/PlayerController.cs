@@ -431,7 +431,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-            if (hit.transform.TryGetComponent<StorageArea>(out var area))
+            if (hit.transform.TryGetComponent<StorageArea>(out var area)) // TODO: I forgot, we can place things inside the shelves, but what if they don't become item inside the shelf? That's where the biggest problem lies! FIXITFIXITFIXIT
             {
                 var newItem = area.CreateNewItemForPickup();
                 if (newItem == null) return; // :)
@@ -677,12 +677,12 @@ public class PlayerController : MonoBehaviour
                 continue;
 
             // Check layer priority
-            if (IsOnLayer(hit.collider.gameObject, "Interactable"))
+            if (UsefulStuffs.IsOnLayer(hit.collider.gameObject, "Interactable"))
             {
                 if (!interactableHit.HasValue || hit.distance < interactableHit.Value.distance)
                     interactableHit = hit;
             }
-            else if (IsOnLayer(hit.collider.gameObject, "Grass"))
+            else if (UsefulStuffs.IsOnLayer(hit.collider.gameObject, "Grass"))
             {
                 if (!grassHit.HasValue || hit.distance < grassHit.Value.distance)
                     grassHit = hit;
@@ -697,13 +697,6 @@ public class PlayerController : MonoBehaviour
         // Return in priority order: Interactable > Grass > Other
         return interactableHit ?? grassHit ?? fallbackHit;
     }
-
-    private bool IsOnLayer(GameObject obj, string layerName)
-    {
-        return obj.layer == LayerMask.NameToLayer(layerName);
-    }
-
-
 
     private void CreatePreview()
     {
