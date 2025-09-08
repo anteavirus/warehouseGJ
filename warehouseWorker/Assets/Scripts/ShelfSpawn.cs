@@ -1,10 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class ShelfSpawn : MonoBehaviour
 {
     [Header("Spawn Restrictions")]
     [Tooltip("Leave empty to accept all shelf types")]
     public int[] acceptedShelfTypes;
+
+    // These fields track which item/shelf has been assigned to this spawn
+    [NonSerialized]
+    public int assignedItemID = 0; // 0 means no item
+    [NonSerialized]
+    public StorageArea assignedShelfPrefab = null;
+    [NonSerialized]
+    public int assignedItemAmount = 0;
 
     public bool CanAcceptShelfType(int shelfTypeID)
     {
@@ -19,12 +28,36 @@ public class ShelfSpawn : MonoBehaviour
         return false;
     }
 
+    public bool IsActiveForAssignment()
+    {
+        return gameObject.activeInHierarchy && enabled;
+    }
+
+    public bool IsAssigned()
+    {
+        return assignedShelfPrefab != null && assignedItemID != 0;
+    }
+
+    public void AssignItemAndShelf(int ID, StorageArea chosenShelf, int amount = 0)
+    {
+        assignedItemID = ID;
+        assignedShelfPrefab = chosenShelf;
+        assignedItemAmount = amount;
+    }
+
+    public void ResetAssignment()
+    {
+        assignedItemID = 0;
+        assignedShelfPrefab = null;
+        assignedItemAmount = 0;
+    }
+
     private void OnDrawGizmos()
     {
-        // Visual indicator in scene view
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, Vector3.one);
-        Gizmos.color = Color.yellow;
+        Color color = gameObject.activeInHierarchy ? Color.green : Color.red;
+        Gizmos.color = color;
+        Gizmos.DrawWireCube(transform.position, Vector3.one * 0.8f);
+        Gizmos.color = color * 0.7f;
         Gizmos.DrawSphere(transform.position, 0.1f);
     }
 }

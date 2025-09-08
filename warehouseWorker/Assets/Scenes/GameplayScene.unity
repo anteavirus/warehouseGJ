@@ -6944,15 +6944,14 @@ MonoBehaviour:
   _allowedItemIDs: 
   assignedItemID: 0
   itemAmount: 0
-  type: {fileID: 0}
   limitVelocity: {x: 0.3, y: 0.3, z: 0.3}
   shelfTypeID: 0
   itemPositions: []
   visualItems: []
   availablePositionColor: {r: 0, g: 1, b: 0, a: 1}
   occupiedPositionColor: {r: 1, g: 0, b: 0, a: 1}
-  noItemPositionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   gizmoSphereSize: 0.1
+  scaleOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &193653147
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7356,7 +7355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   acceptedShelfTypes: 01000000
 --- !u!1 &219524746
 GameObject:
@@ -8669,52 +8667,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1194849386}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &314269416
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 314269417}
-  - component: {fileID: 314269418}
-  m_Layer: 3
-  m_Name: ShelfSpawn
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &314269417
+--- !u!4 &314269417 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+    type: 3}
+  m_PrefabInstance: {fileID: 1284820662131927020}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 314269416}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 77581510}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &314269418
+--- !u!114 &314269418 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 3569427044036885523, guid: c1660b432e44fe74f917cd1f6af88042,
+    type: 3}
+  m_PrefabInstance: {fileID: 1284820662131927020}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 314269416}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
-  acceptedShelfTypes: 01000000
 --- !u!1 &319293873
 GameObject:
   m_ObjectHideFlags: 0
@@ -11849,15 +11819,14 @@ MonoBehaviour:
   _allowedItemIDs: 
   assignedItemID: 0
   itemAmount: 0
-  type: {fileID: 0}
   limitVelocity: {x: 0.3, y: 0.3, z: 0.3}
   shelfTypeID: 0
   itemPositions: []
   visualItems: []
   availablePositionColor: {r: 0, g: 1, b: 0, a: 1}
   occupiedPositionColor: {r: 1, g: 0, b: 0, a: 1}
-  noItemPositionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   gizmoSphereSize: 0.1
+  scaleOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &554480352
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13643,15 +13612,14 @@ MonoBehaviour:
   _allowedItemIDs: 
   assignedItemID: 0
   itemAmount: 0
-  type: {fileID: 0}
   limitVelocity: {x: 0.3, y: 0.3, z: 0.3}
   shelfTypeID: 0
   itemPositions: []
   visualItems: []
   availablePositionColor: {r: 0, g: 1, b: 0, a: 1}
   occupiedPositionColor: {r: 1, g: 0, b: 0, a: 1}
-  noItemPositionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   gizmoSphereSize: 0.1
+  scaleOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &697805085
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14758,15 +14726,14 @@ MonoBehaviour:
   _allowedItemIDs: 
   assignedItemID: 0
   itemAmount: 0
-  type: {fileID: 0}
   limitVelocity: {x: 0.3, y: 0.3, z: 0.3}
   shelfTypeID: 0
   itemPositions: []
   visualItems: []
   availablePositionColor: {r: 0, g: 1, b: 0, a: 1}
   occupiedPositionColor: {r: 1, g: 0, b: 0, a: 1}
-  noItemPositionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   gizmoSphereSize: 0.1
+  scaleOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &733605614
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17616,15 +17583,14 @@ MonoBehaviour:
   _allowedItemIDs: 
   assignedItemID: 0
   itemAmount: 0
-  type: {fileID: 0}
   limitVelocity: {x: 0.3, y: 0.3, z: 0.3}
   shelfTypeID: 0
   itemPositions: []
   visualItems: []
   availablePositionColor: {r: 0, g: 1, b: 0, a: 1}
   occupiedPositionColor: {r: 1, g: 0, b: 0, a: 1}
-  noItemPositionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   gizmoSphereSize: 0.1
+  scaleOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &972303643
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19182,7 +19148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   acceptedShelfTypes: 01000000
 --- !u!1 &1096612823
 GameObject:
@@ -22815,8 +22780,16 @@ MonoBehaviour:
   - {fileID: 6920069248926246038, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff, type: 3}
   shelfSpawns:
   - {fileID: 314269418}
+  - {fileID: 1400179429}
+  - {fileID: 219001268}
+  - {fileID: 1528142185}
+  - {fileID: 1451418022}
+  - {fileID: 1967484030}
+  - {fileID: 1461726668}
+  - {fileID: 1083814013}
   minInitialStock: 3
   maxInitialStock: 8
+  assignmentSeed: 0
   shelfStorages: []
 --- !u!1 &1364567846
 GameObject:
@@ -23173,7 +23146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   acceptedShelfTypes: 01000000
 --- !u!1001 &1407678147
 PrefabInstance:
@@ -24248,7 +24220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   acceptedShelfTypes: 01000000
 --- !u!4 &1457947220 stripped
 Transform:
@@ -24300,7 +24271,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   acceptedShelfTypes: 01000000
 --- !u!1001 &1465890737
 PrefabInstance:
@@ -25237,7 +25207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   acceptedShelfTypes: 01000000
 --- !u!1 &1528504303 stripped
 GameObject:
@@ -30112,7 +30081,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
   acceptedShelfTypes: 01000000
 --- !u!1001 &1979988510
 PrefabInstance:
@@ -32774,6 +32742,74 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8194930027800957830}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1284820662131927020
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 77581510}
+    m_Modifications:
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4440094061194307998, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6595973693287127716, guid: c1660b432e44fe74f917cd1f6af88042,
+        type: 3}
+      propertyPath: m_Name
+      value: ShelfSpawn
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c1660b432e44fe74f917cd1f6af88042, type: 3}
 --- !u!1001 &2584614359364990276
 PrefabInstance:
   m_ObjectHideFlags: 0
