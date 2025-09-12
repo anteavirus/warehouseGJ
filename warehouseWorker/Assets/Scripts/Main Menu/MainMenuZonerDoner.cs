@@ -132,6 +132,11 @@ public class MainMenuZonerDoner : MonoBehaviour
         SceneManager.LoadScene(id);
     }
 
+    public void LoadSceneStr(string name)
+    {
+        SceneManager.LoadScene(name);
+    }
+
     public void UpdateGameSettings(float volume, int qualityLevel)
     {
         // Example settings that can be changed mid-game

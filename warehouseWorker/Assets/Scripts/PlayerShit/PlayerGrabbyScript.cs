@@ -130,7 +130,7 @@ public class PlayerGrabbyScript : MonoBehaviour
             {
                 itemToGrabIndicator.gameObject.SetActive(true);
                 var previewSprite = GameManager.Instance.previewSprites
-                    .Find(i => i != null && i.name == item.Name);
+                    .Find(i => i != null && item.GetComponent<LocalizedText>() && i.name == item.Name.text);
                 itemToGrabIndicator.sprite = previewSprite ?? GameManager.Instance.previewSprites[^1];
             }
 

@@ -135,7 +135,9 @@ public class GameManager : MonoBehaviour
         foreach (var item in items)
         {
             var obj = Instantiate(item);
-            obj.name = obj.name.Replace("(Clone)", "");
+            var localname = obj.GetComponent<LocalizedText>();
+            localname.UpdateText();
+            obj.name = localname.text;
             obj.transform.parent = parent.transform;
             var itemComp = obj.GetComponent<Item>();
             itemComp.mixerGroup = sfx;
@@ -250,6 +252,13 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+#if DEBUG
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            StartRandomEvent();
+        }
+#endif
+
         if (!gameStarted) return;
 
         UpdateGameTime();
@@ -370,7 +379,8 @@ public class GameManager : MonoBehaviour
     {
         if (activeOrders.Count < 1)
         {
-            orderListUI.text = "Ноль заказов.";
+            bool foundNoOrders = LocalizationManager.TryGetVal("no_orders", out var transl);
+            if (foundNoOrders) orderListUI.text = transl;
             return;
         }
 
@@ -575,7 +585,7 @@ public class GameManager : MonoBehaviour
 
         leaderboardEntry = newEntry;
         player.GetComponent<Animator>().Play("GameOver");
-        Invoke(nameof(LoadScene), 10f);
+        Invoke(nameof(LoadSceneStr), 10f);
     }
 
     public void LoadSceneOffset(int offset = 0)
@@ -583,9 +593,14 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + offset);
     }
 
-    public void LoadScene(int ID = 0)
+    public void LoadSceneInd(int ID = 0)
     {
         SceneManager.LoadScene(ID);
+    }
+
+    public void LoadSceneStr(string name = "Main Menu")
+    {
+        SceneManager.LoadScene(name);
     }
 
     LeaderboardEntry CreateLeaderboardEntry()

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8083015383057723363}
   - component: {fileID: 7531254788333829588}
   - component: {fileID: -1572792357109664178}
+  - component: {fileID: -2727209642878933580}
   m_Layer: 6
   m_Name: "\u0430\u0440\u0431\u0430\u043B\u0435\u0442"
   m_TagString: Item
@@ -158,7 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 33717acf7b8908f45903e72635801bf9, type: 2}
   ID: 9
-  Name: "\u0430\u0440\u0431\u0430\u043B\u0435\u0442"
+  Name: {fileID: -2727209642878933580}
   scoreValue: 0
   fromShelf: 1
   canUseOnID: 
@@ -274,3 +275,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-2727209642878933580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588917149664192193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_crossbow
+  text: 

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5374456207388244865}
   - component: {fileID: 8906039377274544619}
   - component: {fileID: 2757402220981282713}
+  - component: {fileID: 9207188910749729218}
   m_Layer: 6
   m_Name: "\u043A\u043D\u0438\u0433\u0430"
   m_TagString: Item
@@ -150,7 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 335dda1b01094d9458471c3f85d95450, type: 2}
   ID: 3
-  Name: "\u043A\u043D\u0438\u0433\u0430"
+  Name: {fileID: 0}
   scoreValue: 15
   fromShelf: 0
   canUseOnID: 
@@ -263,3 +264,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9207188910749729218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090531286242974184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_book
+  text: 

@@ -92,11 +92,16 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    public void LoadGameSettings() =>
-        usernameInput.text = PlayerPrefs.GetString("CurrentUsername", "Он") ?? GameManager.GetRandomTauntingName();
+    public void LoadGameSettings()
+    {
+        var success = LocalizationManager.TryGetVal("default_name", out var name);
+        usernameInput.text = PlayerPrefs.GetString("CurrentUsername", success ? name : GameManager.GetRandomTauntingName());
+
+    }
 
     public void StartGame() =>
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    // TODO: 0 is no longer the main menu. I need to start loading via strings, not ints...
 
     public void SpawnTheFuckingPaper()
     {

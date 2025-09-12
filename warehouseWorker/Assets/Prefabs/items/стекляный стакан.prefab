@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8059619004411840112}
   - component: {fileID: -5991190754000391110}
   - component: {fileID: 5256417286446600357}
+  - component: {fileID: 2026838482605217328}
   m_Layer: 6
   m_Name: "\u0441\u0442\u0435\u043A\u043B\u044F\u043D\u044B\u0439 \u0441\u0442\u0430\u043A\u0430\u043D"
   m_TagString: Item
@@ -128,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 0}
   ID: 11
-  Name: "\u0441\u0442\u0435\u043A\u043B\u044F\u043D\u043D\u044B\u0439 \u0441\u0442\u0430\u043A\u0430\u043D"
+  Name: {fileID: 2026838482605217328}
   scoreValue: 30
   fromShelf: 0
   canUseOnID: 
@@ -264,3 +265,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2026838482605217328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3811767882528823929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_glass
+  text: 

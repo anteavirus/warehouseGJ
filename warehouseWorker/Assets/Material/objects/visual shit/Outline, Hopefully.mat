@@ -119,7 +119,7 @@ Material:
     - _OutlineSmoothing: 1
     - _OutlineThickness: 0.02
     - _OutlineVertexSnap: 8
-    - _OutlineWidth: 0.025
+    - _OutlineWidth: 0.012
     - _Parallax: 0.005
     - _PixelSize: 13.95
     - _PulseAmplitude: 0.1

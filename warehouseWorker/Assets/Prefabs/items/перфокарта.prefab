@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4226782089682021403}
   - component: {fileID: 4474902648890718363}
   - component: {fileID: 4094338593400745064}
+  - component: {fileID: 5771467063071525620}
   m_Layer: 6
   m_Name: "\u043F\u0435\u0440\u0444\u043E\u043A\u0430\u0440\u0442\u0430"
   m_TagString: Item
@@ -149,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: ae409c7e2d55de34fa1eb2f2aa139c9e, type: 2}
   ID: 5
-  Name: "\u043F\u0435\u0440\u0444\u043E\u043A\u0430\u0440\u0442\u0430"
+  Name: {fileID: 5771467063071525620}
   scoreValue: 0
   fromShelf: 0
   canUseOnID: fdffffff
@@ -258,3 +259,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5771467063071525620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2727187295589138996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_punch_card
+  text: 

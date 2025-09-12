@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8610814907812198208}
   - component: {fileID: 6525397498677607383}
   - component: {fileID: 4213183254397908632}
+  - component: {fileID: 2642141715860596494}
   m_Layer: 6
   m_Name: "\u044D\u043D\u0435\u0440\u0433\u043E\u0441"
   m_TagString: Item
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 101253c32d7c75245bd3ac6574a19b60, type: 2}
   ID: 2
-  Name: "\u044D\u043D\u0435\u0440\u0433\u043E\u0441"
+  Name: {fileID: 2642141715860596494}
   scoreValue: 50
   fromShelf: 0
   canUseOnID: 
@@ -277,3 +278,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2642141715860596494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4608451822401041920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_energy_drink
+  text: 

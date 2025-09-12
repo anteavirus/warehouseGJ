@@ -9,7 +9,7 @@ public class Item : MonoBehaviour
     public DeliveryAudioConfig AudioConfig => _audioConfig;
 
     public int ID;
-    public string Name; // TODO: create a translatable class a-la meinkrampft to throw together other languages in the same game
+    public LocalizedText Name; // TODO: create a translatable class a-la meinkrampft to throw together other languages in the same game
     public int scoreValue;
     public bool fromShelf;
     public int[] canUseOnID;
@@ -31,6 +31,7 @@ public class Item : MonoBehaviour
 
     protected virtual void Awake()
     {
+        if (Name == null) Name = GetComponent<LocalizedText>();
         audioSource = GetComponent<AudioSource>();
         if (!audioSource)
             audioSource = gameObject.AddComponent<AudioSource>();

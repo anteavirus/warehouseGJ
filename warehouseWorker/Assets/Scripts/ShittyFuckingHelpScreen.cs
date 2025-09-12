@@ -16,6 +16,10 @@ public class ShittyFuckingHelpScreen : MonoBehaviour
         for (int i = 0; i < answers.Length; i++)
         {
             var answer = answers[i];
+            var localized = answer.GetComponent<LocalizedText>();
+            localized.UpdateText();
+
+            answer.name = localized.text;
             var obj = Instantiate(simpleButtonPrefab, questionSelection.transform);
             obj.GetComponentInChildren<TextMeshProUGUI>().text = answer.name;
 

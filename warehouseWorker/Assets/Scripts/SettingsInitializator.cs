@@ -7,6 +7,7 @@ using UnityEngine.Audio;
 
 public class SettingsManager : MonoBehaviour
 {
+    public static SettingsManager Instance;
 
     [System.Serializable]
     public class KeyBind
@@ -46,9 +47,31 @@ public class SettingsManager : MonoBehaviour
     private bool isRebinding;
     private KeyBind currentRebind;
 
-    #region Initialization
-    private void Start()
+    bool started = false;
+
+    public void InitializeThyself()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        ForceStart();
+    }
+    #region Initialization
+    private void Awake()
+    {
+        if (Instance.started) return;
+        InitializeThyself();
+    }
+
+    public void ForceStart()
+    {
+        if (Instance.started) return;
+        started = true;
         InitializeMouseSettings();
         InitializeResolutions();
         InitializeVolume();
@@ -56,6 +79,10 @@ public class SettingsManager : MonoBehaviour
         CreateKeyBindUI();
         CreateCategoryButtons();
         ShowFirstPanel();
+    }
+    private void Start()
+    {
+        ForceStart();
     }
 
     private void InitializeMouseSettings()
@@ -99,6 +126,29 @@ public class SettingsManager : MonoBehaviour
 
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
         SetVolume(musicSlider, "Music");
+    }
+
+    public string GetKeyDisplay(string actionName)
+    {
+        var keyBind = keyBinds.Find(b => b.actionName == actionName);
+        if (keyBind == null) return "None";
+
+        KeyCode key = keyBind.currentKey != KeyCode.None ? keyBind.currentKey : keyBind.defaultKey;
+
+        return ConvertMouseButtons(key.ToString());
+    }
+
+    // TODO: kill whoever moaned about this being an issue.
+    private static readonly Dictionary<string, string> mouseButtonTranslations = new Dictionary<string, string>
+    {
+        {"Mouse0", "ЛКМ"},
+        {"Mouse1", "ПКМ"},
+        {"Mouse2", "Колесико Мыши"},
+    };
+
+    private string ConvertMouseButtons(string keyString)
+    {
+        return mouseButtonTranslations.TryGetValue(keyString, out string translated) ? translated : keyString;
     }
 
     void CreateKeyBindUI()

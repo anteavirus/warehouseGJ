@@ -1,0 +1,286 @@
+{
+    "languageCode": "ru",
+    "languageName": "Русский",
+    "translations": [
+        {
+            "Key": "menu_warning",
+            "Value": "Есть ТОЛЬКО в случае, если застряли у часов. Не принимаем вину за травмы."
+        },
+        {
+            "Key": "game_title",
+            "Value": "СКЛ<color=\"red\">АД</color>"
+        },
+        {
+            "Key": "button_continue",
+            "Value": "Продолжить"
+        },
+        {
+            "Key": "button_play",
+            "Value": "Играть"
+        },
+        {
+            "Key": "button_internship",
+            "Value": "Стажироваться"
+        },
+        {
+            "Key": "button_settings",
+            "Value": "Настройки"
+        },
+        {
+            "Key": "button_stats",
+            "Value": "Статистика"
+        },
+        {
+            "Key": "button_to_menu",
+            "Value": "В меню"
+        },
+        {
+            "Key": "button_help",
+            "Value": "Помощь"
+        },
+        {
+            "Key": "button_confirm",
+            "Value": "Подтвердить"
+        },
+        {
+            "Key": "button_fullscreen",
+            "Value": "Полный экран"
+        },
+        {
+            "Key": "setting_master_volume",
+            "Value": "Общая Громкость"
+        },
+        {
+            "Key": "setting_sfx_volume",
+            "Value": "Громкость Звука"
+        },
+        {
+            "Key": "setting_music_volume",
+            "Value": "Громкость Музыки"
+        },
+        {
+            "Key": "button_reset",
+            "Value": "Сбросить"
+        },
+        {
+            "Key": "setting_mouse_sensitivity",
+            "Value": "Чувствительность Мыши"
+        },
+        {
+            "Key": "placeholder_text",
+            "Value": "Я больше ничего не придумал"
+        },
+        {
+            "Key": "sorry_text",
+            "Value": "Сорян"
+        },
+        {
+            "Key": "leaderboard_title",
+            "Value": "Лидерборд:"
+        },
+        {
+            "Key": "leaderboard_joke",
+            "Value": "чёрт. я ничего не придумал чтобы продолжить эту шутку здесь должно быть дофига информации но пока-что у нас только этот чертов лидерборд есть. А мы ещё хотим как-то ДОСТИЖЕНИЯ сделать! Ужас... Не, в теории они есть, но щас мне ещё всю остальную игру доделывать."
+        },
+        {
+            "Key": "pregame_name",
+            "Value": "Имя:"
+        },
+        {
+            "Key": "button_back",
+            "Value": "Назад"
+        },
+        {
+            "Key": "default_name",
+            "Value": "Он [имя дефолтное]"
+        },
+        {
+            "Key": "madness_option",
+            "Value": "Безумие"
+        },
+        {
+            "Key": "signature_text",
+            "Value": "(ПОДПИСЬ)"
+        },
+        {
+            "Key": "disclaimer_title",
+            "Value": "ХУЙНЯ:"
+        },
+        {
+            "Key": "disclaimer_text",
+            "Value": "Путем принятия 5 пенни/год вы соглашаетесь: - стать нечеловеком, а «альфа-тестовым субъектом» с динамическим ошейником, тектоническим дзюдо и лампочками, нарушающими ваше здравомыслие; - не возмущаться, когда аномалии заберут ваши деньги, сантехник Боб - остатки достоинства, а законы физики - ваши носки."
+        },
+        {
+            "Key": "help_authors_title",
+            "Value": "кто авторы"
+        },
+        {
+            "Key": "help_authors_text",
+            "Value": "Команда Подзаборных Троллей, в которой четыре участника. \n\nОлег Никифоров - Звуковой дизайнер; \nЯрослава Беляева - 3д модельер + текстуродел; \nИлья Варанкин - ПМ и слишком много небольших дел там да сям для перечисления; \nКоновалов Сергей - кодер и мастер на все ручки. (Эти страшные анимации - мои)"
+        },
+        {
+            "Key": "help_what_to_do_title",
+            "Value": "что делать"
+        },
+        {
+            "Key": "help_what_to_do_text",
+            "Value": "Кроме как страдать и умирать, работать складовщиком - вскрыть ящик на [Use], нужную вещь отнести на нужную полку. Что требует магическая черная доска, то отнести в доставку вещь с полки."
+        },
+        {
+            "Key": "help_why_empty_title",
+            "Value": "почему так пусто"
+        },
+        {
+            "Key": "help_why_empty_text",
+            "Value": "Одно слово - АМБИЦИОЗНОСТЬ. Слишком много чего мы задумали для двух недель. Часть приколов которые мы сделали либо работают на базовом уровне, либо как мишура - красивенько, мешается, но не более."
+        },
+        {
+            "Key": "help_broken_title",
+            "Value": "че-то сломалось"
+        },
+        {
+            "Key": "help_broken_text",
+            "Value": "К сожалению не удивительно, скорее даже предсказуемо; удивительнее будет увидеть как никто это окно не открывает. Молюсь что это не ломает игру, максимум атмосферу недопонятную. Если всё же ломает игру - пните меня - кодера. Как нибудь. Наорите!"
+        },
+        {
+            "Key": "help_updates_title",
+            "Value": "дорабатываться будет?"
+        },
+        {
+            "Key": "help_updates_text",
+            "Value": "Без обещаний."
+        },
+        {
+            "Key": "tasks_title",
+            "Value": "ЗАДАЧИ:"
+        },
+        {
+            "Key": "note_pickup",
+            "Value": "ПОДБИРАТЬ:"
+        },
+        {
+            "Key": "note_use",
+            "Value": "ИСПОЛЬЗОВАТЬ:"
+        },
+        {
+            "Key": "note_jump",
+            "Value": "ПРЫГАТЬ:"
+        },
+        {
+            "Key": "note_place",
+            "Value": "КЛАСТЬ:"
+        },
+        {
+            "Key": "note_throw",
+            "Value": "БРОСАТЬ:"
+        },
+        {
+            "Key": "note_move",
+            "Value": "ПЕРЕДВИГАТЬСЯ:"
+        },
+        {
+            "Key": "delivery_title",
+            "Value": "ДОСТАВКА"
+        },
+        {
+            "Key": "current_orders",
+            "Value": "ТЕКУЩИЕ ЗАКАЗЫ:"
+        },
+        {
+            "Key": "no_orders",
+            "Value": "НЕТ ЗАКАЗОВ."
+        },
+        {
+            "Key": "shredder",
+            "Value": "ШРЕД<s>Д</s>ЕР"
+        },
+        {
+            "Key": "exit_button",
+            "Value": "ВЫХОД"
+        },
+        {
+            "Key": "bomb_disposal_warning",
+            "Value": "ПОСЛЕ ОБЕЗВРЕЖИВАНИЯ, БОМБУ УТИЛИЗИРОВАТЬ"
+        },
+        {
+            "Key": "item_pineapple",
+            "Value": "Ананас"
+        },
+        {
+            "Key": "item_crossbow",
+            "Value": "Арбалет"
+        },
+        {
+            "Key": "item_paper_cup",
+            "Value": "Бумажный Стакан"
+        },
+        {
+            "Key": "item_volleyball",
+            "Value": "Воллейбойный мяч"
+        },
+        {
+            "Key": "item_toy",
+            "Value": "Игрушка"
+        },
+        {
+            "Key": "item_horn",
+            "Value": "Клаксон"
+        },
+        {
+            "Key": "item_book",
+            "Value": "Книга"
+        },
+        {
+            "Key": "item_box",
+            "Value": "Коробка"
+        },
+        {
+            "Key": "item_punch_card",
+            "Value": "Перфокарта"
+        },
+        {
+            "Key": "item_saw",
+            "Value": "Пила"
+        },
+        {
+            "Key": "item_c4",
+            "Value": "С4"
+        },
+        {
+            "Key": "item_c4_disarmed",
+            "Value": "С4 обезвреженная"
+        },
+        {
+            "Key": "item_sappers",
+            "Value": "Сапёры"
+        },
+        {
+            "Key": "item_glass",
+            "Value": "Стеклянный стакан"
+        },
+        {
+            "Key": "item_slipper",
+            "Value": "Тапок"
+        },
+        {
+            "Key": "item_duck",
+            "Value": "Утя"
+        },
+        {
+            "Key": "item_energy_drink",
+            "Value": "Энергос"
+        },
+        {
+            "Key": "item_crate",
+            "Value": "Ящик"
+        },
+        {
+            "Key": "item_crate_open",
+            "Value": "Ящик открытый"
+        },
+		{
+			"Key": "total_score",
+			"Value": "ИТОГО ОЧКОВ:"
+		}
+    ]
+}

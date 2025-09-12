@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8366397636076673259}
   - component: {fileID: 1325071492947081028}
   - component: {fileID: 5430762553892287603}
+  - component: {fileID: 7638371460621351119}
   m_Layer: 6
   m_Name: "\u04414\u043E\u0431\u0435\u0437\u0432\u0440\u0435\u0436"
   m_TagString: Item
@@ -133,7 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: cdfa47826108dba4b85901022049f42d, type: 2}
   ID: 8
-  Name: "c4 \u043E\u0431\u0435\u0437\u0432\u0440\u0435\u0436\u0435\u043D\u043D\u0430\u044F"
+  Name: {fileID: 7638371460621351119}
   scoreValue: 150
   fromShelf: 0
   canUseOnID: 
@@ -364,3 +365,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7638371460621351119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5631500981870740353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_c4_disarmed
+  text: 

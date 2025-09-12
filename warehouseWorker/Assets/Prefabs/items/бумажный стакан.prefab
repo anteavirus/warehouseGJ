@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3152187631918332887}
   - component: {fileID: 212495789226888571}
   - component: {fileID: -6857536431163130378}
+  - component: {fileID: 8455997777848576860}
   m_Layer: 6
   m_Name: "\u0431\u0443\u043C\u0430\u0436\u043D\u044B\u0439 \u0441\u0442\u0430\u043A\u0430\u043D"
   m_TagString: Item
@@ -128,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 0}
   ID: 10
-  Name: "\u0431\u0443\u043C\u0430\u0436\u043D\u044B\u0439 \u0441\u0442\u0430\u043A\u0430\u043D"
+  Name: {fileID: 8455997777848576860}
   scoreValue: 20
   fromShelf: 0
   canUseOnID: 
@@ -262,3 +263,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8455997777848576860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201614392593411610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_paper_cup
+  text: 

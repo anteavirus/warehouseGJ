@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 9212303813635568367}
   - component: {fileID: 6925728433190540191}
   - component: {fileID: 7325950611897727252}
-  m_Layer: 0
+  - component: {fileID: 498644847653678346}
+  m_Layer: 6
   m_Name: "\u0438\u0433\u0440\u0443\u0448\u043A\u0430"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 0}
   ID: 25
-  Name: "\u0438\u0433\u0440\u0443\u0448\u043A\u0430"
+  Name: {fileID: 498644847653678346}
   scoreValue: 40
   fromShelf: 0
   canUseOnID: 
@@ -160,3 +161,17 @@ MonoBehaviour:
   mixerGroup: {fileID: 0}
   throwMultiplier: 0.1
   controller: {fileID: 0}
+--- !u!114 &498644847653678346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330600190100360089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_toy_bear
+  text: 

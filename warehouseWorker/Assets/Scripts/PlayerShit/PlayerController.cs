@@ -77,11 +77,6 @@ public class PlayerController : MonoBehaviour
     // === MUST BE CHANGED ===
     [Header("Settings Reference")]
     [SerializeField] private SettingsManager settingsManager;
-    
-    // === SHOULD BE INSPECTED ONLY ===
-    [Space]
-    string pickUpHint;
-    string useHint;
 
     private float currentMouseSensitivity => settingsManager != null ?
         PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity) : defaultMouseSensitivity;
@@ -121,6 +116,9 @@ public class PlayerController : MonoBehaviour
         if (settingsManager == null)
             settingsManager = FindObjectOfType<SettingsManager>();
 
+        if (settingsManager != null)
+            settingsManager.InitializeThyself();
+
         if (feet == null)
             feet = transform.Find("feet")?.GetComponent<PlayerFeetScript>();
 
@@ -150,8 +148,8 @@ public class PlayerController : MonoBehaviour
         settingsManager.LoadSettings();
         KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
         KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
-        pickUpHint = $"[{(pickupBind.currentKey != KeyCode.None ? pickupBind.currentKey : pickupBind.defaultKey)}]";
-        useHint = $"[{(useBind.currentKey != KeyCode.None ? useBind.currentKey : useBind.defaultKey)}]";
+
+        // Why do we need this, again? TODO: IMPLEMENT DISPLAYNAME! LMB, RMB, ETC! 
     }
 
     void Update()
@@ -808,7 +806,7 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         // Player somehow disabled. Let's throw him back into the lobby.
-        GameManager.Instance.LoadScene(0);
+        GameManager.Instance.LoadSceneStr("Main Menu");
     }
 
     private void OnSettingsChanged()
@@ -889,6 +887,6 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        GameManager.Instance.LoadScene(0);
+        GameManager.Instance.LoadSceneStr("Main Menu");
     }
 }

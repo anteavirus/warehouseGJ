@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2367455250194524584}
   - component: {fileID: 817207783436163896}
   - component: {fileID: 7476347335163460571}
+  - component: {fileID: 4884665318913467210}
   m_Layer: 6
   m_Name: "\u0432\u043E\u043B\u043B\u0435\u0439\u0431\u043E\u0439\u043D\u044B\u0439
     \u043C\u044F\u0447"
@@ -151,8 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 5828d1f374626a547b4519063b9aa53a, type: 2}
   ID: 4
-  Name: "\u0432\u043E\u043B\u043B\u0435\u0439\u0431\u043E\u0439\u043D\u044B\u0439
-    \u043C\u044F\u0447"
+  Name: {fileID: 4884665318913467210}
   scoreValue: 30
   fromShelf: 0
   canUseOnID: 
@@ -265,3 +265,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4884665318913467210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2707247244306727588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_volleyball
+  text: 

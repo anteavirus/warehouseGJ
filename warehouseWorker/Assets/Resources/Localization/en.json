@@ -1,0 +1,282 @@
+{
+    "languageCode": "en",
+    "languageName": "English",
+    "translations": [
+        {
+            "Key": "menu_warning",
+            "Value": "Intake ONLY if stuck at the clock. We don't accept blame for injuries."
+        },
+        {
+            "Key": "game_title",
+            "Value": "S<color=\"red\">HELL</color>VES"
+        },
+        {
+            "Key": "button_play",
+            "Value": "Play"
+        },
+        {
+            "Key": "button_continue",
+            "Value": "Continue"
+        },
+        {
+            "Key": "button_internship",
+            "Value": "Internship"
+        },
+        {
+            "Key": "button_settings",
+            "Value": "Settings"
+        },
+        {
+            "Key": "button_stats",
+            "Value": "Statistics"
+        },
+        {
+            "Key": "button_to_menu",
+            "Value": "To Menu"
+        },
+        {
+            "Key": "button_help",
+            "Value": "Help"
+        },
+        {
+            "Key": "button_confirm",
+            "Value": "Confirm"
+        },
+        {
+            "Key": "button_fullscreen",
+            "Value": "Fullscreen"
+        },
+        {
+            "Key": "setting_master_volume",
+            "Value": "Master Volume"
+        },
+        {
+            "Key": "setting_sfx_volume",
+            "Value": "SFX Volume"
+        },
+        {
+            "Key": "setting_music_volume",
+            "Value": "Music Volume"
+        },
+        {
+            "Key": "button_reset",
+            "Value": "Reset"
+        },
+        {
+            "Key": "setting_mouse_sensitivity",
+            "Value": "Mouse Sensitivity"
+        },
+        {
+            "Key": "placeholder_text",
+            "Value": "I can't think of anything else"
+        },
+        {
+            "Key": "sorry_text",
+            "Value": "Sorry that I can't implement brightness feature yet"
+        },
+        {
+            "Key": "leaderboard_title",
+            "Value": "Leaderboard:"
+        },
+        {
+            "Key": "leaderboard_joke",
+            "Value": "damn. I couldn't think of anything to continue this joke here should be a ton of information but for now we only have this damn leaderboard. And we still want to make ACHIEVEMENTS somehow! in theory they exist(-ed?), but right now I still have to finish the rest of the game. And we don't even know what we want!"
+        },
+        {
+            "Key": "pregame_name",
+            "Value": "Name:"
+        },
+        {
+            "Key": "button_back",
+            "Value": "Back"
+        },
+        {
+            "Key": "default_name",
+            "Value": "He"
+        },
+        {
+            "Key": "madness_option",
+            "Value": "Madness"
+        },
+        {
+            "Key": "signature_text",
+            "Value": "(SIGNATURE)"
+        },
+        {
+            "Key": "disclaimer_text",
+            "Value": "By accepting 5 pennies/year you agree: \n- to become non-human; an 'alpha-test subject' with a dynamic collar, tectonic judo and light bulbs that violate your sanity; \n- not to protest when anomalies take your money, plumber Bob - the remnants of your dignity, and the laws of physics - your socks."
+        },
+        {
+            "Key": "help_authors_title",
+            "Value": "who are the authors"
+        },
+        {
+            "Key": "help_authors_text",
+            "Value": "Team Podzabornykh Trolley, which has four members. \n\nOleg Nikiforov - Sound Designer; \nYaroslava Belyaeva - 3D modeler + texture artist; \nIlya Varankin - PM and too many small tasks here and there to list; \nSergey Konovalov - coder and jack of all trades. (Those scary animations are mine)"
+        },
+        {
+            "Key": "help_what_to_do_title",
+            "Value": "what to do"
+        },
+        {
+            "Key": "help_what_to_do_text",
+            "Value": "Besides suffering and dying, work as a warehouse worker - open a crate with [Use], take the needed item to the right shelf. What the magical black board requires, take that item from the shelf to delivery."
+        },
+        {
+            "Key": "help_why_empty_title",
+            "Value": "why so empty"
+        },
+        {
+            "Key": "help_why_empty_text",
+            "Value": "One word - AMBITION. We planned too much for two weeks. Some of the jokes we made either work at a basic level or are like tinsel - pretty, gets in the way, but nothing more."
+        },
+        {
+            "Key": "help_broken_title",
+            "Value": "something broke"
+        },
+        {
+            "Key": "help_broken_text",
+            "Value": "Unfortunately not surprising, even predictable; it would be more surprising to see no one opening this window. I pray it doesn't break the game, just the incomprehensible atmosphere at most. If it does break the game - kick me - the coder. Somehow. Yell at me!"
+        },
+        {
+            "Key": "help_updates_title",
+            "Value": "will it be updated?"
+        },
+        {
+            "Key": "help_updates_text",
+            "Value": "No promises."
+        },
+        {
+            "Key": "tasks_title",
+            "Value": "TASKS:"
+        },
+        {
+            "Key": "note_pickup",
+            "Value": "PICK UP:"
+        },
+        {
+            "Key": "note_use",
+            "Value": "USE:"
+        },
+        {
+            "Key": "note_jump",
+            "Value": "JUMP:"
+        },
+        {
+            "Key": "note_place",
+            "Value": "PLACE:"
+        },
+        {
+            "Key": "note_throw",
+            "Value": "THROW:"
+        },
+        {
+            "Key": "note_move",
+            "Value": "MOVE:"
+        },
+        {
+            "Key": "delivery_title",
+            "Value": "DELIVERY"
+        },
+        {
+            "Key": "current_orders",
+            "Value": "CURRENT ORDERS:"
+        },
+        {
+            "Key": "no_orders",
+            "Value": "NO ORDERS."
+        },
+        {
+            "Key": "shredder",
+            "Value": "SHRED<s>D</s>ER"
+        },
+        {
+            "Key": "exit_button",
+            "Value": "EXIT"
+        },
+        {
+            "Key": "bomb_disposal_warning",
+            "Value": "AFTER DISARMING, DISPOSE OF THE BOMB"
+        },
+        {
+            "Key": "item_pineapple",
+            "Value": "Pineapple"
+        },
+        {
+            "Key": "item_crossbow",
+            "Value": "Crossbow"
+        },
+        {
+            "Key": "item_paper_cup",
+            "Value": "Paper Cup"
+        },
+        {
+            "Key": "item_volleyball",
+            "Value": "Volleyball"
+        },
+        {
+            "Key": "item_toy",
+            "Value": "Toy"
+        },
+        {
+            "Key": "item_horn",
+            "Value": "Horn"
+        },
+        {
+            "Key": "item_book",
+            "Value": "Book"
+        },
+        {
+            "Key": "item_box",
+            "Value": "Box"
+        },
+        {
+            "Key": "item_punch_card",
+            "Value": "Punch Card"
+        },
+        {
+            "Key": "item_saw",
+            "Value": "Saw"
+        },
+        {
+            "Key": "item_c4",
+            "Value": "C4"
+        },
+        {
+            "Key": "item_c4_disarmed",
+            "Value": "Disarmed C4"
+        },
+        {
+            "Key": "item_sappers",
+            "Value": "Sappers"
+        },
+        {
+            "Key": "item_glass",
+            "Value": "Glass"
+        },
+        {
+            "Key": "item_slipper",
+            "Value": "Slipper"
+        },
+        {
+            "Key": "item_duck",
+            "Value": "Duck"
+        },
+        {
+            "Key": "item_energy_drink",
+            "Value": "Energy Drink"
+        },
+        {
+            "Key": "item_box",
+            "Value": "Box"
+        },
+        {
+            "Key": "item_box_open",
+            "Value": "Open Box"
+        },
+		{
+			"Key": "total_score",
+			"Value": "TOTAL SCORE:"
+		}
+    ]
+}

@@ -266,14 +266,11 @@ public class ShelvesStockManager : MonoBehaviour
                         StorageArea[] storageAreas = spawnedShelf.GetComponentsInChildren<StorageArea>();
                         foreach (var area in storageAreas)
                         {
-                            if (area.shelfTypeID == emptyShelf.shelfTypeID)
-                            {
-                                area.assignedItemID = 0; // No item
-                                area.itemAmount = 0;     // Empty shelf
-                                area.enabled = false;    // Brain off
-                            }
+                            area.assignedItemID = 0; // No item
+                            area.itemAmount = 0;     // Empty shelf
+                            area.enabled = false;    // Brain off
                         }
-
+                        // TODO: FUCK SHIT FUCK SHIT ITS EATING THE FUCKING DUCKS?!!!!!!!!!! FUCK !!!!!!!!!!!!!!!!!
                         Debug.Log($"[ShelfManager] Spawning empty shelf at {spawnPoint.name} for red herring");
                     }
                     else

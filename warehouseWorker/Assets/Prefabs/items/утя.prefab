@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1401319772887570366}
   - component: {fileID: -8536708249557659784}
   - component: {fileID: 160704655277107775}
+  - component: {fileID: 981709373347607440}
   m_Layer: 6
   m_Name: "\u0443\u0442\u044F"
   m_TagString: Item
@@ -151,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: 361ba393559cc9b46a5192999c802076, type: 2}
   ID: 1
-  Name: "\u0443\u0442\u044F"
+  Name: {fileID: 981709373347607440}
   scoreValue: 25
   fromShelf: 0
   canUseOnID: 
@@ -281,3 +282,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &981709373347607440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7581103289063453181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_duck
+  text: 

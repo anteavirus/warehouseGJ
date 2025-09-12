@@ -62,7 +62,7 @@ public class PauseMenuUI : MonoBehaviour
         SceneManager.LoadScene(value);
     }
 
-    public void LoadScene(string id)
+    public void LoadSceneStr(string id)
     {
         SceneManager.LoadScene(id);
     }
@@ -72,6 +72,7 @@ public class PauseMenuUI : MonoBehaviour
         int value = offset;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + value);
     }
+
 
     public void ChangeColorOfScroll()
     {

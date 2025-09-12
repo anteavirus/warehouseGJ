@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4817634075868542850}
   - component: {fileID: 1521921737126237428}
   - component: {fileID: 2556748023430511680}
+  - component: {fileID: 5513288134168023773}
   m_Layer: 6
   m_Name: "\u0441\u0430\u043F\u0451\u0440\u044B"
   m_TagString: Item
@@ -248,7 +249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 11400000, guid: d10e12296537f2f4692cc241fb597527, type: 2}
   ID: 7
-  Name: "\u0441\u0430\u043F\u0451\u0440\u044B"
+  Name: {fileID: 5513288134168023773}
   scoreValue: 0
   fromShelf: 0
   canUseOnID: 06000000
@@ -366,3 +367,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5513288134168023773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6461757811189202106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: item_sappers
+  text: 

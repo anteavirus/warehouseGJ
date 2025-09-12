@@ -12,6 +12,6 @@ public class ExitDoor : Item
     public override void OnUse(GameObject user)
     {
         base.OnUse(user);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Main Menu");
     }
 }

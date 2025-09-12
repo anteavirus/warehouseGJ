@@ -470,8 +470,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   handTransform: {fileID: 8706735555661924714}
-  pickUpHintUI: {fileID: 519986646046471396}
-  canUseOnItemHintUI: {fileID: 4003826899315588880}
+  pickUpHintUI: {fileID: 0}
+  canUseOnItemHintUI: {fileID: 0}
   minThrowForce: 5
   maxThrowForce: 25
   maxChargeTime: 1.5
@@ -1049,12 +1049,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6246827490503494085}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &519986646046471396 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5874503263907282209, guid: 9bf4a83e8722a994f80c160083a717aa,
-    type: 3}
-  m_PrefabInstance: {fileID: 6246827490503494085}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &528240571355667728 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5901264179670652117, guid: 9bf4a83e8722a994f80c160083a717aa,
@@ -1079,12 +1073,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &4003826899315588880 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6998949905452562133, guid: 9bf4a83e8722a994f80c160083a717aa,
-    type: 3}
-  m_PrefabInstance: {fileID: 6246827490503494085}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7744028173131864775 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4452195368980927234, guid: 9bf4a83e8722a994f80c160083a717aa,

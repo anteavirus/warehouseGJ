@@ -44,7 +44,7 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
     public override void OnUse(GameObject user)
     {
         if (!user.TryGetComponent<PunchClock>(out var _)) return;
-        if (SceneManager.GetActiveScene().buildIndex != 1) GameManager.Instance.LoadScene(1);
+        if (SceneManager.GetActiveScene().name == "Main Menu") GameManager.Instance.LoadSceneStr("GameplayScene");
     }
 
     private void StartHoverSequence()
