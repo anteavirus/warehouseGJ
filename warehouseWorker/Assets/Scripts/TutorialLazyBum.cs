@@ -1,29 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
-public class TutorialLazyBum: MonoBehaviour
+public class TutorialLazyBum : MonoBehaviour
 {
     public TextMeshProUGUI text;
     public C4Item c4;
     public ZombieAI zombie;
+
+    // Add these serialized fields for localized text components
+    public LocalizedText c4TaskText;
+    public LocalizedText zombieTaskText;
+    public LocalizedText exitTaskText;
 
     string FormatBool(bool uh)
     {
         return uh ? "<u>X</u>" : "_";
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        // Initialize localized text components if needed
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // TODO: unlazify this shit, maybe? make it interesting? i dunno
-        text.text = $"Деактивировать С4 - {FormatBool(c4 == null && c4.armed)}\nУбить зомби - {FormatBool(zombie == null || zombie.isDead)}\nВыйти из комнаты - _";
+        // Build the text using localized strings
+        text.text = $"{c4TaskText.text} - {FormatBool(c4 == null && c4.armed)}\n" +
+                   $"{zombieTaskText.text} - {FormatBool(zombie == null || zombie.isDead)}\n" +
+                   $"{exitTaskText.text} - _";
     }
 }

@@ -59,6 +59,10 @@
             "Value": "Громкость Музыки"
         },
         {
+            "Key": "setting_brightness",
+            "Value": "Brightness"
+        },
+        {
             "Key": "button_reset",
             "Value": "Сбросить"
         },
@@ -154,6 +158,18 @@
             "Key": "tasks_title",
             "Value": "ЗАДАЧИ:"
         },
+		{
+            "Key": "tasks_c4_task",
+            "Value": "Обезвредь С4:"
+		},
+		{
+            "Key": "tasks_zombie_task",
+            "Value": "Убей зомби:"
+		},
+		{
+            "Key": "tasks_exit_task",
+            "Value": "Покинь комнату:"
+		},
         {
             "Key": "note_pickup",
             "Value": "ПОДБИРАТЬ:"
@@ -178,6 +194,10 @@
             "Key": "note_move",
             "Value": "ПЕРЕДВИГАТЬСЯ:"
         },
+		{
+            "Key": "note_title",
+            "Value": "ЗАПИСКА:"
+		},
         {
             "Key": "delivery_title",
             "Value": "ДОСТАВКА"

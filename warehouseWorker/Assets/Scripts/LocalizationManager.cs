@@ -41,7 +41,7 @@ public class LocalizationManager : MonoBehaviour
         }
     }
 
-    void Initialize()
+    public void Initialize()
     {
         currentLanguage = PlayerPrefs.GetString("SelectedLanguage", defaultLanguage);   // TODO: HOW MANY TIMES DO I HAVE TO TEACH ME THIS LESSON?
         LoadLanguages();
@@ -94,7 +94,7 @@ public class LocalizationManager : MonoBehaviour
                     SetLanguage(lang.languageCode);
                     Debug.Log($"Selected language: {lang.languageName}");
 
-                    LoadScene("Main Menu", null);
+                    if (SceneManager.GetActiveScene().name == "LanguageSelection") LoadScene("Main Menu", null);
                 });
             }
         }

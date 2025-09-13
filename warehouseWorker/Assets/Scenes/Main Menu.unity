@@ -20,13 +20,13 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.6627451, g: 0.82459533, b: 0.972549, a: 1}
-  m_AmbientEquatorColor: {r: 0.07342472, g: 0.16484863, b: 0.2830189, a: 1}
-  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 0}
+  m_AmbientEquatorColor: {r: 0.11372549, g: 0.1254902, b: 0.13333334, a: 1}
+  m_AmbientGroundColor: {r: 0.047058824, g: 0.043137256, b: 0.03529412, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 1
-  m_SubtractiveShadowColor: {r: 0.1489752, g: 0.13656996, b: 0.31132078, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 3c871325472375e4793697f0f8aef96e, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -258,54 +258,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371092}
   m_CullTransparentMesh: 1
---- !u!1 &29771594
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 29771596}
-  - component: {fileID: 29771595}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &29771595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 29771594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f23190d50a6adb94ebfa3d7c3e7997e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  languageSelectionButtonPrefab: {fileID: 0}
-  languageSelectionContent: {fileID: 0}
-  defaultLanguage: en
-  currentLanguage: 
---- !u!4 &29771596
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 29771594}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.759996, y: 2.1406612, z: 22.708557}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &45773993
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,7 +686,6 @@ GameObject:
   - component: {fileID: 103028822}
   - component: {fileID: 103028821}
   - component: {fileID: 103028820}
-  - component: {fileID: 103028823}
   - component: {fileID: 103028824}
   m_Layer: 5
   m_Name: Scroll View
@@ -834,18 +785,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103028818}
   m_CullTransparentMesh: 1
---- !u!114 &103028823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103028818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f0e64b0ca8c7a84b8d2fac7b535c1f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &103028824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3720,7 +3659,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &561247820
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18605,5 +18544,4 @@ SceneRoots:
   - {fileID: 1552460523}
   - {fileID: 1034422672}
   - {fileID: 355731578}
-  - {fileID: 29771596}
   - {fileID: 1858280961}

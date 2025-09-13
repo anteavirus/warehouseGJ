@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Audio;
+using System;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -43,9 +44,18 @@ public class SettingsManager : MonoBehaviour
     [Header("Mouse Settings")]
     [SerializeField] private Slider mouseSensitivitySlider;
 
+    [Header("Lighting Settings")]
+    public Color defaultEnvironmentLight = UsefulStuffs.ColorFromHex("#060607");
+    public Color currentEnvironmentLight;
+    public Slider brightnessSlider;
+
     private Resolution[] resolutions;
     private bool isRebinding;
     private KeyBind currentRebind;
+
+    // Lighting constants
+    private const string ENVIRONMENT_LIGHT_KEY = "EnvironmentLightColor";
+    private const string BRIGHTNESS_KEY = "EnvironmentLightBrightness";
 
     bool started = false;
 
@@ -61,10 +71,11 @@ public class SettingsManager : MonoBehaviour
         }
         ForceStart();
     }
+
     #region Initialization
     private void Awake()
     {
-        if (Instance.started) return;
+        if (Instance != null && Instance.started) return;
         InitializeThyself();
     }
 
@@ -75,11 +86,21 @@ public class SettingsManager : MonoBehaviour
         InitializeMouseSettings();
         InitializeResolutions();
         InitializeVolume();
+        InitializeLighting();
         LoadSettings();
         CreateKeyBindUI();
         CreateCategoryButtons();
+        CreateLanguageButtons();
         ShowFirstPanel();
     }
+
+    private void CreateLanguageButtons()
+    {
+        if (LocalizationManager.Instance == null) return;
+        LocalizationManager.Instance.languageSelectionContent = settingsPanels.Find(i => i.name == "language").transform.Find("Scroll View").Find("Viewport").Find("Content").gameObject;
+        LocalizationManager.Instance.Initialize();
+    }
+
     private void Start()
     {
         ForceStart();
@@ -90,6 +111,23 @@ public class SettingsManager : MonoBehaviour
         float sensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
         mouseSensitivitySlider.value = sensitivity;
         SetMouseSensitivity(sensitivity);
+    }
+
+    private void InitializeLighting()
+    {
+        // Setup brightness slider
+        if (brightnessSlider != null)
+        {
+            brightnessSlider.onValueChanged.AddListener(OnBrightnessChanged);
+
+            float savedBrightness = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, 1f);
+            brightnessSlider.value = savedBrightness;
+        }
+
+        currentEnvironmentLight = LoadColor(ENVIRONMENT_LIGHT_KEY, defaultEnvironmentLight);
+
+        float currentBrightness = brightnessSlider != null ? brightnessSlider.value : 1f;
+        ApplyEnvironmentLight(currentEnvironmentLight, currentBrightness);
     }
 
     void InitializeResolutions()
@@ -290,6 +328,99 @@ public class SettingsManager : MonoBehaviour
     }
     #endregion
 
+    #region Lighting Settings
+    public void OnBrightnessChanged(Slider slider)
+    {
+        OnBrightnessChanged(slider.value);
+    }
+
+    public void OnBrightnessChanged(float brightnessValue)
+    {
+        // Save brightness setting
+        PlayerPrefs.SetFloat(BRIGHTNESS_KEY, brightnessValue);
+        PlayerPrefs.Save();
+
+        // Apply brightness to current color
+        ApplyEnvironmentLight(currentEnvironmentLight, brightnessValue);
+    }
+
+    public void SetEnvironmentLight(Color newColor)
+    {
+        currentEnvironmentLight = newColor;
+
+        // Save color to PlayerPrefs (convert to hex first)
+        string hex = UsefulStuffs.ColorToHex(newColor);
+        PlayerPrefs.SetString(ENVIRONMENT_LIGHT_KEY, hex);
+        PlayerPrefs.Save();
+
+        // Apply with current brightness
+        float currentBrightness = brightnessSlider != null ? brightnessSlider.value : 1f;
+        ApplyEnvironmentLight(newColor, currentBrightness);
+    }
+
+    private Color ApplyBrightnessToDarkColor(Color color, float brightness)
+    {
+        // For very dark colors, use a different approach
+        if (UsefulStuffs.CalculateLuminance(color) < 0.1f)
+        {
+            // Convert to HSV for better control
+            Color.RGBToHSV(color, out float h, out float s, out float v);
+
+            // Adjust value (brightness) component
+            v = Mathf.Clamp(v * brightness, 0f, 1f);
+
+            // For very dark colors, also reduce saturation as brightness increases
+            if (brightness > 1.5f)
+            {
+                s = Mathf.Clamp(s / (brightness * 0.8f), 0f, 1f);
+            }
+
+            return Color.HSVToRGB(h, s, v);
+        }
+        else
+        {
+            // For brighter colors, use standard multiplication
+            return new Color(
+                Mathf.Clamp(color.r * brightness, 0f, 1f),
+                Mathf.Clamp(color.g * brightness, 0f, 1f),
+                Mathf.Clamp(color.b * brightness, 0f, 1f),
+                color.a
+            );
+        }
+    }
+
+    public void SetEnvironmentLightFromHex(string hexColor)
+    {
+        Color color = UsefulStuffs.ColorFromHex(hexColor);
+        SetEnvironmentLight(color);
+    }
+
+    public void ResetToDefaultLight()
+    {
+        SetEnvironmentLight(defaultEnvironmentLight);
+        if (brightnessSlider != null)
+        {
+            brightnessSlider.value = 1f;
+        }
+    }
+
+    private void ApplyEnvironmentLight(Color color, float brightness)
+    {
+        Color finalColor = ApplyBrightnessToDarkColor(color, brightness);
+
+        RenderSettings.ambientSkyColor = finalColor;
+    }
+
+    private Color LoadColor(string key, Color defaultColor)
+    {
+        if (PlayerPrefs.HasKey(key))
+        {
+            string hex = PlayerPrefs.GetString(key);
+            return UsefulStuffs.ColorFromHex(hex);
+        }
+        return defaultColor;
+    }
+    #endregion
 
     #region Key Rebinding
     public void StartRebinding(KeyBind bind, TMP_Text keyText)
@@ -328,8 +459,6 @@ public class SettingsManager : MonoBehaviour
         rebindPanel.SetActive(false);
         isRebinding = false;
     }
-
-
 
     bool IsKeyBound(KeyCode key)
     {
@@ -370,13 +499,21 @@ public class SettingsManager : MonoBehaviour
         SetVolume(masterSlider.value, "Master");
 
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", .5f);
-        SetVolume(sfxSlider.value, "Master");
+        SetVolume(sfxSlider.value, "SFX");
 
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .5f);
-        SetVolume(musicSlider.value, "Master");
+        SetVolume(musicSlider.value, "Music");
 
         mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
         SetMouseSensitivity(mouseSensitivitySlider.value);
+
+        float brightness = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, 1f);
+        if (brightnessSlider != null)
+        {
+            brightnessSlider.value = brightness;
+        }
+        currentEnvironmentLight = LoadColor(ENVIRONMENT_LIGHT_KEY, defaultEnvironmentLight);
+        ApplyEnvironmentLight(currentEnvironmentLight, brightness);
 
         PlayerPrefs.Save();
     }
@@ -395,6 +532,9 @@ public class SettingsManager : MonoBehaviour
 
         mouseSensitivitySlider.value = 100f;
         SetMouseSensitivity(100f);
+
+        // Reset lighting settings
+        ResetToDefaultLight();
 
         QualitySettings.SetQualityLevel(2);
         PlayerPrefs.DeleteAll();
@@ -421,14 +561,23 @@ public class SettingsManager : MonoBehaviour
         return bind != null && Input.GetKeyUp(bind.currentKey);
     }
     #endregion
-    // im stupid
+
+    #region Mouse Sensitivity
     public void SetMouseSensitivity(Slider slider)
     {
         SetMouseSensitivity(slider.value);
     }
+
     public void SetMouseSensitivity(float sensitivity)
     {
         PlayerPrefs.SetFloat("MouseSensitivity", sensitivity);
         PlayerPrefs.Save();
+    }
+    #endregion
+
+    // Save settings when application quits
+    private void OnApplicationQuit()
+    {
+        SaveSettings();
     }
 }

@@ -59,6 +59,10 @@
             "Value": "Music Volume"
         },
         {
+            "Key": "setting_brightness",
+            "Value": "Brightness"
+        },
+        {
             "Key": "button_reset",
             "Value": "Reset"
         },
@@ -150,6 +154,18 @@
             "Key": "tasks_title",
             "Value": "TASKS:"
         },
+		{
+            "Key": "tasks_c4_task",
+            "Value": "Defuse C4:"
+		},
+		{
+            "Key": "tasks_zombie_task",
+            "Value": "Kill the zombie:"
+		},
+		{
+            "Key": "tasks_exit_task",
+            "Value": "Leave the room:"
+		},
         {
             "Key": "note_pickup",
             "Value": "PICK UP:"
@@ -174,6 +190,10 @@
             "Key": "note_move",
             "Value": "MOVE:"
         },
+		{
+            "Key": "note_title",
+            "Value": "NOTE:"
+		},
         {
             "Key": "delivery_title",
             "Value": "DELIVERY"
