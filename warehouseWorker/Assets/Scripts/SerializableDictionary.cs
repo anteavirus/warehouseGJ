@@ -59,8 +59,11 @@ public class SerializableDictionary<XValue, YValue>
         {
             return false;
         }
-        SerializableKeyValuePair ass = new();
-        ass.Key = key; ass.Value = value;
+        SerializableKeyValuePair ass = new()
+        {
+            Key = key,
+            Value = value
+        };
         pairs.Add( ass );
         return true;
     }

@@ -103,11 +103,11 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     // TODO: 0 is no longer the main menu. I need to start loading via strings, not ints...
 
-    public void SpawnTheFuckingPaper()
+    public void BeginGameplayTransition()
     {
         SetMenuState(false);
         SaveGameSettings();
-        FindFirstObjectByType<MainMenuZonerDoner>().SpawnExtraSpecialPunchCard();
+        FindFirstObjectByType<MainMenuZonerDoner>().BeginPlayerTransportationToGameplay();
     }
 
     public bool FuckingDie()

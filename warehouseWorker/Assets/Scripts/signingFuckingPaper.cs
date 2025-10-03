@@ -7,6 +7,6 @@ public class SigningFuckingPaper : MonoBehaviour
     
     public void FuckingDoIt()
     {
-        manager.SpawnTheFuckingPaper();
+        manager.BeginGameplayTransition();
     }
 }

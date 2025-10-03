@@ -677,6 +677,9 @@ MonoBehaviour:
   - actionName: Pickup
     defaultKey: 101
     currentKey: 0
+  - actionName: Drag
+    defaultKey: 114
+    currentKey: 0
   keyBindButtonPrefab: {fileID: 4295571955386951048, guid: 19e3c8d5b05b7b74485790ce72a85707,
     type: 3}
   keyBindContainer: {fileID: 8194720455739646141}

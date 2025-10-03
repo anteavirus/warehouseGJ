@@ -458,7 +458,7 @@ MonoBehaviour:
   airDrag: 1
   groundLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 328
   inversionProgress: 0
   inversionTransitionSpeed: 2
   defaultMouseSensitivity: 100
@@ -481,7 +481,7 @@ MonoBehaviour:
   placementMaxDistance: 3
   placementLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 328
   placementOffset: {x: 0, y: 0.05, z: 0}
   rotationSpeed: 10
   footstepSource: {fileID: 2209314514006350624}
@@ -538,7 +538,10 @@ MonoBehaviour:
   musicSource: {fileID: 8845611650389289601}
   alive: 1
   heldItem: {fileID: 0}
+  dragObject: {fileID: 0}
   previewObject: {fileID: 0}
+  dragFollowForce: 100
+  dragDamping: 5
 --- !u!54 &4645900363409689541
 Rigidbody:
   m_ObjectHideFlags: 0

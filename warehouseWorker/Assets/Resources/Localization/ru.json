@@ -301,6 +301,54 @@
 		{
 			"Key": "total_score",
 			"Value": "ИТОГО ОЧКОВ:"
+		},
+		{
+			"Key": "key_mouse",
+			"Value": "Клавиша Мыши"
+		},
+		{
+			"Key": "key_mouse_0",
+			"Value": "Левая Клавиша Мыши"
+		},
+		{
+			"Key": "key_mouse_1",
+			"Value": "Правая Клавиша Мыши"
+		},
+		{
+			"Key": "key_mouse_2",
+			"Value": "Колёсико Мыши"
+		},
+		{
+			"Key": "key_space",
+			"Value": "Пробел"
+		},
+		{
+			"Key": "action_jump",
+			"Value": "Прыжок"
+		},
+		{
+			"Key": "action_drag",
+			"Value": "Таскать"
+		},
+		{
+			"Key": "action_place",
+			"Value": "Класть"
+		},
+		{
+			"Key": "action_pickup",
+			"Value": "Подобрать"
+		},
+		{
+			"Key": "action_use",
+			"Value": "Использовать"
+		},
+		{
+			"Key": "action_jump",
+			"Value": "Прыгать"
+		},
+		{
+			"Key": "action_throw",
+			"Value": "Бросать"
 		}
     ]
 }

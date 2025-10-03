@@ -9,7 +9,7 @@ public class Item : MonoBehaviour
     public DeliveryAudioConfig AudioConfig => _audioConfig;
 
     public int ID;
-    public LocalizedText Name; // TODO: create a translatable class a-la meinkrampft to throw together other languages in the same game
+    public LocalizedText Name;
     public int scoreValue;
     public bool fromShelf;
     public int[] canUseOnID;

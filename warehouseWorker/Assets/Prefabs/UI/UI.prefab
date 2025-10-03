@@ -319,11 +319,10 @@ RectTransform:
   - {fileID: 98655806033238717}
   - {fileID: 3667497345004965906}
   - {fileID: 8090570393477615771}
-  - {fileID: 5558297584675945779}
+  - {fileID: 6346127360201791571}
   - {fileID: 1150203436640686121}
   - {fileID: 7411350250047257328}
   - {fileID: 4965437470917120030}
-  - {fileID: 6346127360201791571}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -585,16 +584,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5092624690397223312}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.49875265, y: 0.36778525, z: 0.36778522}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2696909057112316567}
+  m_Father: {fileID: 8090570393477615771}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -48.2, y: -95.5}
+  m_AnchoredPosition: {x: -23.6, y: -79.1}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &6994938550240434215
@@ -682,7 +681,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0.00012207031, y: 0}
   m_SizeDelta: {x: 130, y: 130}
   m_Pivot: {x: 1, y: 0}
 --- !u!1 &5423966619992848050
@@ -712,17 +711,18 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5423966619992848050}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.0050018, y: 2.7189782, z: 2.7189782}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5558297584675945779}
   m_Father: {fileID: 2696909057112316567}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 360, y: 205.245}
-  m_SizeDelta: {x: 100, y: 126.734}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 2.4000244, y: 70.19995}
+  m_SizeDelta: {x: 100, y: 126.73401}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &6359435859434845924
 CanvasRenderer:
   m_ObjectHideFlags: 0

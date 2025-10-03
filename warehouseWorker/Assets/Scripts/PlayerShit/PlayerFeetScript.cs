@@ -7,7 +7,7 @@ public class PlayerFeetScript : MonoBehaviour
     public bool isGrounded;
     public List<Collider> objects = new List<Collider>(16);
 
-    void CleanUp()
+    public void CleanUp()
     {
         for (int i = 0; i < objects.Count; i++)
         {
@@ -22,18 +22,18 @@ public class PlayerFeetScript : MonoBehaviour
     {
         if (other.isTrigger) return;
         // Check if layer is 3 (grass) or 6 (interactable)
-        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
+        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Draggable") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
             !objects.Contains(other))
         {
             objects.Add(other);
             isGrounded = true;
         }
     }
-
+    // TODO: beg PlayerController for ground instead, dumbass
     private void OnTriggerExit(Collider other)
     {
         CleanUp();
-        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
+        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Draggable") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
             objects.Contains(other))
         {
             objects.Remove(other);

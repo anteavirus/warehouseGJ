@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8479951754703399401}
   - component: {fileID: 2868472189996358135}
   - component: {fileID: 5748167638655038643}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: talbe
   m_TagString: Untagged
   m_Icon: {fileID: 0}

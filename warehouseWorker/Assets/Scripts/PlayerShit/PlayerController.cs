@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static SettingsManager;
@@ -96,13 +98,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float xRotation;
     private Vector3 moveDirection;
-    public GameObject heldItem, previewObject;
+    public GameObject heldItem, dragObject, previewObject;
     private Coroutine spinRoutine;
     private SurfaceType currentSurface;
 
-    private bool isGrounded, isHoldingToPlace, isValidPlacement, wasGrounded, canMove = true;
+    private bool isHoldingToPlace, isValidPlacement, wasGrounded, canMove = true;
 
-    private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer, lastTimeRagdoll;
+    private float currentChargeTime, chargedThrowForce, currentRotationOffset, footstepTimer, lastTimeRagdoll, rbMass;
 
     PlayerFeetScript feet;
     PlayerGrabbyScript grabby;
@@ -130,6 +132,7 @@ public class PlayerController : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        rbMass = rb.mass;
         Cursor.lockState = CursorLockMode.Locked;
 
         if (playerCamera == null && Camera.main != null)
@@ -159,8 +162,6 @@ public class PlayerController : MonoBehaviour
             slipRisk = Mathf.MoveTowards(slipRisk, 0f, slipRiskDecayRate * Time.deltaTime);
         }
 
-        isGrounded = feet.isGrounded;
-
         if (!alive) return;
         HandlePauseToggle();
 
@@ -185,6 +186,7 @@ public class PlayerController : MonoBehaviour
         if (!alive) return;
         if (canMove) MovePlayer();
         HandleHeldItemPhysics();
+        HandleDragItemPhysics();
     }
 
     void HandlePauseToggle()
@@ -211,7 +213,7 @@ public class PlayerController : MonoBehaviour
 
         moveDirection = transform.forward * input.y + transform.right * input.x;
 
-        float multiplier = isGrounded ? 1f : airControlFactor;
+        float multiplier = feet.isGrounded ? 1f : airControlFactor;
         rb.AddForce(10f * multiplier * moveSpeed * moveDirection.normalized, ForceMode.Force);
 
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -255,7 +257,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        if (settingsManager.GetActionDown("Jump") && isGrounded)
+        if (settingsManager.GetActionDown("Jump") && feet.isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -265,7 +267,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleCameraWobble()
     {
-        if (isGrounded && moveDirection != Vector3.zero)
+        if (feet.isGrounded && moveDirection != Vector3.zero)
         {
             float wobble = Mathf.Sin(Time.time * wobbleFrequency) * wobbleAmount;
             Vector3 targetWobble = originalCameraLocalPosition + new Vector3(0, Mathf.Abs(wobble), 0);
@@ -285,11 +287,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UpdateDrag() => rb.drag = isGrounded ? groundDrag : airDrag;
+    private void UpdateDrag() => rb.drag = feet.isGrounded ? groundDrag : airDrag;
 
     private void HandleFootsteps()
     {
-        if (isGrounded)
+        if (feet.isGrounded)
         {
             if (!wasGrounded)
             {
@@ -325,7 +327,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        wasGrounded = isGrounded;
+        wasGrounded = feet.isGrounded;
     }
 
     private void DetectSurface()
@@ -378,11 +380,17 @@ public class PlayerController : MonoBehaviour
             if (heldItem == null) TryPickupItem(grabby.Pop());
             else if (!isHoldingToPlace) DropItem();
         }
+
+        if (settingsManager.GetActionDown("Drag"))
+        {
+            TryDragItem(grabby.focusedTarget);
+        }
     }
+
 
     private void HandleUseItem()
     {
-        if (settingsManager.GetActionDown("Use"))// Right click
+        if (settingsManager.GetActionDown("Use"))
         {
             if (heldItem != null) 
             {
@@ -399,6 +407,72 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void TryDragItem(object item)
+    {
+        if (item == null)
+        {
+            dragObject = null;
+            return;
+        }
+        if (item is not UnityEngine.GameObject gameObj) return;
+        if (gameObj.layer != LayerMask.NameToLayer("Draggable")) return;
+
+        // If we're already dragging this object, stop dragging
+        if (gameObj == dragObject)
+        {
+            dragObject = null;
+            return;
+        }
+
+        // If we're dragging something else, stop dragging it first
+        if (dragObject != null)
+        {
+            dragObject = null;
+        }
+
+        StartDragging(gameObj);
+    }
+
+    [SerializeField] private float dragFollowForce = 100f;
+    [SerializeField] private float dragDamping = 5f;
+
+    private void StartDragging(GameObject dragObj)
+    {
+        dragObject = dragObj;
+
+        // Configure the dragged object's Rigidbody
+        Rigidbody dragRB = dragObject.GetComponent<Rigidbody>();
+        if (dragRB == null) dragRB = dragObject.AddComponent<Rigidbody>();
+
+        dragRB.drag = 1f;
+        dragRB.angularDrag = 1f;
+        dragRB.useGravity = true;
+
+        Debug.Log($"Started dragging: {dragObject.name}");
+    }
+
+    private void HandleDragItemPhysics()
+    {
+        if (dragObject == null || !dragObject.TryGetComponent<Rigidbody>(out var dragRB))
+        {
+            if (rb != null) rb.mass = rbMass;
+            return;
+        }
+
+        Vector3 direction = handTransform.transform.position - dragObject.transform.position;
+        float distance = direction.magnitude;
+
+        if (distance > 0.1f)
+        {
+            Vector3 force = direction.normalized * (dragFollowForce * distance);
+            force -= dragRB.velocity * dragDamping;
+            dragRB.AddForce(force);
+            rb.AddForce(-force);
+        }
+
+        rb.mass = rbMass + dragRB.mass;
+    }
+    
     public void ForcePickupItem(Item stupidBullshit)
     {
         TryPickupItem(stupidBullshit);
@@ -471,6 +545,7 @@ public class PlayerController : MonoBehaviour
         try
         {
             feet.objects.Remove(item.GetComponent<Collider>());
+            feet.CleanUp();
         }
         catch { Debug.Log("Failed to remove feet or something. Whatever this is fine"); }
         // TODO: This bug can still occur under slimmest of circumstances. I think? I just had it break! This is fucking stupid, whatever

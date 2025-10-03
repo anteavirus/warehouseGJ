@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6784539687485767569}
   - component: {fileID: 681023169789298774}
   - component: {fileID: 1542677373322135982}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: chiar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

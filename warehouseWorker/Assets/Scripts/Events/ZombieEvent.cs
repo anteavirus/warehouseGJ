@@ -35,6 +35,7 @@ public class ZombieEvent : Event
         }
     }
 
+    // TODO: make it check if the position is not inside kinetic rigidbodies, if it is in one at all; just. not inside objects, at least not static
     private Vector3 GetRandomPositionInBox(Bounds bounds)
     {
         return new Vector3(

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Audio;
 using System;
+using System.Linq;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -173,32 +174,67 @@ public class SettingsManager : MonoBehaviour
 
         KeyCode key = keyBind.currentKey != KeyCode.None ? keyBind.currentKey : keyBind.defaultKey;
 
-        return ConvertMouseButtons(key.ToString());
+        string keyStr = key.ToString();
+        if (keyStr.Length < 2) return keyStr;
+
+        string localizationKey = GetKeyLocalizationKey(key);
+        if (LocalizationManager.TryGetVal(localizationKey, out var localizedKey))
+            return localizedKey;
+
+        return keyStr;
     }
 
-    // TODO: kill whoever moaned about this being an issue.
-    private static readonly Dictionary<string, string> mouseButtonTranslations = new Dictionary<string, string>
+    private string GetKeyLocalizationKey(KeyCode key)
     {
-        {"Mouse0", "ЛКМ"},
-        {"Mouse1", "ПКМ"},
-        {"Mouse2", "Колесико Мыши"},
-    };
+        string keyName = key.ToString();
 
-    private string ConvertMouseButtons(string keyString)
+        if (keyName.StartsWith("Mouse"))
+            if (int.TryParse(keyName.Split("Mouse")[1], out int mouseVal))  // NOTE: [0] actually contains a null value 
+            {
+                if (mouseVal >= 0 && mouseVal <= 2)
+                    return $"key_mouse_{mouseVal}";
+                else
+                    return "key_mouse";
+            }
+
+        return $"key_{keyName.ToLower()}";
+    }
+
+    private string GetActionNameLocalizationKey(string actionName)
     {
-        return mouseButtonTranslations.TryGetValue(keyString, out string translated) ? translated : keyString;
+        return $"action_{actionName.ToLower().Replace(" ", "_")}";
     }
 
     void CreateKeyBindUI()
     {
-        foreach (Transform child in keyBindContainer) Destroy(child.gameObject);
+        foreach (Transform child in keyBindContainer)
+            Destroy(child.gameObject);
 
         foreach (KeyBind bind in keyBinds)
         {
             GameObject button = Instantiate(keyBindButtonPrefab, keyBindContainer);
             TMP_Text[] texts = button.GetComponentsInChildren<TMP_Text>();
-            texts[0].text = bind.actionName;
-            texts[1].text = bind.currentKey.ToString();
+
+            string actionKey = GetActionNameLocalizationKey(bind.actionName);
+            if (LocalizationManager.TryGetVal(actionKey, out var localizedAction))
+            {
+                texts[0].text = localizedAction;
+            }
+            else
+            {
+                texts[0].text = bind.actionName;
+            }
+
+            var actionNameText = texts[0].gameObject.AddComponent<LocalizedText>();
+            actionNameText.localizationKey = actionKey;
+
+            texts[1].text = GetKeyDisplay(bind.actionName);
+
+            if (bind.currentKey.ToString().Length > 1)
+            {
+                var keyText = texts[1].gameObject.AddComponent<LocalizedText>();
+                keyText.localizationKey = GetKeyLocalizationKey(bind.currentKey != KeyCode.None ? bind.currentKey : bind.defaultKey);
+            }
 
             Button btn = button.GetComponent<Button>();
             btn.onClick.AddListener(() => StartRebinding(bind, texts[1]));

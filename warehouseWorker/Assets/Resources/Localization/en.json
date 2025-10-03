@@ -297,6 +297,54 @@
 		{
 			"Key": "total_score",
 			"Value": "TOTAL SCORE:"
+		},
+		{
+			"Key": "key_mouse",
+			"Value": "Mouse Button"
+		},
+		{
+			"Key": "key_mouse_0",
+			"Value": "Left Mouse Button"
+		},
+		{
+			"Key": "key_mouse_1",
+			"Value": "Right Mouse Button"
+		},
+		{
+			"Key": "key_mouse_2",
+			"Value": "Mouse Wheel"
+		},
+		{
+			"Key": "key_space",
+			"Value": "Mouse Button"
+		},
+		{
+			"Key": "action_jump",
+			"Value": "Jump"
+		},
+		{
+			"Key": "action_drag",
+			"Value": "Drag"
+		},
+		{
+			"Key": "action_place",
+			"Value": "Place"
+		},
+		{
+			"Key": "action_pickup",
+			"Value": "Pick Up"
+		},
+		{
+			"Key": "action_use",
+			"Value": "Use"
+		},
+		{
+			"Key": "action_jump",
+			"Value": "Jump"
+		},
+		{
+			"Key": "action_throw",
+			"Value": "Throw"
 		}
     ]
 }

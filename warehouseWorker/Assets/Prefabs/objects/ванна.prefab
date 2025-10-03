@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7075421311359396704}
   - component: {fileID: 3019595896452021747}
   - component: {fileID: 418300918942022157}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: "\u0432\u0430\u043D\u043D\u0430"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,8 +147,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8992ce6cf70b074a92c8d43a5b8ac07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
+  _allowedItemIDs: 
+  assignedItemID: 0
+  itemAmount: 0
   limitVelocity: {x: 0.3, y: 0.3, z: 0.3}
+  shelfTypeID: 0
+  itemPositions: []
+  visualItems: []
+  availablePositionColor: {r: 0, g: 1, b: 0, a: 1}
+  occupiedPositionColor: {r: 1, g: 0, b: 0, a: 1}
+  gizmoSphereSize: 0.1
+  scaleOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &665975001475631719
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +171,7 @@ GameObject:
   - component: {fileID: 7263192766312138121}
   - component: {fileID: 780463081705840915}
   - component: {fileID: 7645584749472627171}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: default (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295,7 +304,7 @@ GameObject:
   - component: {fileID: 2169626037806366065}
   - component: {fileID: 3901988262400970719}
   - component: {fileID: 3240245343050924062}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: default (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +437,7 @@ GameObject:
   - component: {fileID: 3580497852334217010}
   - component: {fileID: 4946032062158141352}
   - component: {fileID: 2521004843499531366}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: ShelfTrigger
   m_TagString: IgnoreRaycast
   m_Icon: {fileID: 0}
@@ -533,8 +542,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8992ce6cf70b074a92c8d43a5b8ac07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
+  _allowedItemIDs: 
+  assignedItemID: 0
+  itemAmount: 0
   limitVelocity: {x: 0.3, y: 0.3, z: 0.3}
+  shelfTypeID: 0
+  itemPositions: []
+  visualItems: []
+  availablePositionColor: {r: 0, g: 1, b: 0, a: 1}
+  occupiedPositionColor: {r: 1, g: 0, b: 0, a: 1}
+  gizmoSphereSize: 0.1
+  scaleOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &3274145319509656952
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +566,7 @@ GameObject:
   - component: {fileID: 4547076707739984119}
   - component: {fileID: 845497365473903065}
   - component: {fileID: 5570142653264043472}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: default (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -681,7 +699,7 @@ GameObject:
   - component: {fileID: 7786752805204285050}
   - component: {fileID: 3210357999559346471}
   - component: {fileID: 6162648100410052501}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: default (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -813,7 +831,7 @@ GameObject:
   - component: {fileID: 364395599725304079}
   - component: {fileID: 3300627460571261364}
   - component: {fileID: 7709667141101440731}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}

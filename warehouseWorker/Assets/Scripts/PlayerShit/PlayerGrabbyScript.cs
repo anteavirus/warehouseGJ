@@ -39,20 +39,35 @@ public class PlayerGrabbyScript : MonoBehaviour
     private object GetFocusedTarget()
     {
         // Raycast takes priority
+        var rayList = Physics.RaycastAll(controller.playerCamera.transform.position,
+            controller.playerCamera.transform.forward,
+            controller.pickupRange, controller.interactableLayer);
+        foreach (var rayHit in rayList)
+        {
+            if (rayHit.collider.TryGetComponent<Item>(out var item))
+            {
+                if (item.isActiveAndEnabled && item.isPickupable)
+                    return item;
+            }
+        }
+
         if (Physics.Raycast(controller.playerCamera.transform.position,
             controller.playerCamera.transform.forward, out RaycastHit hit,
             controller.pickupRange, controller.interactableLayer))
         {
-            if (hit.collider.TryGetComponent<Item>(out var item))
-            {
-                if (item.isActiveAndEnabled && item.isPickupable)           
-                    return item;
-            }
+            // Used to contain item condition; unnecessary, I assume, seein' above
 
             if (hit.collider.TryGetComponent<StorageArea>(out var area))
             {
                 if (area.isActiveAndEnabled)
                     return area;
+            }
+
+            var collidedGameObj = hit.collider.gameObject;
+            if (collidedGameObj.layer == LayerMask.NameToLayer("Draggable"))
+            {
+                if (collidedGameObj.activeInHierarchy)
+                    return collidedGameObj;
             }
         }
 
@@ -102,17 +117,19 @@ public class PlayerGrabbyScript : MonoBehaviour
     private void RefreshFocus()
     {
         UpdateIndicator();
-
+        
         if (controller.heldItem != null)
         {
             grabbyIndicator.sprite = grabbedItem;
             itemToGrabIndicator.gameObject.SetActive(true);
 
-            var heldItemSprite = GameManager.Instance.previewSprites
-                .Find(i => i != null && i.name == controller.heldItem.name);
-            // Fallback if no match found
-            itemToGrabIndicator.sprite = heldItemSprite ?? GameManager.Instance.previewSprites[^1];
-
+            if (IconManager.Instance != null)
+            {
+                var heldItemSprite = IconManager.Instance.previewSprites
+                    .Find(i => i != null && i.name.StartsWith(IconManager.IconNamePrefix(controller.heldItem.GetComponent<Item>().ID.ToString())));
+                // Fallback if no match found
+                itemToGrabIndicator.sprite = heldItemSprite ?? IconManager.Instance.previewSprites[^1];
+            }
             // Place the preview below the main indicator (adjust as desired)
             var heldOffset = new Vector2(0, -16f);
             itemToGrabIndicator.rectTransform.anchoredPosition = grabbyIndicator.rectTransform.anchoredPosition + heldOffset;
@@ -125,15 +142,27 @@ public class PlayerGrabbyScript : MonoBehaviour
         if (target != null)
         {
             grabbyIndicator.sprite = someItem;
-
-            if (target is Item item)
+            if (IconManager.Instance != null)
             {
-                itemToGrabIndicator.gameObject.SetActive(true);
-                var previewSprite = GameManager.Instance.previewSprites
-                    .Find(i => i != null && item.GetComponent<LocalizedText>() && i.name == item.Name.text);
-                itemToGrabIndicator.sprite = previewSprite ?? GameManager.Instance.previewSprites[^1];
+                if (target is Item item)
+                {
+                    itemToGrabIndicator.gameObject.SetActive(true);
+                    var previewSprite = IconManager.Instance.previewSprites
+                        .Find(i => i != null && i.name.StartsWith(IconManager.IconNamePrefix(item.ID.ToString())));
+                    itemToGrabIndicator.sprite = previewSprite ?? IconManager.Instance.previewSprites[^1];
+                }
+                else if (target is StorageArea area)
+                {
+                    itemToGrabIndicator.gameObject.SetActive(true);
+                    var previewSprite = IconManager.Instance.previewSprites
+                        .Find(i => i != null && i.name.StartsWith(IconManager.IconNamePrefix(area.assignedItemID.ToString())));
+                    itemToGrabIndicator.sprite = previewSprite ?? IconManager.Instance.previewSprites[^1];
+                }
+                else
+                {
+                    itemToGrabIndicator.gameObject.SetActive(false);
+                }
             }
-
             var heldOffset = new Vector2(0, -grabbyIndicator.rectTransform.rect.height / 2f);
 
             itemToGrabIndicator.rectTransform.anchoredPosition = grabbyIndicator.rectTransform.anchoredPosition;
@@ -182,6 +211,14 @@ public class PlayerGrabbyScript : MonoBehaviour
             if (area.isActiveAndEnabled)
                 return area;
         }
+
+        var collidedGameObj = collider.gameObject;
+        if (collidedGameObj.layer == LayerMask.NameToLayer("Draggable"))
+        {
+            if (collidedGameObj.activeInHierarchy)
+                return collidedGameObj;
+        }
+
         return null;
     }
 

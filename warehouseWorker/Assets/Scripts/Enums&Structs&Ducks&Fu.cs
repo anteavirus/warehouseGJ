@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static SettingsManager;
 
 public class GroundSurface : MonoBehaviour
 {

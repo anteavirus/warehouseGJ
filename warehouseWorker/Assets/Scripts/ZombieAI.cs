@@ -53,7 +53,7 @@ public class ZombieAI : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        player = FindObjectOfType<PlayerController>().transform;
+        player = FindObjectOfType<PlayerController>().transform;    // TODO: mustn't know player from start. we are going to make this multiplayer at some point, so...
         footstepSource = gameObject.AddComponent<AudioSource>();
         footstepSource.spatialBlend = 1f;
         footstepSource.outputAudioMixerGroup = GameManager.Instance.sfx;
@@ -108,6 +108,8 @@ public class ZombieAI : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down,
             characterHeight * 0.5f + 0.1f, groundLayer);
     }
+
+    // TODO: it should NOT be outside of boundaries of where it can go. 
     void WanderBehavior()
     {
         if (directionTimer <= 0 || CheckForObstacle())

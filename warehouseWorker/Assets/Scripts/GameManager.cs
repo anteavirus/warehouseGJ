@@ -33,12 +33,6 @@ public class GameManager : MonoBehaviour
     [Tooltip("Please touch the items list instead, this will fill out from there and other components will use this instead. It's a Gamejam solution that I'll keep in place until it fucks everything so bad I'll have to rework it. Must stay in inspector just incase I fuck it up again.")]
     public List<Item> itemTemplates = new();
 
-    // Previews
-    [SerializeField] Vector2 previewSize = new Vector2(128, 128);
-    public List<Texture2D> previews = new();
-    public Texture2D defaultPreview;
-    public List<Sprite> previewSprites;
-
     // Spawning
     [Tooltip("Box prefab here, so basically anything that acts like a box and preferrably looks like a box.")]
     public GameObject box;
@@ -59,7 +53,7 @@ public class GameManager : MonoBehaviour
     int score = 0;
     float progressTimer;
     float currentEventTime = 0;
-    [SerializeField] float eventTimer = 40;
+    [SerializeField] float eventTimer = 60;
     float currentPostageTime = 0;
     [SerializeField] float postageTimer = 60;
     public float timeToSpawnAnotherBox = 30;
@@ -125,8 +119,6 @@ public class GameManager : MonoBehaviour
         {
             shelvesStockManager.Work();
         }
-
-        GeneratePreviews();
     }
 
     void InitializeItemTemplates()
@@ -144,110 +136,6 @@ public class GameManager : MonoBehaviour
             itemTemplates.Add(itemComp);
             obj.SetActive(false);
         }
-    }
-
-    void GeneratePreviews()
-    {
-        previews.Clear();
-        previewSprites.Clear();
-
-        foreach (var prefab in itemTemplates)
-        {
-            if (prefab == null)
-            {
-                previews.Add(null);
-                continue;
-            }
-
-            Texture2D preview = RenderCopyToTexture(prefab.gameObject, (int)previewSize.x, (int)previewSize.y);
-            previews.Add(preview);
-        }
-        previews.Add(defaultPreview);
-
-        foreach (var preview in previews)
-        {
-            if (preview == null) continue;
-
-            Rect rect = new(0, 0, preview.width, preview.height);
-            Sprite sprite = Sprite.Create(preview, rect, new Vector2(0.5f, 0.5f));
-            sprite.name = preview.name;
-            previewSprites.Add(sprite);
-        }
-    }
-
-    Texture2D RenderCopyToTexture(GameObject prefab, int width, int height)
-    {
-        int previewLayer = 31;
-
-        GameObject instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-        instance.SetActive(true);
-        SetLayer(instance, previewLayer);
-
-        Bounds bounds = GetBounds(instance);
-        Vector3 center = bounds.center;
-        float maxExtent = Mathf.Max(bounds.extents.x, bounds.extents.y, bounds.extents.z);
-
-        GameObject lightObj = new GameObject("PreviewLight");
-        Light light = lightObj.AddComponent<Light>();
-        light.type = LightType.Directional;
-        light.intensity = 1.2f;
-        light.color = Color.white;
-        light.cullingMask = 1 << previewLayer;
-
-        Vector3 viewDir = new Vector3(1, 1, -1).normalized;
-        lightObj.transform.rotation = Quaternion.LookRotation(-viewDir);
-
-        Camera cam = new GameObject("PreviewCam").AddComponent<Camera>();
-        cam.enabled = false;
-        cam.clearFlags = CameraClearFlags.Color;
-        cam.backgroundColor = Color.clear;
-        cam.cullingMask = 1 << previewLayer;
-        cam.orthographic = true;
-        cam.orthographicSize = maxExtent * 1.2f;
-
-        float distance = maxExtent * 3f;
-        Vector3 camPos = center + viewDir * distance;
-        cam.transform.position = camPos;
-        cam.transform.LookAt(center);
-
-        RenderTexture rt = new RenderTexture(width, height, 16);
-        cam.targetTexture = rt;
-
-        cam.Render();
-
-        RenderTexture.active = rt;
-        Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
-        tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-        tex.Apply();
-        tex.name = prefab.name.Replace("(Clone)", "");
-
-        RenderTexture.active = null;
-
-        DestroyImmediate(rt);
-        DestroyImmediate(cam.gameObject);
-        DestroyImmediate(lightObj);
-        DestroyImmediate(instance);
-
-        return tex;
-    }
-
-    void SetLayer(GameObject go, int layer)
-    {
-        go.layer = layer;
-        foreach (Transform t in go.transform)
-            SetLayer(t.gameObject, layer);
-    }
-
-    Bounds GetBounds(GameObject go)
-    {
-        Renderer[] renderers = go.GetComponentsInChildren<Renderer>();
-        if (renderers.Length == 0)
-            return new Bounds(go.transform.position, Vector3.one);
-
-        Bounds bounds = renderers[0].bounds;
-        for (int i = 1; i < renderers.Length; i++)
-            bounds.Encapsulate(renderers[i].bounds);
-        return bounds;
     }
 
     void Update()

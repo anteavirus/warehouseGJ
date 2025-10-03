@@ -11,9 +11,13 @@ public class ArenaLimits : MonoBehaviour
             Destroy(other.gameObject);
         }
 
-        if (other.TryGetComponent<PlayerController>(out var plr))
+        else if (other.TryGetComponent<PlayerController>(out var plr))
         {
             plr.transform.SetPositionAndRotation(GameManager.Instance.spawnPosition.position, transform.rotation);   
+        }
+        else
+        {
+            Debug.Log($"Unmonitored object left the Arena Limits: {other.name}");
         }
     }
 }

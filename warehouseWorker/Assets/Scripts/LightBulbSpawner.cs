@@ -139,9 +139,7 @@ public class StableHangingLight : MonoBehaviour
         joint.anchor = new Vector3(0, segmentLength / 2, 0);
         joint.connectedAnchor = new Vector3(0, -segmentLength / 2, 0);
 
-        joint.xMotion = ConfigurableJointMotion.Locked;
-        joint.yMotion = ConfigurableJointMotion.Locked;
-        joint.zMotion = ConfigurableJointMotion.Locked;
+        joint.xMotion = joint.yMotion = joint.zMotion = ConfigurableJointMotion.Locked;
 
         JointDrive drive = new JointDrive
         {
@@ -159,10 +157,7 @@ public class StableHangingLight : MonoBehaviour
             bounciness = 0f
         };
 
-        joint.angularYLimit = limit;
-        joint.angularZLimit = limit;
-        joint.highAngularXLimit = limit;
-        joint.lowAngularXLimit = limit;
+        joint.angularYLimit = joint.angularZLimit = joint.highAngularXLimit = joint.lowAngularXLimit = limit;
 
         joints.Add(joint);
     }

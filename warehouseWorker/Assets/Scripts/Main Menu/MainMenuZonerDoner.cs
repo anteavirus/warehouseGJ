@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -116,7 +115,7 @@ public class MainMenuZonerDoner : MonoBehaviour
         foreach (var item in list.entries)
         {
             i++;
-            string unWrappableInt = item.score < 0 ? $"<nobr>{item.score}</nobr>" : item.score.ToString();
+            string unWrappableInt = $"<nobr>{item.score}</nobr>";
             str += $"{i}: {item.name} - {unWrappableInt}\n";
         }
         try
@@ -137,60 +136,10 @@ public class MainMenuZonerDoner : MonoBehaviour
         SceneManager.LoadScene(name);
     }
 
-    public void UpdateGameSettings(float volume, int qualityLevel)
-    {
-        // Example settings that can be changed mid-game
-        AudioListener.volume = volume;
-        QualitySettings.SetQualityLevel(qualityLevel);
-    }
-
-    public void SpawnExtraSpecialPunchCard()
-    {
-        if (currentExtraCard != null)
-        {
-            if (currentExtraCard.TryGetComponent<MainMenuExtraSpecialPunchCard>(out var oldCard)) 
-                oldCard.OnDestroyed -= HandleCardDestroyed;
-            Destroy(currentExtraCard);
-        }
-
-        StartCoroutine(SpawnAfterPlayerMovement());
-    }
-
-    private IEnumerator SpawnAfterPlayerMovement()
+    public void BeginPlayerTransportationToGameplay()
     {
         playerController.MoveToPosition(playerSpecialPosition, () => {
-            Vector3 raycastStart = extraSpecialPunchCardSpawnPoint.position;
-            Vector3 spawnPos = extraSpecialPunchCardSpawnPoint.position;
-
-            if (Physics.Raycast(raycastStart, Vector3.down, out RaycastHit hit, 20f))
-            {
-                spawnPos = hit.point + Vector3.up * 0.1f;
-            }
-
-            currentExtraCard = Instantiate(
-                extraSpecialPunchCardPrefab,
-                spawnPos,
-                Quaternion.Euler(0f, 0f, 0f)
-            );
-
-            var newCard = currentExtraCard.GetComponent<MainMenuExtraSpecialPunchCard>();
-            newCard.OnDestroyed += HandleCardDestroyed;
-            newCard.InitializeHoverPosition(spawnPos);
+            SceneManager.LoadScene("GameplayScene");
         });
-
-        yield return null;
-    }
-
-    private void HandleCardDestroyed()
-    {
-        currentExtraCard = null;
-        try
-        {
-            playerController.MoveToPosition(playerDefaultPosition);
-        }
-        catch
-        {
-            Debug.LogWarning("Coroutine sacked, memory leaked, code spaghettied. Everything's fine.");
-        }
     }
 }

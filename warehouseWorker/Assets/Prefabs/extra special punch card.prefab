@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 4496903674795794315}
   - component: {fileID: 3570584340732908509}
   - component: {fileID: 4202559721295158090}
+  - component: {fileID: 3299541109894837837}
   m_Layer: 0
   m_Name: Text (TMP) (1)
   m_TagString: Untagged
@@ -515,6 +516,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 3570584340732908509}
   m_maskType: 0
+--- !u!114 &3299541109894837837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4818806092783528620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e9e5cebda73c14ca399a477a13fdff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localizationKey: pregame_name
+  text: 
 --- !u!1 &5638603035328788350
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,6 +859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 0}
   ID: -1
+  Name: {fileID: 0}
   scoreValue: 0
   fromShelf: 1
   canUseOnID: 
@@ -851,7 +867,6 @@ MonoBehaviour:
   pickupSounds: []
   useSounds: []
   collisionSounds: []
-  parrySounds: []
   mixerGroup: {fileID: 0}
   throwMultiplier: 0.1
   controller: {fileID: 0}
@@ -961,14 +976,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0410 \u0432\u044B \u0437\u043D\u0430\u043B\u0438 \u0447\u0442\u043E
-    \u044F \u0441\u0435\u0439\u0447\u0430\u0441 \u044D\u0442\u043E \u0434\u0435\u043B\u0430\u044E
-    \u0437\u0430\u043D\u0430\u0432\u043E? \u041C\u043D\u0435 \u043E\u0447\u0435\u043D\u044C
-    \u0432\u0435\u0441\u0435\u043B\u043E \u0441\u0435\u0439\u0447\u0430\u0441 \u0441\u0442\u0440\u0430\u0434\u0430\u0442\u044C
-    \u0442\u0430\u043A\u043E\u0439 \u0444\u0438\u0433\u043D\u0451\u0439. \u0410 \u0432\u044B
-    \u0437\u043D\u0430\u043B\u0438 \u0447\u0442\u043E \u0441\u0430\u043C\u044B\u0439
-    \u043B\u0443\u0447\u0448\u0438\u0439 \u041F\u043E\u043A\u0435\u043C\u043E\u043D,
-    \u044D\u0442\u043E -"
+  m_text: I'm doing stuff with this paper again. Now in English. Previous versions
+    had a copypasta here. Now it has this text.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 18b380b9a0bcdbb408b819886c51f761, type: 2}
   m_sharedMaterial: {fileID: -1442064769845830692, guid: 18b380b9a0bcdbb408b819886c51f761,
