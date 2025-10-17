@@ -20,7 +20,7 @@ public class C4Event : Event
     private void SpawnItems()
     {
         if (c4SpawnPoint == null)
-            c4SpawnPoint = GameManager.Instance.spawnPosition;
+            c4SpawnPoint = OrdersManager.Instance.spawnPosition;
 
         if (c4Prefab && c4SpawnPoint)
         {

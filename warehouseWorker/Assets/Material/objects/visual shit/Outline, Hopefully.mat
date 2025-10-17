@@ -14,7 +14,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -116,11 +116,12 @@ Material:
     - _OutlineDistanceFalloff: 0.486
     - _OutlineNoise: 0.309
     - _OutlinePixelSize: 16
+    - _OutlineQuality: 1
     - _OutlineSmoothing: 1
     - _OutlineThickness: 0.02
     - _OutlineThreshold: 0.1
     - _OutlineVertexSnap: 8
-    - _OutlineWidth: 0.022
+    - _OutlineWidth: 0.0309
     - _Parallax: 0.005
     - _PixelSize: 13.95
     - _PulseAmplitude: 0.1
@@ -144,7 +145,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0, g: 1, b: 0.020439148, a: 1}
+    - _Color: {r: 0, g: 1, b: 0.019607782, a: 1}
     - _DarkColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LightColor: {r: 1, g: 1, b: 1, a: 0}

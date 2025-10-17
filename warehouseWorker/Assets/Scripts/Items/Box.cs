@@ -26,13 +26,14 @@ public class Box : Item
 
         var item = Instantiate(containedItem);
         item.name = containedItem.name;
-        item.transform.position = transform.position;
+        item.transform.position = transform.position + new Vector3(0,newbox.transform.localScale.y,0); // TODO: maybe it should spawn at the black part and not. somewhere
         item.SetActive(true);
-        item.GetComponent<Item>().fromShelf = false;
+        Item itemscript = item.GetComponent<Item>();
+        itemscript.fromShelf = false;
         item.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         containedItem = null;
-        player.ForcePickupItem(boxscript);
+        player.ForcePickupItem(itemscript);
         Destroy(this.gameObject);
     }
 

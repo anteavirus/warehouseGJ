@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class UsefulStuffs
@@ -12,7 +15,244 @@ public static class UsefulStuffs
         );
     }
 
-    // Add these to your UsefulStuffs class if needed:
+
+    /// <summary>
+    /// Converts a time string to seconds since midnight
+    /// Supported formats:
+    /// - 24-hour: "14:30", "14:30:45", "1430"
+    /// - 12-hour: "2:30 PM", "2:30:15 PM", "02:30am", "2pm"
+    /// - Simple: "14.5" (hours.decimal), "14.5h" 
+    /// - Relative: "+2h30m", "+2:30"
+    /// </summary>
+    /// <param name="timeString">The time string to parse</param>
+    /// <returns>Seconds since midnight (0 - 86399)</returns>
+    /// <exception cref="ArgumentException">Thrown when time string is invalid</exception>
+    public static long TimeStringToSeconds(string timeString)
+    {
+        if (string.IsNullOrWhiteSpace(timeString))
+        {
+            throw new ArgumentException("Time string cannot be null or empty");
+        }
+
+        string input = timeString.Trim().ToUpper();
+
+        try
+        {
+            // 1. Handle relative times (e.g., "+2h30m", "+1:30")
+            if (input.StartsWith("+"))
+            {
+                return ParseRelativeTime(input.Substring(1));
+            }
+
+            // 2. Handle decimal hours (e.g., "14.5", "3.25h")
+            if (Regex.IsMatch(input, @"^\d*\.?\d+\s*[H]?$"))
+            {
+                return ParseDecimalHours(input.Replace("H", "").Trim());
+            }
+
+            // 3. Handle compact format (e.g., "1430", "0930")
+            if (Regex.IsMatch(input, @"^\d{3,4}$"))
+            {
+                return ParseCompactFormat(input);
+            }
+
+            // 4. Handle standard time formats with AM/PM
+            return ParseStandardTime(input);
+        }
+        catch (Exception ex) when (ex is not ArgumentException)
+        {
+            throw new ArgumentException($"Invalid time format: {timeString}. " +
+                                      "Supported formats: HH:MM, HH:MM:SS, HH:MM AM/PM, +XhYm, H.Hh", ex);
+        }
+    }
+
+    private static long ParseRelativeTime(string relativeTime)
+    {
+        var pattern = new Regex(@"(?:([\d.]+)H)?\s*(?:([\d.]+)M)?", RegexOptions.IgnoreCase);
+        var match = pattern.Match(relativeTime);
+
+        long seconds = 0;
+        if (match.Success)
+        {
+            if (match.Groups[1].Success)
+            {
+                seconds += (long)(double.Parse(match.Groups[1].Value) * 3600);
+            }
+            if (match.Groups[2].Success)
+            {
+                seconds += (long)(double.Parse(match.Groups[2].Value) * 60);
+            }
+        }
+        else
+        {
+            // Try colon format for relative time (e.g., "+2:30")
+            string[] parts = relativeTime.Split(':');
+            if (parts.Length >= 2)
+            {
+                seconds += int.Parse(parts[0]) * 3600L;
+                seconds += int.Parse(parts[1]) * 60L;
+                if (parts.Length == 3)
+                {
+                    seconds += int.Parse(parts[2]);
+                }
+            }
+        }
+
+        return seconds;
+    }
+
+    private static long ParseDecimalHours(string decimalStr)
+    {
+        double decimalHours = double.Parse(decimalStr);
+        return (long)(decimalHours * 3600);
+    }
+
+    private static long ParseCompactFormat(string compact)
+    {
+        // Pad with leading zero if needed
+        if (compact.Length == 3)
+        {
+            compact = "0" + compact;
+        }
+
+        int hours = int.Parse(compact.Substring(0, 2));
+        int minutes = int.Parse(compact.Substring(2, 2));
+
+        ValidateTimeComponents(hours, minutes, 0);
+        return hours * 3600L + minutes * 60L;
+    }
+
+    private static long ParseStandardTime(string timeStr)
+    {
+        // Extract AM/PM if present
+        bool isPM = timeStr.Contains("PM");
+        bool isAM = timeStr.Contains("AM");
+
+        // Remove AM/PM for parsing
+        string cleanTime = timeStr.Replace("AM", "").Replace("PM", "").Trim();
+
+        // Split by colon or period
+        string[] parts = cleanTime.Split(':', '.');
+        if (parts.Length < 2)
+        {
+            throw new ArgumentException("Invalid time format");
+        }
+
+        int hours = int.Parse(parts[0]);
+        int minutes = int.Parse(parts[1]);
+        int seconds = (parts.Length >= 3) ? int.Parse(parts[2]) : 0;
+
+        // Handle 12-hour format conversion
+        if (isPM && hours != 12)
+        {
+            hours += 12;
+        }
+        else if (isAM && hours == 12)
+        {
+            hours = 0;
+        }
+
+        // Handle 24-hour format where hours might be > 12 without AM/PM
+        if (!isAM && !isPM && hours <= 12 && Regex.IsMatch(timeStr, @"\d"))
+        {
+            // This is ambiguous - assume 24-hour format for values > 12, otherwise be explicit
+            if (hours < 12 && timeStr.ToLower().Contains("p"))
+            {
+                hours += 12;
+            }
+        }
+
+        ValidateTimeComponents(hours, minutes, seconds);
+        return hours * 3600L + minutes * 60L + seconds;
+    }
+
+    private static void ValidateTimeComponents(int hours, int minutes, int seconds)
+    {
+        if (hours < 0 || hours > 23)
+        {
+            throw new ArgumentException("Hours must be between 0 and 23");
+        }
+        if (minutes < 0 || minutes > 59)
+        {
+            throw new ArgumentException("Minutes must be between 0 and 59");
+        }
+        if (seconds < 0 || seconds > 59)
+        {
+            throw new ArgumentException("Seconds must be between 0 and 59");
+        }
+    }
+
+    /// <summary>
+    /// Utility method to format seconds back to readable time
+    /// </summary>
+    public static string SecondsToTimeString(long seconds)
+    {
+        if (seconds < 0 || seconds >= 86400)
+        {
+            throw new ArgumentException("Seconds must be between 0 and 86399");
+        }
+
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long secs = seconds % 60;
+
+        return $"{hours:D2}:{minutes:D2}:{secs:D2}";
+    }
+
+    public static void PlaySound(this AudioSource audioSource, AudioClip[] soundList)
+    {
+        if (soundList != null && soundList.Length > 0 && audioSource != null)
+        {
+            audioSource.PlayOneShot(soundList[UnityEngine.Random.Range(0, soundList.Length)]);
+        }
+    }
+
+    public static T FindComponentInChildren<T>(GameObject gameObject) where T : Component
+    {
+        T component = gameObject.GetComponent<T>();
+        if (component != null)
+            return component;
+
+        foreach (Transform child in gameObject.transform)
+        {
+            component = FindComponentInChildren<T>(child.gameObject);
+            if (component != null)
+                return component;
+        }
+
+        return null;
+    }
+
+    public static List<T> FindComponentsInChildren<T>(GameObject gameObject) where T : Component
+    {
+        List<T> components = new List<T>();
+        FindComponentsInChildrenRecursive(gameObject, components);
+        return components;
+    }
+
+    private static void FindComponentsInChildrenRecursive<T>(GameObject gameObject, List<T> components) where T : Component
+    {
+        T[] currentComponents = gameObject.GetComponents<T>();
+        components.AddRange(currentComponents);
+
+        foreach (Transform child in gameObject.transform)
+        {
+            FindComponentsInChildrenRecursive(child.gameObject, components);
+        }
+    }
+
+    public static List<T> ShuffleList<T>(List<T> list)
+    {
+        List<T> shuffled = new List<T>(list);
+        for (int i = 0; i < shuffled.Count; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(i, shuffled.Count);
+            T temp = shuffled[i];
+            shuffled[i] = shuffled[randomIndex];
+            shuffled[randomIndex] = temp;
+        }
+        return shuffled;
+    }
 
     /// <summary>
     /// Linearly interpolates between two colors

@@ -40,6 +40,7 @@ public class FileDataManipulator
                 Directory.CreateDirectory(directory);
             }
 
+            if (File.Exists(directory)) Debug.Log("File is going to be overwritten.");
             if (IsSettingsType(data.GetType()))
             {
                 SaveAsJson(data);
@@ -102,18 +103,7 @@ public class FileDataManipulator
         // Settings are typically configuration data that should be human-readable
         return type.Name.ToLower().Contains("settings") ||
                type.Name.ToLower().Contains("config") ||
-               type.IsPrimitive ||
-               type == typeof(string) ||
-               IsSimpleSerializableType(type);
-    }
-
-    private bool IsSimpleSerializableType(Type type)
-    {
-        return type.IsSerializable &&
-               !type.IsArray &&
-               !type.IsGenericType &&
-               type.Namespace != null &&
-               (type.Namespace.StartsWith("System") || type.Namespace.StartsWith("UnityEngine"));
+               type == typeof(string);
     }
 
     // Save as JSON for settings (human-readable)
@@ -121,6 +111,7 @@ public class FileDataManipulator
     {
         string json = JsonUtility.ToJson(data, true); // pretty print for readability
         File.WriteAllText(_filePath, json, Encoding.UTF8);
+        Debug.Log($"{data} successfully saved in {_filePath}");
     }
 
     // Save with compression for save data (smaller file size)
@@ -137,6 +128,8 @@ public class FileDataManipulator
         {
             compressionStream.Write(jsonBytes, 0, jsonBytes.Length);
         }
+
+        Debug.Log($"{data} successfully saved in {_filePath}");
     }
 
     // Load from JSON for settings
@@ -179,21 +172,36 @@ public class FileDataManipulator
     // Static helper methods for common use cases
 
     // Settings should probably remain in PlayerPrefs though, no?
-    public static FileDataManipulator ForSettings(string settingsName, object settingsData) 
+
+    /// <summary>
+    ///  File Data Manipulator class created that will work with pathSegments Folder? -> Folder? -> File
+    /// </summary>
+    /// <param name="data">Class that will be used saved in selected pathSegments' final file location (i.e. Folder/Text.txt)</param>
+    /// <param name="pathSegments">A string array path to the location of file manipulation (i.e. new string(){"Folder", "Text.txt"})</param>
+    /// <returns> File Data Manipulator with functions to Save data class or Load it instead. </returns>
+    public static FileDataManipulator ForPersistentDataPath(object data, params string[] pathSegments)
     {
-        string path = Path.Combine(Application.persistentDataPath, $"{settingsName}.json");
-        return new FileDataManipulator(path, settingsData);
+        string[] allSegments = new string[pathSegments.Length + 1];
+        allSegments[0] = Application.persistentDataPath;
+        Array.Copy(pathSegments, 0, allSegments, 1, pathSegments.Length);
+
+        string path = Path.Combine(allSegments);
+        return new FileDataManipulator(path, data);
     }
 
-    public static FileDataManipulator ForSaveData(string saveName, object saveData)
+    /// <summary>
+    ///  File Data Manipulator class created that will work with pathSegments Folder? -> Folder? -> File
+    /// </summary>
+    /// <param name="data">Class that will be used saved in selected pathSegments' final file location (i.e. Folder/Text.txt)</param>
+    /// <param name="pathSegments">A string array path to the location of file manipulation (i.e. new string(){"Folder", "Text.txt"})</param>
+    /// <returns> File Data Manipulator with functions to Save data class or Load it instead. </returns>
+    public static FileDataManipulator ForStreamingAssets(object data, params string[] pathSegments)
     {
-        string path = Path.Combine(Application.persistentDataPath, "Saves", $"{saveName}.save");
-        return new FileDataManipulator(path, saveData);
-    }
+        string[] allSegments = new string[pathSegments.Length + 1];
+        allSegments[0] = Application.streamingAssetsPath;
+        Array.Copy(pathSegments, 0, allSegments, 1, pathSegments.Length);
 
-    public static FileDataManipulator ForStreamingAssets(string relativePath, object data)
-    {
-        string path = Path.Combine(Application.streamingAssetsPath, relativePath);
+        string path = Path.Combine(allSegments);
         return new FileDataManipulator(path, data);
     }
 }

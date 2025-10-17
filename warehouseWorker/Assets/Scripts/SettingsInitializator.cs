@@ -10,6 +10,8 @@ using System.Linq;
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance;
+    Settings settings = new();
+    FileDataManipulator settingsFileManip;
 
     [System.Serializable]
     public class KeyBind
@@ -17,6 +19,29 @@ public class SettingsManager : MonoBehaviour
         public string actionName;
         public KeyCode defaultKey;
         [HideInInspector] public KeyCode currentKey;
+    }
+
+    [System.Serializable]
+    public class Settings
+    {
+        // Graphics Settings
+        public int resolutionIndex = 0;
+        public int qualityLevel = 2;
+        public bool fullscreen = true;
+
+        // Audio Settings
+        public float masterVolume = 1f;
+        public float sfxVolume = 1f;
+        public float musicVolume = 1f;
+
+        // Input Settings
+        public float mouseSensitivity = 100f;
+
+        // Lighting Settings
+        public string environmentLightColor = "#060607";
+        public float brightness = 1f;
+
+        public List<KeyBind> keyBindings = new();
     }
 
     [Header("UI References")]
@@ -84,6 +109,8 @@ public class SettingsManager : MonoBehaviour
     {
         if (Instance.started) return;
         started = true;
+        settingsFileManip = FileDataManipulator.ForPersistentDataPath(settings, new string[1] { "settings.json" });
+
         InitializeMouseSettings();
         InitializeResolutions();
         InitializeVolume();
@@ -286,33 +313,39 @@ public class SettingsManager : MonoBehaviour
     public void SetQuality(TMP_Dropdown qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex.value);
+        settings.qualityLevel = qualityIndex.value;
     }
 
     public void SetQuality(int qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex);
+        settings.qualityLevel = qualityIndex;
     }
 
     public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        settings.resolutionIndex = resolutionIndex;
     }
 
     public void SetResolution(TMP_Dropdown resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex.value];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        settings.resolutionIndex = resolutionIndex.value;
     }
 
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
+        settings.fullscreen = isFullscreen;
     }
 
     public void SetFullscreen(Toggle isFullscreen)
     {
         Screen.fullScreen = isFullscreen.isOn;
+        settings.fullscreen = isFullscreen.isOn;
     }
     #endregion
 
@@ -331,14 +364,17 @@ public class SettingsManager : MonoBehaviour
         {
             case "Master":
                 audioMixer.SetFloat("Master", dB);
+                settings.masterVolume = dB;
                 PlayerPrefs.SetFloat("MasterVolume", volume);
                 break;
             case "SFX":
                 audioMixer.SetFloat("SFX", dB);
+                settings.sfxVolume = dB;
                 PlayerPrefs.SetFloat("SFXVolume", volume);
                 break;
             case "Music":
                 audioMixer.SetFloat("MUS", dB);
+                settings.musicVolume = dB;
                 PlayerPrefs.SetFloat("MusicVolume", volume);
                 break;
             default:
@@ -374,6 +410,7 @@ public class SettingsManager : MonoBehaviour
     {
         // Save brightness setting
         PlayerPrefs.SetFloat(BRIGHTNESS_KEY, brightnessValue);
+        settings.brightness = brightnessValue;
         PlayerPrefs.Save();
 
         // Apply brightness to current color
@@ -386,6 +423,7 @@ public class SettingsManager : MonoBehaviour
 
         // Save color to PlayerPrefs (convert to hex first)
         string hex = UsefulStuffs.ColorToHex(newColor);
+        settings.environmentLightColor = hex;
         PlayerPrefs.SetString(ENVIRONMENT_LIGHT_KEY, hex);
         PlayerPrefs.Save();
 
@@ -472,7 +510,7 @@ public class SettingsManager : MonoBehaviour
     IEnumerator RebindKey(TMP_Text keyText)
     {
         isRebinding = true;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSecondsRealtime(0.2f);
 
         while (!Input.anyKeyDown) yield return null;
 
@@ -509,6 +547,7 @@ public class SettingsManager : MonoBehaviour
     {
         foreach (KeyBind bind in keyBinds)
         {
+            settings.keyBindings.Add(bind);
             PlayerPrefs.SetInt(bind.actionName, (int)bind.currentKey);
         }
     }
@@ -517,6 +556,9 @@ public class SettingsManager : MonoBehaviour
     {
         foreach (KeyBind bind in keyBinds)
         {
+            // TODO!!!: load save, make this method accept data and use it to .  uh load the actual keybind set. I think that's what I went with here. 
+            // I wish i wasn't this fucking stupid but oh well
+            settings.keyBindings.Add(bind);  // uh it is supposed to load this right
             bind.currentKey = (KeyCode)PlayerPrefs.GetInt(bind.actionName, (int)bind.defaultKey);
         }
     }
@@ -526,6 +568,7 @@ public class SettingsManager : MonoBehaviour
     public void SaveSettings()
     {
         PlayerPrefs.Save();
+        settingsFileManip.SaveData(settings);
     }
 
     public void LoadSettings()
@@ -575,6 +618,9 @@ public class SettingsManager : MonoBehaviour
         QualitySettings.SetQualityLevel(2);
         PlayerPrefs.DeleteAll();
         CreateKeyBindUI();
+
+        settings = new Settings();
+        settingsFileManip.SaveData(settings);
     }
     #endregion
 
@@ -606,6 +652,7 @@ public class SettingsManager : MonoBehaviour
 
     public void SetMouseSensitivity(float sensitivity)
     {
+        settings.mouseSensitivity = sensitivity;
         PlayerPrefs.SetFloat("MouseSensitivity", sensitivity);
         PlayerPrefs.Save();
     }

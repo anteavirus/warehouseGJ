@@ -19,7 +19,7 @@ public class BlackHoleEvent : Event
     {
         base.StartEvent();
         spawnPoint = GameManager.Instance.blackHoleSpawnPosition;
-        weakerSpawnPoint = GameManager.Instance.spawnPosition;
+        weakerSpawnPoint = OrdersManager.Instance.spawnPosition;
         Invoke(nameof(SpawnBlackHole), 2f);
     }
 

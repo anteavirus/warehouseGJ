@@ -14,13 +14,19 @@ public class ShelvesStockManager : MonoBehaviour
     public int maxInitialStock = 8;
 
     [Header("Debug")]
-    [SerializeField] private int assignmentSeed = 0;
+    [SerializeField] private int assignmentSeed = 0;    
 
     [Tooltip("Hi I am storageAreas from shelfPrefabs")]
     public List<StorageArea> shelfStorages;
 
     // Dictionary to map StorageArea back to its root prefab GameObject
     private Dictionary<StorageArea, GameObject> storageAreaToPrefabMap = new();
+
+    public void Initialize(GameManager gm)
+    {
+        gameManager = gm;
+        // todo. m. a thing.
+    }
 
     public void UpdateShelfStoragesFromPrefabs()
     {
@@ -119,7 +125,7 @@ public class ShelvesStockManager : MonoBehaviour
         var remainingItems = new List<Item>(validItems);
 
         // STEP 1: Priority assignment - specific item to specific shelf
-        foreach (var item in ShuffleList(validItems))
+        foreach (var item in UsefulStuffs.ShuffleList(validItems))
         {
             var compatibleSpawns = remainingSpawns.Where(spawn =>
                 shelfsByItemType.ContainsKey(item.ID) &&
@@ -157,7 +163,7 @@ public class ShelvesStockManager : MonoBehaviour
         // STEP 2: Assign remaining items to wildcard shelves
         var wildcardShelves = shelfStorages.Where(shelf => shelf.allowedItemIDs.Count == 0).ToList();
 
-        foreach (var item in ShuffleList(remainingItems.ToList()))
+        foreach (var item in UsefulStuffs.ShuffleList(remainingItems.ToList()))
         {
             var compatibleSpawns = remainingSpawns.Where(spawn =>
                 wildcardShelves.Any(shelf => spawn.CanAcceptShelfType(shelf.shelfTypeID))
@@ -193,20 +199,6 @@ public class ShelvesStockManager : MonoBehaviour
 
         // At this point, all available spawn points have either been assigned items or will remain empty
         return unassignedItems;
-    }
-
-    // Helper to shuffle lists for random assignment
-    private List<T> ShuffleList<T>(List<T> list)
-    {
-        List<T> shuffled = new List<T>(list);
-        for (int i = 0; i < shuffled.Count; i++)
-        {
-            int randomIndex = Random.Range(i, shuffled.Count);
-            T temp = shuffled[i];
-            shuffled[i] = shuffled[randomIndex];
-            shuffled[randomIndex] = temp;
-        }
-        return shuffled;
     }
 
     private void SpawnShelvesAtSpawnPoints(List<ShelfSpawn> spawnPoints)
@@ -263,7 +255,7 @@ public class ShelvesStockManager : MonoBehaviour
                         spawnedShelf.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
 
                         // Find and configure the StorageArea for empty shelf
-                        StorageArea[] storageAreas = spawnedShelf.GetComponentsInChildren<StorageArea>();
+                        var storageAreas = UsefulStuffs.FindComponentsInChildren<StorageArea>(spawnedShelf);   // YOU. stop eating my ducks. apparently they aren't being turned off
                         foreach (var area in storageAreas)
                         {
                             area.assignedItemID = 0; // No item
@@ -271,6 +263,7 @@ public class ShelvesStockManager : MonoBehaviour
                             area.enabled = false;    // Brain off
                         }
                         // TODO: FUCK SHIT FUCK SHIT ITS EATING THE FUCKING DUCKS?!!!!!!!!!! FUCK !!!!!!!!!!!!!!!!!
+                        // ducks that are put on shelves that are (theoretically) disabled will be taken anyway.
                         Debug.Log($"[ShelfManager] Spawning empty shelf at {spawnPoint.name} for red herring");
                     }
                     else

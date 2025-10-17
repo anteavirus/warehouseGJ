@@ -15,82 +15,62 @@ public class GameManager : MonoBehaviour
     public bool gameStarted;
     public bool setdownItem;
     internal int levelSeed = 0;
+    public int score = 0;
 
-    // References
-    ShelvesStockManager shelvesStockManager;
+    // Manager References
+    [Header("Manager References")]
+    public ShelvesStockManager shelvesStockManager;
+    public OrdersManager ordersManager;
+    public GenericTimer timer;
     private AudioSource audioSource;
 
     // UI Elements
+    [Header("UI Elements")]
     [SerializeField] TextMeshProUGUI scoreUI;
-    [SerializeField] Image timerUI;
+    [SerializeField] public Image timerUI;
     [SerializeField] TextMeshProUGUI orderListUI;
     [SerializeField] Image difficultyImage;
 
     // Items & Templates
+    [Header("Items")]
     [Tooltip("I will kill you if you put something that doesn't have an Item Component here.")]
     [SerializeField] List<GameObject> items = new();
-
-    [Tooltip("Please touch the items list instead, this will fill out from there and other components will use this instead. It's a Gamejam solution that I'll keep in place until it fucks everything so bad I'll have to rework it. Must stay in inspector just incase I fuck it up again.")]
     public List<Item> itemTemplates = new();
 
     // Spawning
-    [Tooltip("Box prefab here, so basically anything that acts like a box and preferrably looks like a box.")]
-    public GameObject box;
-    public Transform spawnPosition;
+    [Header("Spawning")]
     public Transform blackHoleSpawnPosition;
-    [Range(0, 10), SerializeField] float randomSpawnIntervalMax = 1;
 
     // Audio
+    [Header("Audio")]
     public AudioMixerGroup sfx;
-    [Header("Order System")]
-    [SerializeField] AudioClip[] newOrderSound;
     [SerializeField] AudioClip[] orderCompleteSound;
     [SerializeField] AudioClip[] orderFailSound;
 
     // Game Mechanics
-    float timeLeft;
-    [SerializeField] float maxTimer = 30;
-    int score = 0;
-    float progressTimer;
-    float currentEventTime = 0;
-    [SerializeField] float eventTimer = 60;
-    float currentPostageTime = 0;
-    [SerializeField] float postageTimer = 60;
-    public float timeToSpawnAnotherBox = 30;
+    [Header("Game Objects")]
     public GameObject talkingDeliveryItem;
-
-    // Order System
-    [Header("Order System")]
-    [SerializeField] float orderCooldown = 25f;
-    readonly List<Order> activeOrders = new List<Order>();
-    private float orderTimer = 0;
 
     // Difficulty Settings
     [Header("Difficulty Settings")]
     [SerializeField] AnimationCurve difficultyCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-    [SerializeField] float minimalDifficulty = 2, maximumDifficulty = 3;
+    [SerializeField] public float minimalDifficulty = 2, maximumDifficulty = 3;
     [SerializeField] float maxDifficultyTime = 120f;
-    [SerializeField] float minOrderTime = 20f;
-    [SerializeField] float minRandomTimeEventDecrease = 1, maxRandomTimeEventDecrease = 15;
     private float totalGameTime;
     private float currentDifficulty;
-    float selectedRandomTimeEventDecrease = 0;
-    [Range(0, 10), SerializeField] float timerRestore = 1;
 
     // Events System
+    [Header("Events System")]
     [SerializeField] List<GameObject> eventList = new List<GameObject>();
     public List<Event> activeEvents = new List<Event>();
+    [SerializeField] float minRandomTimeEventDecrease = 1, maxRandomTimeEventDecrease = 15;
+    private float currentEventTime = 0;
+    [SerializeField] private float eventTimer = 60;
+    private float selectedRandomTimeEventDecrease = 0;
 
     // Leaderboard
+    [Header("Leaderboard")]
     public LeaderboardEntry leaderboardEntry;
-
-    [System.Serializable]
-    public class Order
-    {
-        public int requestedItemID;
-        public float timeRemaining;
-        public float maxTime;
-    }
 
     void Awake()
     {
@@ -100,25 +80,14 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("Dupe game manager; killed.");
             Destroy(gameObject);
         }
 
         levelSeed = Random.Range(0, 1969);
-        timeLeft = maxTimer;
-
         InitializeItemTemplates();
-
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        shelvesStockManager = GetComponent<ShelvesStockManager>();
-        if (shelvesStockManager != null)
-        {
-            shelvesStockManager.Work();
-        }
+        InitializeAudio();
+        InitializeManagers();
     }
 
     void InitializeItemTemplates()
@@ -138,23 +107,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void InitializeAudio()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    void InitializeManagers()
+    {
+        // Let each manager initialize itself and reference back to this GameManager
+        if (shelvesStockManager != null)
+        {
+            shelvesStockManager.Initialize(this);
+            shelvesStockManager.Work();
+        }
+
+        if (ordersManager != null)
+        {
+            ordersManager.Initialize(this);
+        }
+
+        if (timer != null)
+        {
+            timer.Initialize(this);
+        }
+    }
+
     void Update()
     {
-#if DEBUG
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            StartRandomEvent();
-        }
-#endif
-
         if (!gameStarted) return;
 
         UpdateGameTime();
         UpdateDifficulty();
-        UpdateTimer();
         UpdateEvents();
-        UpdatePostage();
-        UpdateOrders();
+
+        if (timer != null && timer.enabledTimer) timer.UpdateTimer();
+        if (ordersManager != null) ordersManager.UpdateOrders();
+
         CheckForGameOver();
     }
 
@@ -166,43 +158,16 @@ public class GameManager : MonoBehaviour
     void UpdateDifficulty()
     {
         currentDifficulty = difficultyCurve.Evaluate(Mathf.Clamp01(totalGameTime / maxDifficultyTime));
-        difficultyImage.color = new Color(difficultyImage.color.r, difficultyImage.color.g, difficultyImage.color.b, currentDifficulty);
-    }
-
-    void UpdatePostage()
-    {
-        currentPostageTime += Time.deltaTime;
-        // TODO: any adjustments for difficulty? so far I don't want any more variables in this. Nightmare. to put it lightly.
-
-        if (currentPostageTime >= postageTimer)
+        if (difficultyImage != null)
         {
-            currentPostageTime = 0;
-            StartCoroutine(nameof(SpawnItemAfterDelay));
+            difficultyImage.color = new Color(difficultyImage.color.r, difficultyImage.color.g, difficultyImage.color.b, currentDifficulty);
         }
-    }
-
-    void UpdateTimer()
-    {
-        float difficultyMultiplier = (activeEvents.Count > 0 || score == 0) ?
-            Mathf.Lerp(maximumDifficulty, minimalDifficulty, currentDifficulty) :
-            Mathf.Lerp(maximumDifficulty, minimalDifficulty / 4, currentDifficulty);
-
-        timeLeft -= Time.deltaTime / (difficultyMultiplier + 0.01f);
-
-        progressTimer = timeLeft / maxTimer;
-        timerUI.fillAmount = progressTimer;
-
-        var color = timerUI.color;
-        color.a = progressTimer;
-        timerUI.color = color;
     }
 
     void UpdateEvents()
     {
-        currentEventTime += Time.deltaTime * (score != 0 ? Mathf.Lerp(3, .8f, currentDifficulty) : 1f);  
-        // TODO: signal on how often events are, cuz this is ridiculous lmao
-        // TODO: isn't this supposed to be maximum/minimum difficulty as well?
-        // TODO: do the TODOs
+        if (eventTimer == -1) return;
+        currentEventTime += Time.deltaTime * (score != 0 ? Mathf.Lerp(3, .8f, currentDifficulty) : 1f);
 
         foreach (var evt in activeEvents.ToList())
         {
@@ -224,122 +189,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void UpdateOrders()
-    {
-        orderTimer += Time.deltaTime;
-        if (orderTimer >= orderCooldown)
-        {
-            GenerateNewOrder();
-            orderTimer = 0;
-        }
-
-        foreach (Order order in activeOrders.ToList())
-        {
-            order.timeRemaining -= Time.deltaTime;
-            if (order.timeRemaining <= 0)
-            {
-                AddScore(-25, resetTimer: false);
-                activeOrders.Remove(order);
-                PlaySound(orderFailSound);
-            }
-        }
-
-        UpdateOrderUI();
-    }
-
-    void GenerateNewOrder()
-    {
-        if (items.Count == 0) return;
-
-        Order newOrder = new Order
-        {
-            requestedItemID = itemTemplates[Random.Range(0, itemTemplates.Count)].ID,
-            timeRemaining = Mathf.Lerp(45f, minOrderTime, currentDifficulty),
-            maxTime = Mathf.Lerp(45f, minOrderTime, currentDifficulty)
-        };
-
-        activeOrders.Add(newOrder);
-        PlaySound(newOrderSound);
-        UpdateOrderUI();
-    }
-
-    void UpdateOrderUI()
-    {
-        if (activeOrders.Count < 1)
-        {
-            bool foundNoOrders = LocalizationManager.TryGetVal("no_orders", out var transl);
-            if (foundNoOrders) orderListUI.text = transl;
-            return;
-        }
-
-        orderListUI.text = "";
-        foreach (Order order in activeOrders)
-        {
-            Item item = ReturnItemById(order.requestedItemID);
-            float timePercent = order.timeRemaining / order.maxTime;
-            string progressBar = GetProgressBar(timePercent);
-            orderListUI.text += $"- {item.name} {progressBar} ({Mathf.FloorToInt(order.timeRemaining)}s)\n";
-        }
-    }
-
-    string GetProgressBar(float percent)
-    {
-        int bars = 10;
-        int filled = Mathf.RoundToInt(bars * percent);
-        filled = Mathf.Clamp(filled, 0, bars);
-        return "<color=#FF0000>" + new string('█', filled) + "</color>" +
-               "<color=#444444>" + new string('█', bars - filled) + "</color>";
-    }
-
     public void ProcessDelivery(Item deliveredItem, bool fromShelf)
     {
-        bool orderFound = false;
-
-        foreach (Order order in activeOrders.ToList())
+        if (ordersManager != null)
         {
-            if (order.requestedItemID == deliveredItem.ID)
-            {
-                int scoreChange = fromShelf ? deliveredItem.scoreValue * 2 : deliveredItem.scoreValue * -1;
-                AddScore(scoreChange, resetTimer: !fromShelf, immediateReset: true);
-
-                activeOrders.Remove(order);
-                orderFound = true;
-                PlaySound(deliveredItem.fromShelf ? orderCompleteSound : orderFailSound);
-                break;
-            }
+            ordersManager.ProcessOrderDelivery(deliveredItem, fromShelf);
         }
-
-        if (!orderFound)
-        {
-            AddScore(deliveredItem.scoreValue * (fromShelf ? 0 : -3), resetTimer: !fromShelf);
-            PlaySound(orderFailSound);
-        }
-
-        UpdateOrderUI();
-    }
-
-    void PlaySound(AudioClip[] listOfRandomSounds)
-    {
-        if (listOfRandomSounds != null && listOfRandomSounds.Length > 0)
-        {
-            audioSource.PlayOneShot(listOfRandomSounds[Random.Range(0, listOfRandomSounds.Length)]);
-        }
-    }
-
-    public Item ReturnItemById(int id)
-    {
-        foreach (var item in itemTemplates)
-        {
-            if (item.ID == id)
-                return item;
-        }
-        return null;
-    }
-
-    public void StartGame()
-    {
-        gameStarted = true;
-        if (items.Count > 0) SpawnItem();
     }
 
     public void AddScore(int amount, bool resetTimer = true, bool immediateReset = false)
@@ -347,39 +202,26 @@ public class GameManager : MonoBehaviour
         this.score += amount;
         if (scoreUI != null)
             scoreUI.text = this.score.ToString();
-        if (resetTimer)
+
+        if (timer != null)
         {
-            setdownItem = true;
-            if (immediateReset) ResetTimer();
-            StartCoroutine(SpawnItemAfterDelay());
+            if (immediateReset) timer.ResetTimer();
+            if (resetTimer)
+            {
+                setdownItem = true;
+                if (ordersManager != null) ordersManager.SpawnItemAfterDelay();
+            }
         }
     }
 
-    public void ResetTimer()
+    public void StartGame()
     {
-        if (setdownItem)
-        {
-            timeLeft = Mathf.Clamp(timeLeft + timerRestore, 0, maxTimer);
-            setdownItem = false;
-        }
+        gameStarted = true;
+        if (ordersManager != null && items.Count > 0)
+            ordersManager.SpawnInitialItem();
     }
 
-    IEnumerator SpawnItemAfterDelay()
-    {
-        yield return new WaitForSeconds(Random.Range(0, randomSpawnIntervalMax));
-        SpawnItem();
-    }
-
-    void SpawnItem()
-    {
-        int randomIndex = Random.Range(0, itemTemplates.Count);
-        var box = Instantiate(this.box, spawnPosition.transform.position, Quaternion.identity);
-        GameObject newItem = Instantiate(itemTemplates[randomIndex]).gameObject;
-        newItem.SetActive(false);
-        box.GetComponent<Box>().containedItem = newItem;
-        box.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-    }
-
+    // Event System
     void StartRandomEvent()
     {
         if (eventList.Count == 0) return;
@@ -405,11 +247,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(EndEventAfterDuration(newEvent));
     }
 
-    public void ResetEventTimer()
-    {
-        currentEventTime = 0;
-    }
-
     IEnumerator EndEventAfterDuration(Event evt)
     {
         yield return new WaitForSeconds(evt.duration);
@@ -421,9 +258,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public Item ReturnItemById(int id)
+    {
+        foreach (var item in itemTemplates)
+        {
+            if (item.ID == id)
+                return item;
+        }
+        return null;
+    }
+
     void CheckForGameOver()
     {
-        if (timeLeft < 0)
+        if (timer != null && timer.IsTimeUp())
         {
             GameOver();
         }
@@ -437,7 +284,9 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         if (!gameStarted) return;
-
+        
+        timer.StopTimer();
+        
         foreach (var evt in activeEvents)
         {
             evt.EndEvent();

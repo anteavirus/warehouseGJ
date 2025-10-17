@@ -12,7 +12,7 @@ public class StupidHitboxToMakeGameManagerRestartTimer : MonoBehaviour
         var gm = FindObjectOfType<GameManager>();
         if (gm != null && gm.gameStarted && gm.setdownItem && other.GetComponent<PlayerController>() != null)
         {
-            gm.ResetTimer();
+            gm.timer.ResetTimer();
             source.Play();
             StartCoroutine(nameof(blink));
         }

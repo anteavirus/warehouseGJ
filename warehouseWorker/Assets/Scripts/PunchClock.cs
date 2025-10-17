@@ -28,6 +28,7 @@ public class PunchClock : Item
         {
             base.OnUse(gameObject);
             GameManager.Instance.StartGame();
+            GameManager.Instance.timer.StartTimer();
             for (int i = 0; i < thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform.childCount; i++)
             {
                 StartCoroutine(MoveObjectUp(thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform.GetChild(i), 15, 1));

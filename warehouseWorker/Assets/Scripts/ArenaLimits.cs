@@ -13,7 +13,7 @@ public class ArenaLimits : MonoBehaviour
 
         else if (other.TryGetComponent<PlayerController>(out var plr))
         {
-            plr.transform.SetPositionAndRotation(GameManager.Instance.spawnPosition.position, transform.rotation);   
+            plr.transform.SetPositionAndRotation(OrdersManager.Instance.spawnPosition.position, transform.rotation);   
         }
         else
         {

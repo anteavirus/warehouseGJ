@@ -17,7 +17,7 @@ public class DeliveryEvent : Event
     public override void StartEvent()
     {
         base.StartEvent();
-        if (spawnCenter == null) spawnCenter = GameManager.Instance.spawnPosition;
+        if (spawnCenter == null) spawnCenter = OrdersManager.Instance.spawnPosition;
         SelectMainItem();
         SpawnMainItem();
         SpawnDecoys();
@@ -45,7 +45,7 @@ public class DeliveryEvent : Event
         }
 
         // TODO: do we want the item in the box, or just like that?
-        var deliveryBox = Instantiate(GameManager.Instance.box, spawnCenter.position, Quaternion.identity);
+        var deliveryBox = Instantiate(OrdersManager.Instance.box, spawnCenter.position, Quaternion.identity);
         deliveryBox.GetComponent<Box>().containedItem = mainItemPrefab;
     }
 

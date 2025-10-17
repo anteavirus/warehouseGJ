@@ -92,7 +92,7 @@ public class StorageArea : MonoBehaviour
     }
 
     private void OnTriggerStay(Collider other)
-    {
+    {   
         Rigidbody rb = other.attachedRigidbody;
         if (rb == null) 
             return;

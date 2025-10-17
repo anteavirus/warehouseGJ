@@ -54,7 +54,7 @@ public class ZombieEvent : Event
             GameObject weaponPrefab = throwableWeaponPrefabs[Random.Range(0, throwableWeaponPrefabs.Length)];
             Vector3 spawnPos = weaponSpawnPoints.Length > 0
                 ? weaponSpawnPoints[Random.Range(0, weaponSpawnPoints.Length)].position
-                : GameManager.Instance.spawnPosition.position;
+                : OrdersManager.Instance.spawnPosition.position;
 
             Instantiate(weaponPrefab, spawnPos, Quaternion.identity);
         }

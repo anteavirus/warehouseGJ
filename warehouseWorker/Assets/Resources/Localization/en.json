@@ -166,30 +166,6 @@
             "Key": "tasks_exit_task",
             "Value": "Leave the room:"
 		},
-        {
-            "Key": "note_pickup",
-            "Value": "PICK UP:"
-        },
-        {
-            "Key": "note_use",
-            "Value": "USE:"
-        },
-        {
-            "Key": "note_jump",
-            "Value": "JUMP:"
-        },
-        {
-            "Key": "note_place",
-            "Value": "PLACE:"
-        },
-        {
-            "Key": "note_throw",
-            "Value": "THROW:"
-        },
-        {
-            "Key": "note_move",
-            "Value": "MOVE:"
-        },
 		{
             "Key": "note_title",
             "Value": "NOTE:"
@@ -208,7 +184,7 @@
         },
         {
             "Key": "shredder",
-            "Value": "SHRED<s>D</s>ER"
+            "Value": "SHREDDER"
         },
         {
             "Key": "exit_button",
@@ -221,6 +197,10 @@
         {
             "Key": "item_pineapple",
             "Value": "Pineapple"
+        },
+        {
+            "Key": "item_toy_bear",
+            "Value": "Teddy Bear"
         },
         {
             "Key": "item_crossbow",
@@ -341,6 +321,10 @@
 		{
 			"Key": "action_jump",
 			"Value": "Jump"
+		},
+		{
+			"Key": "action_move",
+			"Value": "MOVEMENT"
 		},
 		{
 			"Key": "action_throw",

@@ -155,9 +155,13 @@ MonoBehaviour:
   fromShelf: 0
   canUseOnID: 
   isPickupable: 1
-  pickupSounds: []
-  useSounds: []
-  collisionSounds: []
+  pickupSounds:
+  - {fileID: 8300000, guid: 722b19ef3cd92004d8a37a2f860e21fd, type: 3}
+  useSounds:
+  - {fileID: 0}
+  collisionSounds:
+  - {fileID: 8300000, guid: 61a5ba4bf88ddee468751cb0fb3f5df7, type: 3}
+  - {fileID: 8300000, guid: b3bf909565a5d4a4e848ba1bbfe1ac7b, type: 3}
   mixerGroup: {fileID: 0}
   throwMultiplier: 0.1
   controller: {fileID: 0}

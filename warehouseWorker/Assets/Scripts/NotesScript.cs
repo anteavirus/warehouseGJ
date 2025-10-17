@@ -13,6 +13,7 @@ public class NotesScript : MonoBehaviour
     public TextMeshProUGUI placeHint;
     public TextMeshProUGUI throwHint;
     public TextMeshProUGUI movementHint;    // HARDCODED! Kill Coder to unhardcode this shit
+    public TextMeshProUGUI dragHint;
 
 
 
@@ -39,6 +40,7 @@ public class NotesScript : MonoBehaviour
         jumpHint.text = settingsManager.GetKeyDisplay("Jump");
         placeHint.text = settingsManager.GetKeyDisplay("Place");
         throwHint.text = settingsManager.GetKeyDisplay("Throw");
+        dragHint.text = settingsManager.GetKeyDisplay("Drag");
         movementHint.text = "WASD";
     }
 

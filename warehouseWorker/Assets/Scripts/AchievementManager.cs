@@ -13,22 +13,23 @@ public class AchievementManager : MonoBehaviour
         public bool unlocked;
     }
 
-    public List<Achievement> achievements = new List<Achievement>();
+    [System.Serializable]
+    public class Achievements
+    {
+        public List<Achievement> ach_list;
+        // TODO: refine. looks naked
+    }
+
+    FileDataManipulator achievementsManip;
+    Achievements achievements = new();
     public Transform achievementsContainer;
     public GameObject achievementPrefab;
 
     private void Start()
     {
-        LoadAchievements();
+        achievementsManip = FileDataManipulator.ForPersistentDataPath(achievements, new string[1] { "achievements.sv" });
+        achievements = (Achievements) achievementsManip.LoadData();  // TODO: needs to load achievements from somewhere. perhaps creating a new "localization" folder is fine.
         PopulateUI();
-    }
-
-    private void LoadAchievements()
-    {
-        foreach (var achievement in achievements)
-        {
-            achievement.unlocked = PlayerPrefs.GetInt("ACH_" + achievement.id, 0) == 1;
-        }
     }
 
     private void PopulateUI()
@@ -38,7 +39,7 @@ public class AchievementManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (var achievement in achievements)
+        foreach (var achievement in achievements.ach_list)
         {
             GameObject obj = Instantiate(achievementPrefab, achievementsContainer);
             TextMeshProUGUI[] texts = obj.GetComponentsInChildren<TextMeshProUGUI>();
@@ -51,12 +52,12 @@ public class AchievementManager : MonoBehaviour
 
     public void UnlockAchievement(string id)
     {
-        Achievement achievement = achievements.Find(a => a.id == id);
+        Achievement achievement = achievements.ach_list.Find(a => a.id == id);
         if (achievement != null && !achievement.unlocked)
         {
             achievement.unlocked = true;
-            PlayerPrefs.SetInt("ACH_" + id, 1);
             PopulateUI();
+            // TODO: save.
         }
     }
 }

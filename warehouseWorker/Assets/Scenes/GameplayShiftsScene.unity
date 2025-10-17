@@ -36673,8 +36673,8 @@ GameObject:
   - component: {fileID: 1345430452}
   - component: {fileID: 1345430453}
   - component: {fileID: 1345430454}
-  - component: {fileID: 1345430456}
   - component: {fileID: 1345430455}
+  - component: {fileID: 1345430456}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -36748,8 +36748,8 @@ MonoBehaviour:
   setdownItem: 0
   score: 0
   shelvesStockManager: {fileID: 1345430454}
-  ordersManager: {fileID: 1345430456}
-  timer: {fileID: 1345430455}
+  ordersManager: {fileID: 1345430455}
+  timer: {fileID: 1345430456}
   scoreUI: {fileID: 1992051407}
   timerUI: {fileID: 1775384431}
   orderListUI: {fileID: 671222074}
@@ -36798,21 +36798,11 @@ MonoBehaviour:
   minimalDifficulty: 1.1
   maximumDifficulty: 2.4
   maxDifficultyTime: 240
-  eventList:
-  - {fileID: 2967366868401370336, guid: 1a6a5002f985bee459ae84ea280ff2e8, type: 3}
-  - {fileID: 2967366868401370336, guid: 6e7add9295133fe40b9ffffdf3f80fbd, type: 3}
-  - {fileID: 2967366868401370336, guid: 5268504bd46cb314698991a6d8af56b3, type: 3}
-  - {fileID: 2967366868401370336, guid: d8c755b85f2f51143880e6f8d760a3f2, type: 3}
-  - {fileID: 2967366868401370336, guid: 8a4b3bda44b2bb947af9d3a9c3dde050, type: 3}
-  - {fileID: 2967366868401370336, guid: 9c665b26cdc150c43940b61b2adcbfdd, type: 3}
-  - {fileID: 2967366868401370336, guid: e7e47294e59c2e24eae1e3be3060b930, type: 3}
-  - {fileID: 2967366868401370336, guid: 3fb72184fa01b99468a29528109f7a87, type: 3}
-  - {fileID: 2967366868401370336, guid: df335f4c893fc2d469e19b8b123714b6, type: 3}
-  - {fileID: 2967366868401370336, guid: 71bb35eb71732be41acfb6e7b72b20c6, type: 3}
+  eventList: []
   activeEvents: []
   minRandomTimeEventDecrease: 1
   maxRandomTimeEventDecrease: 15
-  eventTimer: 60
+  eventTimer: -1
   leaderboardEntry:
     name: 
     score: 0
@@ -36978,11 +36968,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1345430448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9452f5a351c0f44592914c9b35c6dbe, type: 3}
+  m_Script: {fileID: 11500000, guid: a62e42f80b56933479261ea88cdd4f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTimer: 30
-  timerRestore: 15
+  orderCooldown: 25
+  minOrderTime: 20
+  box: {fileID: 4684404609544575223, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
+  spawnPosition: {fileID: 1418787258}
+  randomSpawnIntervalMax: 1
+  orderListUI: {fileID: 671222074}
+  newOrderSound:
+  - {fileID: 8300000, guid: f6ba07a68425e614c8b2094578c92144, type: 3}
+  orderCompleteSound:
+  - {fileID: 8300000, guid: 20bab373bd5ca5e448c3861f3bee0e88, type: 3}
+  orderFailSound:
+  - {fileID: 8300000, guid: 72ec8b762f789c74aa491ac414fb7a74, type: 3}
 --- !u!114 &1345430456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36992,21 +36992,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 1345430448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a62e42f80b56933479261ea88cdd4f9c, type: 3}
+  m_Script: {fileID: 11500000, guid: dfc820cc239b405459ec774bb860d14f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orderCooldown: 25
-  minOrderTime: 20
-  box: {fileID: 4684404609544575223, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
-  spawnPosition: {fileID: 1755453424}
-  randomSpawnIntervalMax: 2.13
-  orderListUI: {fileID: 671222074}
-  newOrderSound:
-  - {fileID: 8300000, guid: f6ba07a68425e614c8b2094578c92144, type: 3}
-  orderCompleteSound:
-  - {fileID: 8300000, guid: 20bab373bd5ca5e448c3861f3bee0e88, type: 3}
-  orderFailSound:
-  - {fileID: 8300000, guid: 72ec8b762f789c74aa491ac414fb7a74, type: 3}
+  enabledTimer: 0
+  shifts:
+  - shiftName: MEURGO
+    startTime: 28800
+    endTime: 32000
+    timeScale: 1
+  - shiftName: GVADOR
+    startTime: 28800
+    endTime: 32000
+    timeScale: 1
+  - shiftName: PELIOA
+    startTime: 28800
+    endTime: 32000
+    timeScale: 1
+  - shiftName: ZAVIBIS
+    startTime: 28800
+    endTime: 32000
+    timeScale: 1
+  - shiftName: ASDOX
+    startTime: 28800
+    endTime: 32000
+    timeScale: 1
+  currentTimeOfDay: 28800
+  totalDayLength: 86400
+  shiftChangeEffects: []
+  timeJumpEffectDuration: 2
 --- !u!1 &1364567846
 GameObject:
   m_ObjectHideFlags: 0
@@ -37584,6 +37598,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d4914a1fd62c8c4da8760fddda498a7, type: 3}
+--- !u!1 &1441081673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1441081674}
+  m_Layer: 0
+  m_Name: shift scene please rework antea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1441081674
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441081673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.201585, y: -139.94087, z: 1541.7357}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1443833967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44332,12 +44377,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 834846cacdafb0e459a0494676bfe555, type: 3}
---- !u!4 &1755453424 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 554592132807242651, guid: 834846cacdafb0e459a0494676bfe555,
-    type: 3}
-  m_PrefabInstance: {fileID: 1755453423}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1775384431 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8886357569623099918, guid: 36fa5b879b809674c92ca1d6340ed2a5,
@@ -46544,3 +46583,4 @@ SceneRoots:
   - {fileID: 8036725674389747053}
   - {fileID: 1923667174}
   - {fileID: 778163639}
+  - {fileID: 1441081674}
