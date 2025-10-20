@@ -493,6 +493,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7dbfc3a41e647a4fbbbe8a8d8e828e3, type: 3}
+--- !u!1001 &89474624
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3826668044454975344, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_Name
+      value: IconManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 23.851435
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -12.035877
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 30.079649
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4847965307738839538, guid: 74ad74604b674244bacbc9ac4b7da5f0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 74ad74604b674244bacbc9ac4b7da5f0, type: 3}
 --- !u!1 &120903801
 GameObject:
   m_ObjectHideFlags: 0
@@ -4464,6 +4532,76 @@ MonoBehaviour:
   mixerGroup: {fileID: 0}
   throwMultiplier: 0.1
   controller: {fileID: 0}
+  order:
+    requestee:
+      request:
+        requestee:
+          request:
+            requestee:
+              request:
+                requestee:
+                  request:
+                    requestee:
+                      request:
+                        orderType: 0
+                        requestedItemID: 0
+                        specialRequirement: 0
+                        orderFulfilled: 0
+                      queuePosition: {x: 0, y: 0}
+                      requestNotTaken: 0
+                      timeStart: 0
+                      timeRemaining: 0
+                      impatienceModifier: 0
+                      lastQueueJumpTime: 0
+                    requestObjectCreated: {fileID: 0}
+                    orderType: 0
+                    requestedItemID: 0
+                    specialRequirement: 0
+                    orderFulfilled: 0
+                  queuePosition: {x: 0, y: 0}
+                  requestNotTaken: 0
+                  timeStart: 0
+                  timeRemaining: 0
+                  impatienceModifier: 0
+                  lastQueueJumpTime: 0
+                requestObjectCreated: {fileID: 0}
+                orderType: 0
+                requestedItemID: 0
+                specialRequirement: 0
+                orderFulfilled: 0
+              queuePosition: {x: 0, y: 0}
+              requestNotTaken: 0
+              timeStart: 0
+              timeRemaining: 0
+              impatienceModifier: 0
+              lastQueueJumpTime: 0
+            requestObjectCreated: {fileID: 0}
+            orderType: 0
+            requestedItemID: 0
+            specialRequirement: 0
+            orderFulfilled: 0
+          queuePosition: {x: 0, y: 0}
+          requestNotTaken: 0
+          timeStart: 0
+          timeRemaining: 0
+          impatienceModifier: 0
+          lastQueueJumpTime: 0
+        requestObjectCreated: {fileID: 0}
+        orderType: 0
+        requestedItemID: 0
+        specialRequirement: 0
+        orderFulfilled: 0
+      queuePosition: {x: 0, y: 0}
+      requestNotTaken: 0
+      timeStart: 0
+      timeRemaining: 0
+      impatienceModifier: 0
+      lastQueueJumpTime: 0
+    requestObjectCreated: {fileID: 0}
+    orderType: 0
+    requestedItemID: 0
+    specialRequirement: 0
+    orderFulfilled: 0
 --- !u!54 &1184640765
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8416,18 +8554,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6da295f98e88463488d13dab1b1d736d, type: 3}
---- !u!114 &1915656564 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2269507372920718372, guid: 6da295f98e88463488d13dab1b1d736d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1915656563}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1915867350
 GameObject:
   m_ObjectHideFlags: 0
@@ -9598,6 +9724,8 @@ GameObject:
   - component: {fileID: 2087536277}
   - component: {fileID: 2087536276}
   - component: {fileID: 2087536282}
+  - component: {fileID: 2087536284}
+  - component: {fileID: 2087536283}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -9716,9 +9844,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameStarted: 1
   setdownItem: 0
+  score: 0
+  shelvesStockManager: {fileID: 2087536282}
+  ordersManager: {fileID: 2087536283}
+  timer: {fileID: 2087536284}
   scoreUI: {fileID: 934468495}
   timerUI: {fileID: 934468496}
-  orderListUI: {fileID: 1915656564}
+  orderListUI: {fileID: 0}
   difficultyImage: {fileID: 983318336}
   items:
   - {fileID: 7581103289063453181, guid: 0d7dc2ec419ca994eaf024ce7f4a13a9, type: 3}
@@ -9730,23 +9862,13 @@ MonoBehaviour:
   - {fileID: 201614392593411610, guid: 3d31e8122f7d2d845a8943a15a90c4c4, type: 3}
   - {fileID: 3330600190100360089, guid: ff49b5fe9f127af49976fe0d71e955eb, type: 3}
   itemTemplates: []
-  box: {fileID: 4684404609544575223, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
-  spawnPosition: {fileID: 869970934}
   blackHoleSpawnPosition: {fileID: 0}
-  randomSpawnIntervalMax: 3.48
   sfx: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5, type: 2}
-  newOrderSound:
-  - {fileID: 8300000, guid: f6ba07a68425e614c8b2094578c92144, type: 3}
   orderCompleteSound:
   - {fileID: 8300000, guid: 20bab373bd5ca5e448c3861f3bee0e88, type: 3}
   orderFailSound:
   - {fileID: 8300000, guid: 72ec8b762f789c74aa491ac414fb7a74, type: 3}
-  maxTimer: 694201300
-  eventTimer: 40
-  postageTimer: 5
-  timeToSpawnAnotherBox: 20
   talkingDeliveryItem: {fileID: 0}
-  orderCooldown: 25
   difficultyCurve:
     serializedVersion: 2
     m_Curve:
@@ -9774,12 +9896,11 @@ MonoBehaviour:
   minimalDifficulty: 1
   maximumDifficulty: 1
   maxDifficultyTime: 6.9697e+11
-  minOrderTime: 30
-  minRandomTimeEventDecrease: 1
-  maxRandomTimeEventDecrease: 10
-  timerRestore: 10
   eventList: []
   activeEvents: []
+  minRandomTimeEventDecrease: 1
+  maxRandomTimeEventDecrease: 10
+  eventTimer: 40
   leaderboardEntry:
     name: 
     score: 0
@@ -9855,6 +9976,48 @@ MonoBehaviour:
   maxInitialStock: 8
   assignmentSeed: 0
   shelfStorages: []
+--- !u!114 &2087536283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087536275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a62e42f80b56933479261ea88cdd4f9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orderCooldown: 25
+  minOrderTime: 20
+  orderCompleteScore: 50
+  orderFailPenalty: -25
+  box: {fileID: 0}
+  spawnPosition: {fileID: 0}
+  randomSpawnIntervalMax: 1
+  canvas: {fileID: 0}
+  margin: 10
+  depositImage: {fileID: 0}
+  requesteeImage: {fileID: 0}
+  boxes: []
+  newOrderSound: []
+  orderCompleteSound: []
+  orderFailSound: []
+--- !u!114 &2087536284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087536275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9452f5a351c0f44592914c9b35c6dbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabledTimer: 0
+  maxTimer: 30
+  timerRestore: 1
 --- !u!1 &2089087112
 GameObject:
   m_ObjectHideFlags: 0
@@ -10619,3 +10782,4 @@ SceneRoots:
   - {fileID: 570922286}
   - {fileID: 2091580048}
   - {fileID: 1508497657}
+  - {fileID: 89474624}

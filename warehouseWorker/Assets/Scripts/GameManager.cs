@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (currentEventTime >= eventTimer - selectedRandomTimeEventDecrease)
+        if (currentEventTime >= eventTimer - selectedRandomTimeEventDecrease /*|| Random.value < OrdersManager.displeasedRequestees*/)
         {
             bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
             if (extremeMode || activeEvents.Count == 0)
@@ -189,12 +189,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ProcessDelivery(Item deliveredItem, bool fromShelf)
+    public bool ProcessDelivery(int table, Item deliveredItem, bool fromShelf)
     {
         if (ordersManager != null)
         {
-            ordersManager.ProcessOrderDelivery(deliveredItem, fromShelf);
+            return ordersManager.ProcessOrderDelivery(table, deliveredItem, fromShelf);
         }
+        return false;
     }
 
     public void AddScore(int amount, bool resetTimer = true, bool immediateReset = false)

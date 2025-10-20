@@ -254,6 +254,8 @@ public static class UsefulStuffs
         return shuffled;
     }
 
+    public static Color semiTransparent = new(255f, 255f, 255f, 0.3f);
+
     /// <summary>
     /// Linearly interpolates between two colors
     /// </summary>

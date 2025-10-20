@@ -3,7 +3,8 @@ using UnityEngine;
 public class Box : Item
 {
     public GameObject containedItem;
-    [SerializeField] GameObject openBox;
+    public OrdersManager.Order order;  // TODO: figure out why this feels like a wrong action.
+    [SerializeField] GameObject futureBoxPrefab;
 
     public override void OnUse(GameObject user)
     {
@@ -12,7 +13,7 @@ public class Box : Item
         useSounds = null;
         OnDrop();
 
-        var newbox = Instantiate(openBox);
+        var newbox = Instantiate(futureBoxPrefab);
         newbox.transform.position = transform.position;
         var boxscript = newbox.GetComponent<Box>();
         boxscript.OnDrop();

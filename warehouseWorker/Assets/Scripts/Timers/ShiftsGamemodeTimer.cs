@@ -59,6 +59,7 @@ public class ShiftsGamemodeTimer : GenericTimer
 
     private void StartNextShift()
     {
+        OrdersManager.Instance.ClearAllOrders();
         if (timeJumpCoroutine != null)
             StopCoroutine(timeJumpCoroutine);
 

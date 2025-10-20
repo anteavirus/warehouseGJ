@@ -43,7 +43,7 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
 
     public override void OnUse(GameObject user)
     {
-        if (!user.TryGetComponent<PunchClock>(out var _)) return;
+        if (!user.TryGetComponent<PunchClock>(out var _)) return;  //TODO fix
         if (SceneManager.GetActiveScene().name == "Main Menu") GameManager.Instance.LoadSceneStr("GameplayScene");
     }
 

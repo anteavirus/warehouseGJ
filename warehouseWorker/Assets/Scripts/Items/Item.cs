@@ -28,6 +28,7 @@ public class Item : MonoBehaviour
 
     [HideInInspector] public PlayerController controller;
     protected AudioSource audioSource;
+    public OrdersManager.Order order;
 
     protected virtual void Awake()
     {

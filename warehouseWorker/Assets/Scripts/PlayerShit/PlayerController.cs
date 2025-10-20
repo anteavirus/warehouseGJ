@@ -95,6 +95,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody heldItemRb;
     private Vector3 originalCameraLocalPosition;
 
+    [SerializeField] private Image timeWatch;
+    private bool checkingTime;
+    private Vector2 timeWatchStartPosition;
+
     private Rigidbody rb;
     private float xRotation;
     private Vector3 moveDirection;
@@ -140,6 +144,7 @@ public class PlayerController : MonoBehaviour
 
         playerCameraTransform = playerCamera.transform;
         originalCameraLocalPosition = playerCameraTransform.localPosition;
+        timeWatchStartPosition = timeWatch.transform.position;
 
         StartCoroutine(FindBindsNamesLater());
     }
@@ -179,6 +184,7 @@ public class PlayerController : MonoBehaviour
         HandleInteractions();
         HandleFootsteps();
         HandleCameraWobble();
+        HandleCheckTime();
     }
 
     void FixedUpdate()
@@ -203,6 +209,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void HandleCheckTime()
+    {
+        if (settingsManager.GetActionDown("CheckTime"))
+        {
+            checkingTime = !checkingTime;
+            StopCoroutine(MoveImage());
+            StartCoroutine(MoveImage());
+
+        }
+    }
+
+    IEnumerator MoveImage()
+    {
+        float targetX = timeWatchStartPosition.x + (checkingTime ? -300 : 300);
+        Vector3 start = timeWatch.transform.position;
+
+        for (float t = 0; t < 1; t += Time.deltaTime / 0.3f)
+        {
+            timeWatch.transform.position = Vector3.Lerp(start, new Vector3(targetX, start.y, start.z), t);
+            yield return null;
+        }
+    }
 
     private void MovePlayer()
     {

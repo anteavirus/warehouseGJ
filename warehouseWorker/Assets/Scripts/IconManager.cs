@@ -61,7 +61,7 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    Texture2D RenderCopyToTexture(GameObject prefab, int width, int height, int item = -1)
+    public Texture2D RenderCopyToTexture(GameObject prefab, int width, int height, int item = -1)
     {
         int previewLayer = 31;
 

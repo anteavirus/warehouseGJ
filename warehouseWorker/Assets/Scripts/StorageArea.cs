@@ -108,7 +108,7 @@ public class StorageArea : MonoBehaviour
 
         if (isVelocityUnderLimit)
         {
-            if (item.isActiveAndEnabled && IsItemAllowed(item.ID))
+            if (item.isActiveAndEnabled && IsItemAllowed(item.ID))  // TODO: fuckin. make boxes. shelves dont assign some item. we save boxes and whatever they contain.
             {
                 if (GameManager.Instance != null && !item.fromShelf)
                 {
@@ -116,8 +116,10 @@ public class StorageArea : MonoBehaviour
                     GameManager.Instance.setdownItem = true;
                 }
                 AddItemToShelf();
+                item.order.orderFulfilled = true;
                 item.enabled = false;
-                Destroy(other.gameObject);
+                other.gameObject.SetActive(false);
+                Destroy(other.gameObject, .1f);
             }
         }
     }

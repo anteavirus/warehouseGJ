@@ -176,7 +176,78 @@ MonoBehaviour:
   controller: {fileID: 0}
   containedItem: {fileID: 6190435878620182654, guid: e5a2859fd9bc35e4689ed98dd65f4dc2,
     type: 3}
-  openBox: {fileID: 4684404609544575223, guid: 539a8f16556dfe743b1b2616525aada4, type: 3}
+  order:
+    requestee:
+      request:
+        requestee:
+          request:
+            requestee:
+              request:
+                requestee:
+                  request:
+                    requestee:
+                      request:
+                        orderType: 0
+                        requestedItemID: 0
+                        specialRequirement: 0
+                        orderFulfilled: 0
+                      queuePosition: {x: 0, y: 0}
+                      requestNotTaken: 0
+                      timeStart: 0
+                      timeRemaining: 0
+                      impatienceModifier: 0
+                      lastQueueJumpTime: 0
+                    requestObjectCreated: {fileID: 0}
+                    orderType: 0
+                    requestedItemID: 0
+                    specialRequirement: 0
+                    orderFulfilled: 0
+                  queuePosition: {x: 0, y: 0}
+                  requestNotTaken: 0
+                  timeStart: 0
+                  timeRemaining: 0
+                  impatienceModifier: 0
+                  lastQueueJumpTime: 0
+                requestObjectCreated: {fileID: 0}
+                orderType: 0
+                requestedItemID: 0
+                specialRequirement: 0
+                orderFulfilled: 0
+              queuePosition: {x: 0, y: 0}
+              requestNotTaken: 0
+              timeStart: 0
+              timeRemaining: 0
+              impatienceModifier: 0
+              lastQueueJumpTime: 0
+            requestObjectCreated: {fileID: 0}
+            orderType: 0
+            requestedItemID: 0
+            specialRequirement: 0
+            orderFulfilled: 0
+          queuePosition: {x: 0, y: 0}
+          requestNotTaken: 0
+          timeStart: 0
+          timeRemaining: 0
+          impatienceModifier: 0
+          lastQueueJumpTime: 0
+        requestObjectCreated: {fileID: 0}
+        orderType: 0
+        requestedItemID: 0
+        specialRequirement: 0
+        orderFulfilled: 0
+      queuePosition: {x: 0, y: 0}
+      requestNotTaken: 0
+      timeStart: 0
+      timeRemaining: 0
+      impatienceModifier: 0
+      lastQueueJumpTime: 0
+    requestObjectCreated: {fileID: 0}
+    orderType: 0
+    requestedItemID: 0
+    specialRequirement: 0
+    orderFulfilled: 0
+  futureBoxPrefab: {fileID: 4684404609544575223, guid: 539a8f16556dfe743b1b2616525aada4,
+    type: 3}
 --- !u!114 &5082579548337248556
 MonoBehaviour:
   m_ObjectHideFlags: 0
