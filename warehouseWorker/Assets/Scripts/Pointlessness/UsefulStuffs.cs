@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class UsefulStuffs
@@ -65,6 +66,53 @@ public static class UsefulStuffs
                                       "Supported formats: HH:MM, HH:MM:SS, HH:MM AM/PM, +XhYm, H.Hh", ex);
         }
     }
+    public static T RandomFromArray<T>(T[] array) => RandomFromArray(array, out _);
+    public static T RandomFromArray<T>(T[] array, out int index)
+    {
+        index = UnityEngine.Random.Range(0, array.Length);
+        return array[index];
+    }
+
+
+    public static T RandomNonNullFromArray<T>(T[] array) where T : class => RandomNonNullFromArray(array, out _);
+    public static T RandomNonNullFromArray<T>(T[] array, out int index) where T : class
+    {
+        T[] nonNulls = new T[array.Length];
+        index = -1;
+        int tick = 0;
+        for (int i = 0; i < array.Length; i++)
+            if (array[i] != null) nonNulls[tick++] = array[i];  // lets hope some windows update doesn't bork this like it did with GTA:SA
+
+        if (nonNulls.Length == 0)
+            return null;
+
+        index = UnityEngine.Random.Range(0, array.Length);
+        return nonNulls[index];
+    }
+
+    public static T RandomFromList<T>(List<T> list) => RandomFromList(list, out _);
+    public static T RandomFromList<T>(List<T> list, out int index)
+    {
+        index = UnityEngine.Random.Range(0, list.Count);
+        return list[index];
+    }
+
+    public static T RandomNonNullFromList<T>(List<T> list) where T : class => RandomFromList(list, out _);
+    public static T RandomNonNullFromList<T>(List<T> list, out int index) where T : class
+    {
+        List<T> nonNulls = new();
+        index = -1;
+        foreach (var item in list)
+            if (item != null) nonNulls.Add(item);
+
+        if (nonNulls.Count == 0)
+            return null;
+        
+        index = UnityEngine.Random.Range(0, list.Count);
+        return nonNulls[index];
+    }
+
+    public static Vector2 Vect2OneHalved => new(0.5f, 0.5f);
 
     private static long ParseRelativeTime(string relativeTime)
     {

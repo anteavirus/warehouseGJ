@@ -118,7 +118,6 @@ public class GameManager : MonoBehaviour
 
     void InitializeManagers()
     {
-        // Let each manager initialize itself and reference back to this GameManager
         if (shelvesStockManager != null)
         {
             shelvesStockManager.Initialize(this);
@@ -164,6 +163,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private int failedEventCounter = 0;
+    private const int MAX_EVENTS = 3;
+    private float failureProbabilityMultiplier = 1f;
+    private const float FAILURE_MULTIPLIER_INCREMENT = 0.1f;
     void UpdateEvents()
     {
         if (eventTimer == -1) return;
@@ -177,16 +180,62 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (currentEventTime >= eventTimer - selectedRandomTimeEventDecrease /*|| Random.value < OrdersManager.displeasedRequestees*/)
+        if (currentEventTime >= eventTimer - selectedRandomTimeEventDecrease ||
+            ShouldForceEventDueToFailures())
         {
             bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
-            if (extremeMode || activeEvents.Count == 0)
+
+            if (extremeMode || activeEvents.Count < MAX_EVENTS)
             {
-                StartRandomEvent();
+                int eventsToStart = CalculateEventsToStart();
+
+                for (int i = 0; i < eventsToStart && activeEvents.Count < MAX_EVENTS; i++)
+                {
+                    bool eventStarted = StartRandomEvent();
+
+                    if (eventStarted)
+                    {
+                        failedEventCounter = 0;
+                        failureProbabilityMultiplier = 1f;
+                    }
+                    else
+                    {
+                        failedEventCounter++;
+                        failureProbabilityMultiplier += FAILURE_MULTIPLIER_INCREMENT;
+                    }
+                }
+
                 currentEventTime = 0;
                 selectedRandomTimeEventDecrease = Random.Range(minRandomTimeEventDecrease, maxRandomTimeEventDecrease);
             }
         }
+    }
+
+    private bool ShouldForceEventDueToFailures()
+    {
+        if (failedEventCounter > 0)
+        {
+            float forcedEventChance = Mathf.Min(0.8f, failedEventCounter * 0.15f * failureProbabilityMultiplier);
+            return Random.value < forcedEventChance;
+        }
+        return false;
+    }
+
+    private int CalculateEventsToStart()
+    {
+        int baseEvents = eventList.Count + 1;
+
+        if (failedEventCounter >= 3)
+        {
+            baseEvents += Mathf.Min(2, failedEventCounter / 3);
+        }
+
+        return Mathf.Min(baseEvents, MAX_EVENTS - activeEvents.Count);
+    }
+
+    public void IncreaseChanceOfEvent()
+    {
+        failureProbabilityMultiplier += FAILURE_MULTIPLIER_INCREMENT;
     }
 
     public bool ProcessDelivery(int table, Item deliveredItem, bool fromShelf)
@@ -210,7 +259,7 @@ public class GameManager : MonoBehaviour
             if (resetTimer)
             {
                 setdownItem = true;
-                if (ordersManager != null) ordersManager.SpawnItemAfterDelay();
+                if (ordersManager != null) ordersManager.GenerateNewOrderRequestee();
             }
         }
     }
@@ -219,13 +268,16 @@ public class GameManager : MonoBehaviour
     {
         gameStarted = true;
         if (ordersManager != null && items.Count > 0)
-            ordersManager.SpawnInitialItem();
+            ordersManager.GenerateNewOrderRequestee();
     }
 
     // Event System
-    void StartRandomEvent()
+    bool StartRandomEvent()
     {
-        if (eventList.Count == 0) return;
+        if (eventList.Count == 0) return false;
+
+        Debug.Log("Event should've started, but I can't fucking deal with this shit. Purge this code if you want to proceed.");
+        return false;
 
         bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
 
@@ -246,6 +298,7 @@ public class GameManager : MonoBehaviour
         activeEvents.Add(newEvent);
 
         StartCoroutine(EndEventAfterDuration(newEvent));
+        return true;
     }
 
     IEnumerator EndEventAfterDuration(Event evt)

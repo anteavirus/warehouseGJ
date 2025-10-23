@@ -14,7 +14,7 @@ public class ShelvesStockManager : MonoBehaviour
     public int maxInitialStock = 8;
 
     [Header("Debug")]
-    [SerializeField] private int assignmentSeed = 0;    
+    [SerializeField] private int assignmentSeed = 0;
 
     [Tooltip("Hi I am storageAreas from shelfPrefabs")]
     public List<StorageArea> shelfStorages;
@@ -128,8 +128,7 @@ public class ShelvesStockManager : MonoBehaviour
         foreach (var item in UsefulStuffs.ShuffleList(validItems))
         {
             var compatibleSpawns = remainingSpawns.Where(spawn =>
-                shelfsByItemType.ContainsKey(item.ID) &&
-                shelfsByItemType[item.ID].Any(shelf => spawn.CanAcceptShelfType(shelf.shelfTypeID))
+                shelfsByItemType.ContainsKey(item.ID)
             ).ToList();
 
             if (compatibleSpawns.Count > 0)
@@ -137,10 +136,9 @@ public class ShelvesStockManager : MonoBehaviour
                 // Select random compatible spawn
                 var spawn = compatibleSpawns[Random.Range(0, compatibleSpawns.Count)];
 
-                // Get compatible shelves for this spawn & item
+                // Get compatible shelves for this item
                 var compatibleShelves = shelfStorages.Where(shelf =>
-                    shelf.allowedItemIDs.Contains(item.ID) &&
-                    spawn.CanAcceptShelfType(shelf.shelfTypeID)
+                    shelf.allowedItemIDs.Contains(item.ID)
                 ).ToList();
 
                 // Select random compatible shelf
@@ -166,7 +164,7 @@ public class ShelvesStockManager : MonoBehaviour
         foreach (var item in UsefulStuffs.ShuffleList(remainingItems.ToList()))
         {
             var compatibleSpawns = remainingSpawns.Where(spawn =>
-                wildcardShelves.Any(shelf => spawn.CanAcceptShelfType(shelf.shelfTypeID))
+                wildcardShelves.Count > 0
             ).ToList();
 
             if (compatibleSpawns.Count > 0)
@@ -174,15 +172,10 @@ public class ShelvesStockManager : MonoBehaviour
                 // Select random compatible spawn
                 var spawn = compatibleSpawns[Random.Range(0, compatibleSpawns.Count)];
 
-                // Get wildcard shelves compatible with this spawn
-                var compatibleShelves = wildcardShelves.Where(shelf =>
-                    spawn.CanAcceptShelfType(shelf.shelfTypeID)
-                ).ToList();
-
-                if (compatibleShelves.Count > 0)
+                if (wildcardShelves.Count > 0)
                 {
                     // Select random wildcard shelf
-                    var shelf = compatibleShelves[Random.Range(0, compatibleShelves.Count)];
+                    var shelf = wildcardShelves[Random.Range(0, wildcardShelves.Count)];
                     int stockAmount = Random.Range(minInitialStock, maxInitialStock + 1);
 
                     spawn.AssignItemAndShelf(item.ID, shelf, stockAmount);
@@ -219,14 +212,10 @@ public class ShelvesStockManager : MonoBehaviour
                     StorageArea[] storageAreas = spawnedShelf.GetComponentsInChildren<StorageArea>();
                     foreach (var area in storageAreas)
                     {
-                        if (area.shelfTypeID == spawnPoint.assignedShelfPrefab.shelfTypeID)
-                        {
-                            area.assignedItemID = spawnPoint.assignedItemID;
-                            area.itemAmount = spawnPoint.assignedItemAmount;
-                            area.scaleOffset = spawnedShelf.transform.localScale;
-                            area.CreateVisualStock();
-                            break;
-                        }
+                        // In the new StorageArea, we don't assign item IDs or amounts
+                        // The shelf just accepts items based on its allowedItemIDs
+                        area.scaleOffset = spawnedShelf.transform.localScale;
+                        break;
                     }
                 }
                 else
@@ -237,10 +226,9 @@ public class ShelvesStockManager : MonoBehaviour
             else
             {
                 // This is critical: Spawn empty shelves for red herrings!
-                // Find any wildcard shelf that fits this spawn point
+                // Find any wildcard shelf
                 var wildcardShelves = shelfStorages
-                    .Where(shelf => shelf.allowedItemIDs.Count == 0 &&
-                                    spawnPoint.CanAcceptShelfType(shelf.shelfTypeID))
+                    .Where(shelf => shelf.allowedItemIDs.Count == 0)
                     .ToList();
 
                 if (wildcardShelves.Count > 0)
@@ -254,16 +242,8 @@ public class ShelvesStockManager : MonoBehaviour
                         spawnedShelf.name = $"EmptyShelf_{spawnPoint.name}_{prefabToSpawn.name}";
                         spawnedShelf.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
 
-                        // Find and configure the StorageArea for empty shelf
-                        var storageAreas = UsefulStuffs.FindComponentsInChildren<StorageArea>(spawnedShelf);   // YOU. stop eating my ducks. apparently they aren't being turned off
-                        foreach (var area in storageAreas)
-                        {
-                            area.assignedItemID = 0; // No item
-                            area.itemAmount = 0;     // Empty shelf
-                            area.enabled = false;    // Brain off
-                        }
-                        // TODO: FUCK SHIT FUCK SHIT ITS EATING THE FUCKING DUCKS?!!!!!!!!!! FUCK !!!!!!!!!!!!!!!!!
-                        // ducks that are put on shelves that are (theoretically) disabled will be taken anyway.
+                        // In the new StorageArea, empty shelves don't need special configuration
+                        // They'll naturally not accept any items since they have no assigned item ID
                         Debug.Log($"[ShelfManager] Spawning empty shelf at {spawnPoint.name} for red herring");
                     }
                     else
@@ -273,14 +253,10 @@ public class ShelvesStockManager : MonoBehaviour
                 }
                 else
                 {
-                    // If no wildcard shelves, use any shelf that fits the spawn requirements
-                    var compatibleShelves = shelfStorages
-                        .Where(shelf => spawnPoint.CanAcceptShelfType(shelf.shelfTypeID))
-                        .ToList();
-
-                    if (compatibleShelves.Count > 0)
+                    // If no wildcard shelves, use any shelf
+                    if (shelfStorages.Count > 0)
                     {
-                        StorageArea emptyShelf = compatibleShelves[Random.Range(0, compatibleShelves.Count)];
+                        StorageArea emptyShelf = shelfStorages[Random.Range(0, shelfStorages.Count)];
 
                         GameObject prefabToSpawn = GetRootPrefabForStorageArea(emptyShelf);
                         if (prefabToSpawn != null)
@@ -288,17 +264,6 @@ public class ShelvesStockManager : MonoBehaviour
                             GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
                             spawnedShelf.name = $"EmptyShelf_{spawnPoint.name}_{prefabToSpawn.name}";
                             spawnedShelf.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
-
-                            StorageArea[] storageAreas = spawnedShelf.GetComponentsInChildren<StorageArea>();
-                            foreach (var area in storageAreas)
-                            {
-                                if (area.shelfTypeID == emptyShelf.shelfTypeID)
-                                {
-                                    area.assignedItemID = 0;
-                                    area.itemAmount = 0;
-                                    break;
-                                }
-                            }
 
                             Debug.Log($"[ShelfManager] Spawning empty shelf at {spawnPoint.name} for red herring");
                         }
@@ -329,7 +294,6 @@ public class ShelvesStockManager : MonoBehaviour
         return null;
     }
 
-    // Add this method to clean up assignments if needed
     public void ResetAssignments()
     {
         foreach (var spawn in shelfSpawns)

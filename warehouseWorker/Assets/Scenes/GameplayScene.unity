@@ -5495,9 +5495,10 @@ MonoBehaviour:
                     requestee:
                       request:
                         orderType: 0
-                        requestedItemID: 0
+                        orderPosition: 0
                         specialRequirement: 0
                         orderFulfilled: 0
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -5506,9 +5507,10 @@ MonoBehaviour:
                       lastQueueJumpTime: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
-                    requestedItemID: 0
+                    orderPosition: 0
                     specialRequirement: 0
                     orderFulfilled: 0
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -5517,9 +5519,10 @@ MonoBehaviour:
                   lastQueueJumpTime: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
-                requestedItemID: 0
+                orderPosition: 0
                 specialRequirement: 0
                 orderFulfilled: 0
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -5528,9 +5531,10 @@ MonoBehaviour:
               lastQueueJumpTime: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
-            requestedItemID: 0
+            orderPosition: 0
             specialRequirement: 0
             orderFulfilled: 0
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -5539,9 +5543,10 @@ MonoBehaviour:
           lastQueueJumpTime: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
-        requestedItemID: 0
+        orderPosition: 0
         specialRequirement: 0
         orderFulfilled: 0
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -5550,9 +5555,10 @@ MonoBehaviour:
       lastQueueJumpTime: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
-    requestedItemID: 0
+    orderPosition: 0
     specialRequirement: 0
     orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!54 &65789930
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10601,9 +10607,10 @@ MonoBehaviour:
                     requestee:
                       request:
                         orderType: 0
-                        requestedItemID: 0
+                        orderPosition: 0
                         specialRequirement: 0
                         orderFulfilled: 0
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -10612,9 +10619,10 @@ MonoBehaviour:
                       lastQueueJumpTime: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
-                    requestedItemID: 0
+                    orderPosition: 0
                     specialRequirement: 0
                     orderFulfilled: 0
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -10623,9 +10631,10 @@ MonoBehaviour:
                   lastQueueJumpTime: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
-                requestedItemID: 0
+                orderPosition: 0
                 specialRequirement: 0
                 orderFulfilled: 0
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -10634,9 +10643,10 @@ MonoBehaviour:
               lastQueueJumpTime: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
-            requestedItemID: 0
+            orderPosition: 0
             specialRequirement: 0
             orderFulfilled: 0
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -10645,9 +10655,10 @@ MonoBehaviour:
           lastQueueJumpTime: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
-        requestedItemID: 0
+        orderPosition: 0
         specialRequirement: 0
         orderFulfilled: 0
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -10656,9 +10667,10 @@ MonoBehaviour:
       lastQueueJumpTime: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
-    requestedItemID: 0
+    orderPosition: 0
     specialRequirement: 0
     orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!54 &99222832
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16505,9 +16517,10 @@ MonoBehaviour:
                     requestee:
                       request:
                         orderType: 0
-                        requestedItemID: 0
+                        orderPosition: 0
                         specialRequirement: 0
                         orderFulfilled: 0
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -16516,9 +16529,10 @@ MonoBehaviour:
                       lastQueueJumpTime: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
-                    requestedItemID: 0
+                    orderPosition: 0
                     specialRequirement: 0
                     orderFulfilled: 0
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -16527,9 +16541,10 @@ MonoBehaviour:
                   lastQueueJumpTime: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
-                requestedItemID: 0
+                orderPosition: 0
                 specialRequirement: 0
                 orderFulfilled: 0
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -16538,9 +16553,10 @@ MonoBehaviour:
               lastQueueJumpTime: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
-            requestedItemID: 0
+            orderPosition: 0
             specialRequirement: 0
             orderFulfilled: 0
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -16549,9 +16565,10 @@ MonoBehaviour:
           lastQueueJumpTime: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
-        requestedItemID: 0
+        orderPosition: 0
         specialRequirement: 0
         orderFulfilled: 0
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -16560,9 +16577,10 @@ MonoBehaviour:
       lastQueueJumpTime: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
-    requestedItemID: 0
+    orderPosition: 0
     specialRequirement: 0
     orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!54 &331238943
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22252,9 +22270,10 @@ MonoBehaviour:
                     requestee:
                       request:
                         orderType: 0
-                        requestedItemID: 0
+                        orderPosition: 0
                         specialRequirement: 0
                         orderFulfilled: 0
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -22263,9 +22282,10 @@ MonoBehaviour:
                       lastQueueJumpTime: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
-                    requestedItemID: 0
+                    orderPosition: 0
                     specialRequirement: 0
                     orderFulfilled: 0
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -22274,9 +22294,10 @@ MonoBehaviour:
                   lastQueueJumpTime: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
-                requestedItemID: 0
+                orderPosition: 0
                 specialRequirement: 0
                 orderFulfilled: 0
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -22285,9 +22306,10 @@ MonoBehaviour:
               lastQueueJumpTime: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
-            requestedItemID: 0
+            orderPosition: 0
             specialRequirement: 0
             orderFulfilled: 0
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -22296,9 +22318,10 @@ MonoBehaviour:
           lastQueueJumpTime: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
-        requestedItemID: 0
+        orderPosition: 0
         specialRequirement: 0
         orderFulfilled: 0
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -22307,9 +22330,10 @@ MonoBehaviour:
       lastQueueJumpTime: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
-    requestedItemID: 0
+    orderPosition: 0
     specialRequirement: 0
     orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!54 &419434816
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -28388,9 +28412,10 @@ MonoBehaviour:
                     requestee:
                       request:
                         orderType: 0
-                        requestedItemID: 0
+                        orderPosition: 0
                         specialRequirement: 0
                         orderFulfilled: 0
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -28399,9 +28424,10 @@ MonoBehaviour:
                       lastQueueJumpTime: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
-                    requestedItemID: 0
+                    orderPosition: 0
                     specialRequirement: 0
                     orderFulfilled: 0
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -28410,9 +28436,10 @@ MonoBehaviour:
                   lastQueueJumpTime: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
-                requestedItemID: 0
+                orderPosition: 0
                 specialRequirement: 0
                 orderFulfilled: 0
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -28421,9 +28448,10 @@ MonoBehaviour:
               lastQueueJumpTime: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
-            requestedItemID: 0
+            orderPosition: 0
             specialRequirement: 0
             orderFulfilled: 0
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -28432,9 +28460,10 @@ MonoBehaviour:
           lastQueueJumpTime: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
-        requestedItemID: 0
+        orderPosition: 0
         specialRequirement: 0
         orderFulfilled: 0
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -28443,9 +28472,10 @@ MonoBehaviour:
       lastQueueJumpTime: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
-    requestedItemID: 0
+    orderPosition: 0
     specialRequirement: 0
     orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!54 &701510160
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -36967,9 +36997,10 @@ MonoBehaviour:
                     requestee:
                       request:
                         orderType: 0
-                        requestedItemID: 0
+                        orderPosition: 0
                         specialRequirement: 0
                         orderFulfilled: 0
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -36978,9 +37009,10 @@ MonoBehaviour:
                       lastQueueJumpTime: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
-                    requestedItemID: 0
+                    orderPosition: 0
                     specialRequirement: 0
                     orderFulfilled: 0
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -36989,9 +37021,10 @@ MonoBehaviour:
                   lastQueueJumpTime: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
-                requestedItemID: 0
+                orderPosition: 0
                 specialRequirement: 0
                 orderFulfilled: 0
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -37000,9 +37033,10 @@ MonoBehaviour:
               lastQueueJumpTime: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
-            requestedItemID: 0
+            orderPosition: 0
             specialRequirement: 0
             orderFulfilled: 0
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -37011,9 +37045,10 @@ MonoBehaviour:
           lastQueueJumpTime: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
-        requestedItemID: 0
+        orderPosition: 0
         specialRequirement: 0
         orderFulfilled: 0
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -37022,9 +37057,10 @@ MonoBehaviour:
       lastQueueJumpTime: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
-    requestedItemID: 0
+    orderPosition: 0
     specialRequirement: 0
     orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!54 &1324852443
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37579,14 +37615,23 @@ MonoBehaviour:
   minOrderTime: 20
   orderCompleteScore: 50
   orderFailPenalty: -25
-  box: {fileID: 4684404609544575223, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
+  boxPrefabs:
+  - {fileID: 4684404609544575223, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
+  - {fileID: 1699641779362350131, guid: da86fc1a266a54343a12b2b24fc94bd8, type: 3}
+  - {fileID: 3757457042386557433, guid: 4c03284c64456474f95aeed14e6b3ee7, type: 3}
+  materialPrefabs:
+  - {fileID: 2100000, guid: 384d7e0fe8088c04c9662f77b46edb9d, type: 2}
+  - {fileID: 2100000, guid: 53262a1e0986dac42bf0db4f6ac0a422, type: 2}
+  - {fileID: 2100000, guid: 93e5e99bd9a5a3d40927bed6e6dc6204, type: 2}
+  readyToUseBoxes: []
+  readyToUseMaterialsForBoxes: []
+  readyToUseBoxSprites: []
   spawnPosition: {fileID: 1755453424}
   randomSpawnIntervalMax: 2.13
   canvas: {fileID: 1055962995}
   margin: 10
   depositImage: {fileID: 21300000, guid: 8507a965ce51d8c499fad722313d01e1, type: 3}
   requesteeImage: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  boxes: []
   newOrderSound:
   - {fileID: 8300000, guid: f6ba07a68425e614c8b2094578c92144, type: 3}
   orderCompleteSound:
@@ -44333,9 +44378,10 @@ MonoBehaviour:
                     requestee:
                       request:
                         orderType: 0
-                        requestedItemID: 0
+                        orderPosition: 0
                         specialRequirement: 0
                         orderFulfilled: 0
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -44344,9 +44390,10 @@ MonoBehaviour:
                       lastQueueJumpTime: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
-                    requestedItemID: 0
+                    orderPosition: 0
                     specialRequirement: 0
                     orderFulfilled: 0
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -44355,9 +44402,10 @@ MonoBehaviour:
                   lastQueueJumpTime: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
-                requestedItemID: 0
+                orderPosition: 0
                 specialRequirement: 0
                 orderFulfilled: 0
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -44366,9 +44414,10 @@ MonoBehaviour:
               lastQueueJumpTime: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
-            requestedItemID: 0
+            orderPosition: 0
             specialRequirement: 0
             orderFulfilled: 0
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -44377,9 +44426,10 @@ MonoBehaviour:
           lastQueueJumpTime: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
-        requestedItemID: 0
+        orderPosition: 0
         specialRequirement: 0
         orderFulfilled: 0
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -44388,9 +44438,10 @@ MonoBehaviour:
       lastQueueJumpTime: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
-    requestedItemID: 0
+    orderPosition: 0
     specialRequirement: 0
     orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!54 &1641467616
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -45011,6 +45062,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 554592132807242651, guid: 834846cacdafb0e459a0494676bfe555,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 25.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 554592132807242651, guid: 834846cacdafb0e459a0494676bfe555,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.619
+      objectReference: {fileID: 0}
+    - target: {fileID: 554592132807242651, guid: 834846cacdafb0e459a0494676bfe555,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40.86
+      objectReference: {fileID: 0}
     - target: {fileID: 1964989811101244957, guid: 834846cacdafb0e459a0494676bfe555,
         type: 3}
       propertyPath: m_Name
@@ -47307,6 +47373,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1983069004}
+  - {fileID: 98118681}
   - {fileID: 1345430451}
   - {fileID: 410087041}
   - {fileID: 832575519}
@@ -47317,4 +47384,3 @@ SceneRoots:
   - {fileID: 8036725674389747053}
   - {fileID: 1923667174}
   - {fileID: 778163639}
-  - {fileID: 98118681}

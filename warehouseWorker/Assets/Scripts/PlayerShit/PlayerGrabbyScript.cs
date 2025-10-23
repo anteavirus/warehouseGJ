@@ -151,13 +151,6 @@ public class PlayerGrabbyScript : MonoBehaviour
                         .Find(i => i != null && i.name.StartsWith(IconManager.IconNamePrefix(item.ID.ToString())));
                     itemToGrabIndicator.sprite = previewSprite ?? IconManager.Instance.previewSprites[^1];
                 }
-                else if (target is StorageArea area)
-                {
-                    itemToGrabIndicator.gameObject.SetActive(true);
-                    var previewSprite = IconManager.Instance.previewSprites
-                        .Find(i => i != null && i.name.StartsWith(IconManager.IconNamePrefix(area.assignedItemID.ToString())));
-                    itemToGrabIndicator.sprite = previewSprite ?? IconManager.Instance.previewSprites[^1];
-                }
                 else
                 {
                     itemToGrabIndicator.gameObject.SetActive(false);
@@ -234,16 +227,6 @@ public class PlayerGrabbyScript : MonoBehaviour
             nearbyObjects.Remove(item);
             RefreshFocus();
             return item;
-        }
-
-        if (target is StorageArea area)
-        {
-            var spawned = area.CreateNewItemForPickup();
-            if (spawned != null)
-            {
-                RefreshFocus();
-                return spawned.GetComponent<Item>();
-            }
         }
 
         return null;

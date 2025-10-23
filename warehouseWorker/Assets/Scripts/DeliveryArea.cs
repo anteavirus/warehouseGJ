@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -6,6 +8,7 @@ public class DeliveryArea : MonoBehaviour
 {
     OrdersManager orderManager;
     Vector3 originalPosition;
+    public GameObject[] selectionGameObjects;
     int selection;
     bool doorClosed = true;
     [SerializeField] DoorMover up, down;
@@ -24,7 +27,9 @@ public class DeliveryArea : MonoBehaviour
             StartCoroutine(FindOrderManagerSomeDay());
         }
 
-        // Assign this area to the door controllers
+        selectionGameObjects = new GameObject[orderManager.queue.GetLength(0)];
+        orderManager.deliveryArea = this;
+
         if (up != null) up.area = this;
         if (down != null) down.area = this;
         if (left != null) left.area = this;
@@ -123,10 +128,12 @@ public class DeliveryArea : MonoBehaviour
     public void ShiftSelection(bool shiftLeft)
     {
         if (orderManager == null || orderManager.queue == null) return;
+        selectionGameObjects[selection]?.SetActive(false);
 
         int queueLength = orderManager.queue.GetLength(0);
         selection = (selection + (shiftLeft ? -1 : 1) + queueLength) % queueLength;
 
+        selectionGameObjects[selection]?.SetActive(true);
         if (selectedRequestee != null)
             selectedRequestee.text = (selection + 1).ToString();
     }
@@ -157,5 +164,17 @@ public class DeliveryArea : MonoBehaviour
         {
             itemInsideMe = null;
         }
+    }
+
+    internal void UpdateYoShit()
+    {
+        foreach(var item in selectionGameObjects)
+        {
+            if (item == null) continue;
+            item.SetActive(false);
+        }
+        
+        // TODO: it always appears the last one weirdly enough. 
+        selectionGameObjects[selection]?.SetActive(true);  // lazy. balls
     }
 }

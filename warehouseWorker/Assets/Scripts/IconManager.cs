@@ -105,7 +105,7 @@ public class IconManager : MonoBehaviour
         Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
         tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         tex.Apply();
-        tex.name = $"{IconNamePrefix(itemTemplates[item].ID.ToString())} - {prefab.name}";
+        tex.name = $"{IconNamePrefix(item > -1 ? itemTemplates[item].ID.ToString() : item.ToString())} - {prefab.name}";
 
         RenderTexture.active = null;
 

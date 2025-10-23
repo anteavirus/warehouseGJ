@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 
-[RequireComponent(typeof(Rigidbody))]
 public class Item : MonoBehaviour
 {
     [SerializeField] private DeliveryAudioConfig _audioConfig;

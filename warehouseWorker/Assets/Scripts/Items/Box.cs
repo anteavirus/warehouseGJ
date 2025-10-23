@@ -3,7 +3,6 @@ using UnityEngine;
 public class Box : Item
 {
     public GameObject containedItem;
-    public OrdersManager.Order order;  // TODO: figure out why this feels like a wrong action.
     [SerializeField] GameObject futureBoxPrefab;
 
     public override void OnUse(GameObject user)

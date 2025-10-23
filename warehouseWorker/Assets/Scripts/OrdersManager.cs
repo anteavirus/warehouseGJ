@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,12 +22,12 @@ public class OrdersManager : MonoBehaviour
     public class Order
     {
         public OrderRequestee requestee;
-        public GameObject requestObjectCreated;  // assigned value only when Requestee is no longer in queue (in front of table (!inQueue && requestee != null)).
+        public GameObject requestObjectCreated;
         public OrderType orderType;
         public int orderPosition;
-        public int requestedItemID;
-        public bool specialRequirement; // TODO item status chnagable, like easily flammable 'n shit
+        public bool specialRequirement;
         public bool orderFulfilled;
+        public int assignedBoxMaterial;
     }
 
     [System.Serializable]
@@ -37,7 +38,7 @@ public class OrdersManager : MonoBehaviour
         public bool requestNotTaken;
         public float timeStart = 30;
         public float timeRemaining;
-        public float impatienceModifier;  // bigger -> faster timeRemaining goes down. min value = .05
+        public float impatienceModifier;
         public float lastQueueJumpTime;
         public float timeSinceLastJump => Time.time - lastQueueJumpTime;
 
@@ -57,7 +58,6 @@ public class OrdersManager : MonoBehaviour
 
             if (timeRemaining < 0)
             {
-                // Fail the order if timer runs out
                 if (!requestNotTaken && !request.orderFulfilled)
                 {
                     Instance.FailOrder(request);
@@ -76,25 +76,26 @@ public class OrdersManager : MonoBehaviour
                     return;
                 }
 
-                // Throws dice to change queue (if is IN this said queue)
                 if (timeSinceLastJump > 2f && Random.value < CalculateQueueJumpChance())
                 {
                     int[] nearestQueues = new int[3];
                     for (int i = 0; i < 3; i++)
-                        nearestQueues[i] = Instance.HighestQueuePosition(queuePosition, i);   // some day , optimize this to - whenever someone list is interacted with - another list gets ++ or -- of nonnull vals. this is a minor optimization but . yeah tbh this is a minor one
-                    int minValOfQueue = int.MaxValue, indexOfQueue = 0;
+                        nearestQueues[i] = Instance.HighestQueuePosition(queuePosition, i - 1); // Fixed: i-1 to get [-1, 0, 1]
+
+                    int minValOfQueue = int.MaxValue;
+                    int indexOfQueue = 0;
                     for (int index = 0; index < nearestQueues.Length; index++)
                     {
-                        if (minValOfQueue < nearestQueues[index])
+                        if (nearestQueues[index] != -1 && nearestQueues[index] < minValOfQueue) // FIXED: Changed comparison
                         {
                             minValOfQueue = nearestQueues[index];
                             indexOfQueue = index;
                         }
                     }
 
-                    if (minValOfQueue != int.MaxValue && minValOfQueue + 1 < nearestQueues[1])
+                    if (minValOfQueue != int.MaxValue && minValOfQueue + 1 < queuePosition.y) // FIXED: Compare with current position
                     {
-                        Instance.MoveRequesteeToQueue(this, queuePosition.x + indexOfQueue);
+                        Instance.MoveRequesteeToQueue(this, queuePosition.x + (indexOfQueue - 1)); // FIXED: Correct index offset
                         lastQueueJumpTime = Time.time;
                     }
                 }
@@ -112,25 +113,29 @@ public class OrdersManager : MonoBehaviour
         private float CalculateQueueJumpChance()
         {
             float baseChance = (timeRemaining / timeStart) * impatienceModifier * 0.1f;
-            float cooldownModifier = Mathf.Clamp01( Mathf.Max(timeSinceLastJump, 0.01f)  / 5f); //math max just incase timesincelastjump is somehow 0. i forgot if it throws an error or not
+            float cooldownModifier = Mathf.Clamp01(Mathf.Max(timeSinceLastJump, 0.01f) / 5f);
             return baseChance * cooldownModifier;
         }
     }
 
-    public OrderRequestee[,] queue = new OrderRequestee[4, 4]; // width, height
+    public OrderRequestee[,] queue = new OrderRequestee[4, 4];
 
     [Header("Order Settings")]
-    [SerializeField] float orderCooldown = 25f;
-    [SerializeField] float minOrderTime = 20f;
-    [SerializeField] int orderCompleteScore = 50;
-    [SerializeField] int orderFailPenalty = -25;
+    [SerializeField, Range(0, 90)] float orderCooldown = 25f;
+    [SerializeField, Range(0, 90)] float minOrderTime = 20f;
+    [SerializeField, Range(0, 100)] int orderCompleteScore = 50;
+    [SerializeField, Range(-100, 100)] int orderFailPenalty = -25;
 
     [Header("Spawning")]
-    public GameObject box;
+    public List<GameObject> boxPrefabs = new List<GameObject>();  //setup
+    public List<Material> materialPrefabs = new List<Material>(); //setup
+    public List<Material> readyToUseMaterialsForBoxes = new List<Material>(); //step1
+    public List<GameObject> readyToUseBoxes = new List<GameObject>(); //step2
+    public List<Sprite> readyToUseBoxSprites = new List<Sprite>(); //step3
     public Transform spawnPosition;
     [Range(0, 10), SerializeField] float randomSpawnIntervalMax = 1;
 
-    [Header("Layout")]  
+    [Header("Layout")]
     public RectTransform canvas;
     public float margin = 10f;
     public int gridWidth => queue.GetLength(0);
@@ -139,9 +144,8 @@ public class OrdersManager : MonoBehaviour
     [Header("UI")]
     public Sprite depositImage;
     public Sprite requesteeImage;
-    public List<GameObject> boxes = new List<GameObject>();  // TODO: fuckin. replace the "box" . i dont remember wher but replace it with this. multiple boxes with multiple textures and so on 'n so forth. no dupes
-    private RectTransform requesteePanel; // 75% top section
-    private RectTransform orderPanel;     // 25% bottom section
+    private RectTransform requesteePanel;
+    private RectTransform orderPanel;
     private Image[,] requesteeSlots;
     private Image[] orderSlots;
 
@@ -151,11 +155,12 @@ public class OrdersManager : MonoBehaviour
     [SerializeField] AudioClip[] orderFailSound;
 
     private GameManager gameManager;
-    private readonly Order[] activeOrders = new Order[4];   // NOTE! update to queue's width!'
-    List<GameObject> createdOrderObjects = new(); 
+    private Order[] activeOrders = new Order[4];
+    List<GameObject> createdOrderObjects = new();
     private float orderTimer = 0;
     AudioSource source;
-    
+    internal DeliveryArea deliveryArea;
+
     public void Initialize(GameManager gm)
     {
         if (Instance == null)
@@ -179,11 +184,90 @@ public class OrdersManager : MonoBehaviour
                 queue[i, j] = null;
             }
         }
-        
+
+        PrepareBoxes();
+        StartCoroutine(nameof(PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue));
         ClearCanvas();
         CreatePanels();
         CreateGridSlots();
     }
+
+    IEnumerator PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue()
+    {
+        readyToUseBoxSprites.Clear();
+        yield return new WaitUntil(() => IconManager.Instance != null);
+
+        for (int i = 0; i < readyToUseBoxes.Count; i++)
+        {
+            GameObject item = readyToUseBoxes[i];
+            if (item == null) continue;
+            var texture = IconManager.Instance.RenderCopyToTexture(item, 128, 128);
+            if (texture != null)
+            {
+                Rect rect = new Rect(0, 0, texture.width, texture.height);
+                Sprite itemSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
+                itemSprite.name = $"{item.name}_Sprite";
+                readyToUseBoxSprites.Add(itemSprite);
+            }
+        }
+    }
+
+    private void PrepareBoxes()
+    {
+        foreach (GameObject boxPrefab in boxPrefabs)
+        {
+            if (boxPrefab != null)
+            {
+                GameObject boxInstance = Instantiate(boxPrefab);
+                boxInstance.name = $"{boxPrefab.name}_Original";
+                readyToUseBoxes.Add(boxInstance);
+                boxInstance.SetActive(false);
+            }
+        }
+
+        foreach (GameObject boxPrefab in boxPrefabs)
+        {
+            if (boxPrefab == null) continue;
+
+            Renderer renderer = boxPrefab.GetComponent<Renderer>();
+            if (renderer == null) continue;
+
+            Material originalMaterial = renderer.sharedMaterial;
+
+            foreach (Material materialPrefab in materialPrefabs)
+            {
+                if (materialPrefab == null) continue;
+
+                Material newMaterial = new Material(materialPrefab);
+                newMaterial.name = $"{boxPrefab.name}_{materialPrefab.name}";
+
+                CreateTextureVariation(newMaterial, originalMaterial);
+
+                readyToUseMaterialsForBoxes.Add(newMaterial);
+
+                GameObject boxInstance = Instantiate(boxPrefab);
+                boxInstance.name = $"{boxPrefab.name}_{materialPrefab.name}_Variation";
+
+                if (boxInstance.TryGetComponent<Renderer>(out var instanceRenderer))
+                {
+                    instanceRenderer.material = newMaterial;
+                }
+
+                readyToUseBoxes.Add(boxInstance);
+                boxInstance.SetActive(false);
+            }
+        }
+    }
+
+    private void CreateTextureVariation(Material material, Material originalMaterial, int textureSlot = 1)
+    {
+        string textureProperty = $"_Tex{textureSlot}";
+        if (material.HasProperty(textureProperty))
+        {
+            material.SetTexture(textureProperty, originalMaterial.mainTexture);
+        }
+    }
+
     private void ClearCanvas()
     {
         foreach (Transform child in canvas)
@@ -192,20 +276,21 @@ public class OrdersManager : MonoBehaviour
 
     private void CreatePanels()
     {
-        // Create top panel (75% for requestees)
         GameObject requesteePanelObj = new GameObject("RequesteePanel");
         requesteePanel = requesteePanelObj.AddComponent<RectTransform>();
         requesteePanel.SetParent(canvas, false);
-        requesteePanel.localPosition = Vector3.zero;
-        requesteePanel.rotation = canvas.transform.rotation;
-        requesteePanel.localScale = Vector3.one;
+        requesteePanel.anchorMin = new Vector2(0, 0.25f);
+        requesteePanel.anchorMax = new Vector2(1, 1f);
+        requesteePanel.offsetMin = Vector2.zero;
+        requesteePanel.offsetMax = Vector2.zero;
 
         GameObject orderPanelObj = new GameObject("OrderPanel");
         orderPanel = orderPanelObj.AddComponent<RectTransform>();
         orderPanel.SetParent(canvas, false);
-        orderPanel.localPosition = Vector3.zero;
-        orderPanel.rotation = canvas.transform.rotation;
-        orderPanel.localScale = Vector3.one;
+        orderPanel.anchorMin = new Vector2(0, 0);
+        orderPanel.anchorMax = new Vector2(1, 0.25f);
+        orderPanel.offsetMin = Vector2.zero;
+        orderPanel.offsetMax = Vector2.zero;
     }
 
     private void CreateGridSlots()
@@ -253,8 +338,11 @@ public class OrdersManager : MonoBehaviour
                 slotImg.fillMethod = Image.FillMethod.Radial360;
                 slotImg.fillOrigin = (int)Image.Origin360.Top;
 
-                requesteeSlots[col, row] = slotImg; // Note: [x,y] = [col,row]
-                slotImg.gameObject.GetComponent<Image>().color = UsefulStuffs.semiTransparent;
+                var element = slotObj.AddComponent<LayoutElement>();
+                element.preferredWidth = element.preferredHeight = 40;
+
+                requesteeSlots[col, row] = slotImg;
+                slotImg.color = UsefulStuffs.semiTransparent;
             }
         }
     }
@@ -276,12 +364,14 @@ public class OrdersManager : MonoBehaviour
             slotRect.SetParent(orderPanel, false);
 
             Image slotImg = slotObj.AddComponent<Image>();
-            slotImg.type = Image.Type.Filled;
-            slotImg.fillMethod = Image.FillMethod.Radial360;
-            slotImg.fillOrigin = (int)Image.Origin360.Top;
+            slotImg.type = Image.Type.Simple;
+            slotImg.preserveAspect = true;
+
+            var element = slotObj.AddComponent<LayoutElement>();
+            element.preferredWidth = element.preferredHeight = 40;
 
             orderSlots[i] = slotImg;
-            slotImg.gameObject.GetComponent<Image>().color = UsefulStuffs.semiTransparent;
+            slotImg.color = UsefulStuffs.semiTransparent;
         }
     }
 
@@ -297,7 +387,6 @@ public class OrdersManager : MonoBehaviour
         }
 
         UpdateRequestees();
-        UpdateActiveOrders();
         UpdateOrderUI();
     }
 
@@ -317,17 +406,16 @@ public class OrdersManager : MonoBehaviour
         MoveTheQueues();
     }
 
-    void GenerateNewOrderRequestee()
+    public void GenerateNewOrderRequestee()
     {
         if (gameManager.itemTemplates.Count == 0) return;
 
         Vector2Int? emptySpot = FindEmptyQueueSpot();
-        if (!emptySpot.HasValue) return; // Queue is full
+        if (!emptySpot.HasValue) return;
 
         Order newOrder = new()
         {
-            requestedItemID = gameManager.itemTemplates[Random.Range(0, gameManager.itemTemplates.Count)].ID,
-            orderType = (OrderType)Random.Range(0, 1) // Randomly assign Receive or Deposit   // Fuck deposit all my omies ate deposit
+            orderType = (OrderType)  (createdOrderObjects.Count > 0 ? Random.Range(0, 2) : 1)
         };
 
         OrderRequestee newRequestee = new(newOrder, minOrderTime + Random.Range(0f, 10f), Random.Range(0.8f, 1.2f))
@@ -341,23 +429,14 @@ public class OrdersManager : MonoBehaviour
 
     private Vector2Int? FindEmptyQueueSpot()
     {
-        List<Vector2Int> allPositions = new();
-        for (int width = 0; width < queue.GetLength(0); width++)
+        for (int height = 0; height < queue.GetLength(1); height++)
         {
-            for (int height = 0; height < queue.GetLength(1); height++)
+            for (int width = 0; width < queue.GetLength(0); width++)
             {
-                allPositions.Add(new Vector2Int(width, height));
+                if (queue[width, height] == null)
+                    return new Vector2Int(width, height);
             }
         }
-
-        allPositions = UsefulStuffs.ShuffleList(allPositions);
-
-        foreach (Vector2Int pos in allPositions)
-        {
-            if (queue[pos.x, pos.y] == null)
-                return pos;
-        }
-
         return null;
     }
 
@@ -365,41 +444,20 @@ public class OrdersManager : MonoBehaviour
     {
         if (!activeOrders.Contains(requestee.request))
         {
-            Debug.Log($"Setting orderPosition to: {requestee.request.orderPosition} for queue position: {requestee.queuePosition}");
-            activeOrders[requestee.queuePosition.x] = requestee.request;
-            requestee.request.orderPosition = requestee.queuePosition.x;
-            Debug.Log($"request orderpos is now {requestee.queuePosition.x} ");
-            // TODO: deposit can be whatever, but we actually save the deposit, rewrite it as receive and at some point throw it in as an actual mission
-            // actually yeah we need to save the objects we create
-            if (requestee.request.requestObjectCreated == null)
+            // TODO: lynch LLMs
+            if (activeOrders[requestee.queuePosition.x] == null)
             {
-                // TODO: create the box icon requested or deposit symbol on appropriate queue table
-                SpawnItem(requestee);
-            }
-        }
-    }
+                activeOrders[requestee.queuePosition.x] = requestee.request;
+                requestee.request.orderPosition = requestee.queuePosition.x;
 
-    void UpdateActiveOrders()
-    {
-        foreach (Order order in activeOrders.ToList())
-        {
-            if (order == null) continue;
-            if (order.requestee != null)
-            {
-                if (order.requestee.timeRemaining <= 0 && !order.orderFulfilled)
+
+                if (requestee.request.orderType == OrderType.Deposit)
+                    SpawnItem(requestee);
+                else
                 {
-                    FailOrder(order);
-                }
-            }
-            else
-            {
-                for (int tick = 0; tick < activeOrders.Length; tick++)
-                {
-                    if (activeOrders[tick] == order)
-                    {
-                        activeOrders[tick] = null;
-                        break;
-                    }
+                    GameObject gameObject1 = UsefulStuffs.RandomNonNullFromList(createdOrderObjects, out var index);
+                    if (index > -1 && gameObject1.TryGetComponent<Box>(out var box))
+                        requestee.request.assignedBoxMaterial = box.order.assignedBoxMaterial;
                 }
             }
         }
@@ -412,12 +470,11 @@ public class OrdersManager : MonoBehaviour
             activeOrders[order.orderPosition] = null;
             gameManager.AddScore(orderCompleteScore, resetTimer: true, immediateReset: true);
             source.PlaySound(orderCompleteSound);
-            requesteeSlots[order.orderPosition, 0].color = UsefulStuffs.semiTransparent;
-            requesteeSlots[order.orderPosition, 0].fillAmount = 1;
+            deliveryArea.selectionGameObjects[order.orderPosition] = null ;
 
-            if (order.requestObjectCreated != null)
+            if (order.requestObjectCreated != null && order.orderType == OrderType.Receive)
             {
-                Destroy(order.requestObjectCreated);
+                createdOrderObjects.Remove(order.requestObjectCreated);
             }
         }
     }
@@ -429,34 +486,30 @@ public class OrdersManager : MonoBehaviour
             activeOrders[order.orderPosition] = null;
             gameManager.AddScore(orderFailPenalty, resetTimer: false);
             source.PlaySound(orderFailSound);
-            requesteeSlots[order.orderPosition, 0].color = UsefulStuffs.semiTransparent;
-            requesteeSlots[order.orderPosition, 0].fillAmount = 1;
+            deliveryArea.selectionGameObjects[order.orderPosition] = null;
 
-            if (order.requestObjectCreated != null)
+            if (order.requestObjectCreated != null && order.orderType == OrderType.Receive)
             {
+                createdOrderObjects.Remove(order.requestObjectCreated);
                 Destroy(order.requestObjectCreated);
             }
+            gameManager.IncreaseChanceOfEvent();
         }
     }
 
-    /// <summary>
-    /// Asks queue for an int that represents the furthest position from start.
-    /// </summary>
-    /// <param name="side"> int to be clamped to [-1, 1]</param>
-    /// <returns>Null position from start based on requestee position. -1 if invalid (i.e. impossible to reach).</returns>
     public int HighestQueuePosition(Vector2Int reqPosition, int side)
     {
-        int offset = Mathf.Clamp(side, -1, 1); // Mathf math includes non float returns. That's my level of spaghetticoding.
+        int offset = Mathf.Clamp(side, -1, 1);
         int targetX = reqPosition.x + offset;
 
-        if (targetX < 0 || targetX >= queue.GetLength(0)) return -1;  // Out of bounds? Out of mind.
+        if (targetX < 0 || targetX >= queue.GetLength(0)) return -1;
 
         for (int height = 0; height < queue.GetLength(1); height++)
         {
             if (queue[targetX, height] == null)
                 return height;
         }
-        return queue.GetLength(1); // This queue is full.
+        return queue.GetLength(1);
     }
 
     public void MoveRequesteeToQueue(OrderRequestee requestee, int queueIndex)
@@ -470,13 +523,9 @@ public class OrdersManager : MonoBehaviour
                 queue[requestee.queuePosition.x, requestee.queuePosition.y] = null;
                 queue[queueIndex, height] = requestee;
                 requestee.queuePosition = new Vector2Int(queueIndex, height);
-                requestee.request.orderPosition = queueIndex;
-                UpdateOrderUI();
                 return;
             }
         }
-
-        Debug.Log($"Failed to move {requestee} to queue {queueIndex}, assumedly it's because the queue index requested to move to was full");
     }
 
     public void AnnihilateRequestee(Vector2Int requesteePos)
@@ -484,6 +533,13 @@ public class OrdersManager : MonoBehaviour
         if (requesteePos.x >= 0 && requesteePos.x < queue.GetLength(0) &&
             requesteePos.y >= 0 && requesteePos.y < queue.GetLength(1))
         {
+            // FIXED: Clear from activeOrders if this was an active order
+            var requestee = queue[requesteePos.x, requesteePos.y];
+            if (requestee != null && !requestee.requestNotTaken)
+            {
+                activeOrders[requestee.request.orderPosition] = null;
+            }
+
             queue[requesteePos.x, requesteePos.y] = null;
         }
     }
@@ -498,124 +554,128 @@ public class OrdersManager : MonoBehaviour
                 {
                     for (int aboveHeight = height + 1; aboveHeight < queue.GetLength(1); aboveHeight++)
                     {
-                        if (queue[width, aboveHeight] != null)
+                        if (queue[width, aboveHeight] != null)  
                         {
                             queue[width, height] = queue[width, aboveHeight];
                             queue[width, aboveHeight] = null;
                             queue[width, height].queuePosition = new Vector2Int(width, height);
-                            // TODO: move progress as well, if null = full
                             break;
                         }
                     }
                 }
             }
         }
-
-        UpdateOrderUI();
     }
 
     public bool ProcessOrderDelivery(int table, Item deliveredItem, bool fromShelf)
     {
-        Order order = queue[table, 0]?.request;
-        Debug.Log($"{table} {deliveredItem} {fromShelf} {order}");
-        if (order != null && order.requestedItemID == deliveredItem.ID && !order.orderFulfilled && order.orderType == OrderType.Receive)
+        // FIXED: Check if there's an active order at this table position
+        Order order = activeOrders[table];
+
+        // todo. something. mateirals ids and shits fuck balls. if doesn't align, then minus score. else add score.
+        if (order != null &&
+            deliveredItem.order.assignedBoxMaterial == order.assignedBoxMaterial &&
+            !order.orderFulfilled &&
+            order.orderType == OrderType.Receive)
         {
             order.orderFulfilled = true;
 
             if (fromShelf)
             {
                 CompleteOrder(order);
+                return true;
             }
             else
             {
                 gameManager.AddScore(-deliveredItem.scoreValue, resetTimer: false);
                 source.PlaySound(orderFailSound);
+                gameManager.IncreaseChanceOfEvent();
+                return true;
             }
-            return true;
         }
-    
+
         return false;
-    }
-
-    public void SpawnInitialItem()
-    {
-        GenerateNewOrderRequestee();
-    }
-
-    public void SpawnItemAfterDelay()
-    {
-        StartCoroutine(SpawnWithDelay());
-    }
-
-    IEnumerator SpawnWithDelay()
-    {
-        yield return new WaitForSeconds(Random.Range(0, randomSpawnIntervalMax));
-        GenerateNewOrderRequestee();
     }
 
     void SpawnItem(OrderRequestee requestee)
     {
-        if (box == null || spawnPosition == null || gameManager.itemTemplates.Count == 0) return;
+        if (readyToUseBoxes.Count < 1 || spawnPosition == null || gameManager.itemTemplates.Count == 0) return;
+
+        GameObject assignedBox = UsefulStuffs.RandomNonNullFromList(readyToUseBoxes, out int assignedBoxIndex);
+        Material assignedMaterial = UsefulStuffs.RandomNonNullFromList(readyToUseMaterialsForBoxes, out int assignedMaterialIndex);
+
+        var newBox = Instantiate(assignedBox, spawnPosition.position, Quaternion.identity);
+        newBox.GetComponent<Renderer>().material = assignedMaterial;
 
         int randomIndex = Random.Range(0, gameManager.itemTemplates.Count);
-        var newBox = Instantiate(box, spawnPosition.position, Quaternion.identity);
         GameObject newItem = Instantiate(gameManager.itemTemplates[randomIndex].gameObject);
         newItem.SetActive(false);
 
         if (newBox.TryGetComponent<Box>(out var boxComponent))
         {
             boxComponent.containedItem = newItem;
-            boxComponent.containedItem.GetComponent<Item>().order = requestee.request;
+            boxComponent.order = requestee.request;
+            boxComponent.order.assignedBoxMaterial = assignedMaterialIndex;
+            boxComponent.order.requestObjectCreated = newBox;
         }
+        
 
         if (newBox.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
+        deliveryArea.selectionGameObjects[requestee.queuePosition.x] = newBox;
+        deliveryArea.UpdateYoShit();
+        newBox.SetActive(true);
+        createdOrderObjects.Add(newBox);
     }
 
     private void UpdateOrderUI()
     {
+        // Reset all slots first
+        for (int x = 0; x < gridWidth; x++)
+        {
+            orderSlots[x].color = UsefulStuffs.semiTransparent;
+            orderSlots[x].sprite = null;
+
+            for (int y = 0; y < gridHeight; y++)
+            {
+                requesteeSlots[x, y].color = UsefulStuffs.semiTransparent;
+                requesteeSlots[x, y].fillAmount = 1f;
+            }
+        }
+
+        // Update requestee slots
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
             {
                 OrderRequestee requestee = queue[x, y];
-                if (requestee == null)
+                if (requestee != null)
                 {
-                    requesteeSlots[x, y].color = UsefulStuffs.semiTransparent;
-                    if (y == 0) orderSlots[x].color = UsefulStuffs.semiTransparent;
-                    if (y == 0) orderSlots[x].sprite = requesteeImage;
-                    continue;
-                }
-
-                requesteeSlots[x, y].color = Color.white;
-
-                Image radialImage = requesteeSlots[x, y].transform.GetComponent<Image>();
-                if (radialImage != null && requestee != null)
-                {
+                    requesteeSlots[x, y].color = Color.white;
                     float timePercent = requestee.timeRemaining / requestee.timeStart;
-                    radialImage.fillAmount = timePercent;
-
-                    radialImage.color = GetTimeColor(timePercent);
+                    requesteeSlots[x, y].fillAmount = timePercent;
+                    requesteeSlots[x, y].color = GetTimeColor(timePercent);
                 }
-                    
-                Order order = requestee.request;
-                if (!requestee.requestNotTaken)
-                {
-                    orderSlots[x].color = Color.white;
+            }
+        }
 
-                    Item item = gameManager.ReturnItemById(order.requestedItemID);
-                    Sprite itemSprite = requestee.request.orderType switch
-                    {
-                        OrderType.Receive => IconManager.Instance?.previewSprites.Find(i => i.name.StartsWith(IconManager.IconNamePrefix(item.ID.ToString()))),
-                        OrderType.Deposit => depositImage,
-                        _ => null,
-                    };
-                    if (item != null && itemSprite != null)
-                    {
-                        orderSlots[x].sprite = itemSprite;
-                    }
+        // Update order slots (active orders)
+        for (int i = 0; i < activeOrders.Length; i++)
+        {
+            Order order = activeOrders[i];
+            if (order != null)
+            {
+                orderSlots[i].color = Color.white;
+                    
+                if (order.orderType == OrderType.Receive)
+                {
+                    orderSlots[i].sprite = readyToUseBoxSprites[order.assignedBoxMaterial];
+                }
+                else if (order.orderType == OrderType.Deposit)
+                {
+                    orderSlots[i].sprite = depositImage;
                 }
             }
         }
@@ -650,5 +710,11 @@ public class OrdersManager : MonoBehaviour
                 }
             }
         }
+
+        foreach (var obj in createdOrderObjects)
+        {
+            if (obj != null) Destroy(obj);
+        }
+        createdOrderObjects.Clear();
     }
 }

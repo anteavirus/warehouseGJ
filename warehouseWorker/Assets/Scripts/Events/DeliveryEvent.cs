@@ -45,7 +45,7 @@ public class DeliveryEvent : Event
         }
 
         // TODO: do we want the item in the box, or just like that?
-        var deliveryBox = Instantiate(OrdersManager.Instance.box, spawnCenter.position, Quaternion.identity);
+        var deliveryBox = Instantiate(UsefulStuffs.RandomNonNullFromList(OrdersManager.Instance.boxPrefabs), spawnCenter.position, Quaternion.identity);
         deliveryBox.GetComponent<Box>().containedItem = mainItemPrefab;
     }
 

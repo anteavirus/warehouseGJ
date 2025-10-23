@@ -1,0 +1,224 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &63892876875158129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5331885289191324266}
+  - component: {fileID: 5973206711846274604}
+  - component: {fileID: 6420670737851620647}
+  - component: {fileID: 8017985819176256189}
+  - component: {fileID: 1872165473299464105}
+  m_Layer: 0
+  m_Name: "\u043A\u043E\u0440\u043E\u0431\u043A\u0430 \u043A\u0440\u0443\u0433\u043B\u0430\u044F
+    2 \u0437\u0435\u043B\u0435\u043D\u0430\u044F"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5331885289191324266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63892876875158129}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 20.163494, y: -2.269529, z: 45.623}
+  m_LocalScale: {x: 2.475156, y: 2.475156, z: 2.475156}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &5973206711846274604
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63892876875158129}
+  m_Mesh: {fileID: -2432090755550338912, guid: 92911598faf0cdc4ab138e6594307a0a, type: 3}
+--- !u!23 &6420670737851620647
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63892876875158129}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: d3384f29b68366848898d8ef9f9f6044, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &8017985819176256189
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63892876875158129}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1872165473299464105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63892876875158129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25eeab41706f7a439a240ef48333062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioConfig: {fileID: 0}
+  ID: 0
+  Name: {fileID: 0}
+  scoreValue: 0
+  fromShelf: 0
+  canUseOnID: 
+  isPickupable: 1
+  pickupSounds: []
+  useSounds: []
+  collisionSounds: []
+  mixerGroup: {fileID: 0}
+  throwMultiplier: 0.1
+  controller: {fileID: 0}
+  order:
+    requestee:
+      request:
+        requestee:
+          request:
+            requestee:
+              request:
+                requestee:
+                  request:
+                    requestee:
+                      request:
+                        orderType: 0
+                        orderPosition: 0
+                        requestedItemID: 0
+                        specialRequirement: 0
+                        orderFulfilled: 0
+                        assignedBoxMaterial: {x: 0, y: 0}
+                      queuePosition: {x: 0, y: 0}
+                      requestNotTaken: 0
+                      timeStart: 0
+                      timeRemaining: 0
+                      impatienceModifier: 0
+                      lastQueueJumpTime: 0
+                    requestObjectCreated: {fileID: 0}
+                    orderType: 0
+                    orderPosition: 0
+                    requestedItemID: 0
+                    specialRequirement: 0
+                    orderFulfilled: 0
+                    assignedBoxMaterial: {x: 0, y: 0}
+                  queuePosition: {x: 0, y: 0}
+                  requestNotTaken: 0
+                  timeStart: 0
+                  timeRemaining: 0
+                  impatienceModifier: 0
+                  lastQueueJumpTime: 0
+                requestObjectCreated: {fileID: 0}
+                orderType: 0
+                orderPosition: 0
+                requestedItemID: 0
+                specialRequirement: 0
+                orderFulfilled: 0
+                assignedBoxMaterial: {x: 0, y: 0}
+              queuePosition: {x: 0, y: 0}
+              requestNotTaken: 0
+              timeStart: 0
+              timeRemaining: 0
+              impatienceModifier: 0
+              lastQueueJumpTime: 0
+            requestObjectCreated: {fileID: 0}
+            orderType: 0
+            orderPosition: 0
+            requestedItemID: 0
+            specialRequirement: 0
+            orderFulfilled: 0
+            assignedBoxMaterial: {x: 0, y: 0}
+          queuePosition: {x: 0, y: 0}
+          requestNotTaken: 0
+          timeStart: 0
+          timeRemaining: 0
+          impatienceModifier: 0
+          lastQueueJumpTime: 0
+        requestObjectCreated: {fileID: 0}
+        orderType: 0
+        orderPosition: 0
+        requestedItemID: 0
+        specialRequirement: 0
+        orderFulfilled: 0
+        assignedBoxMaterial: {x: 0, y: 0}
+      queuePosition: {x: 0, y: 0}
+      requestNotTaken: 0
+      timeStart: 0
+      timeRemaining: 0
+      impatienceModifier: 0
+      lastQueueJumpTime: 0
+    requestObjectCreated: {fileID: 0}
+    orderType: 0
+    orderPosition: 0
+    requestedItemID: 0
+    specialRequirement: 0
+    orderFulfilled: 0
+    assignedBoxMaterial: {x: 0, y: 0}
+  containedItem: {fileID: 0}
+  futureBoxPrefab: {fileID: 0}

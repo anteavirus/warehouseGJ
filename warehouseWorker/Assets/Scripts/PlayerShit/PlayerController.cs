@@ -1,8 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static SettingsManager;
@@ -429,6 +426,7 @@ public class PlayerController : MonoBehaviour
                 out RaycastHit hit, pickupRange, interactableLayer))
             {
                 /// TODO
+                /// // wait why the fuck is the RIGHT ARROW triggerring this????? fucking .  done for the night. this is acceptable mess. it was looking beautiful and then "oh please make it be like [this] because it's more fun. yeah thanks. i think i'd rather now go back via git to an older build, this shit is even less fun.
                 hit.transform.GetComponent<Item>().OnUse(gameObject);
                 return;
             }
@@ -529,17 +527,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-
-
-            if (hit.transform.TryGetComponent<StorageArea>(out var area)) // TODO: I forgot, we can place things inside the shelves, but what if they don't become item inside the shelf? That's where the biggest problem lies! FIXITFIXITFIXIT
-            {
-                var newItem = area.CreateNewItemForPickup();
-                if (newItem == null) return; // :)
-                newItem.SetActive(true);
-                Item itemScript = newItem.GetComponent<Item>();
-                TryPickupItem(itemScript);
-                return;
-            }
         }
 
         // May lord not see this mess, for his punishment'd be death by choking hanging.
