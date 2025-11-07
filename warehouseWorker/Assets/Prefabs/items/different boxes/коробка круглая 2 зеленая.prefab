@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6420670737851620647}
   - component: {fileID: 8017985819176256189}
   - component: {fileID: 1872165473299464105}
+  - component: {fileID: 1692562532377430603}
   m_Layer: 0
   m_Name: "\u043A\u043E\u0440\u043E\u0431\u043A\u0430 \u043A\u0440\u0443\u0433\u043B\u0430\u044F
     2 \u0437\u0435\u043B\u0435\u043D\u0430\u044F"
@@ -125,17 +126,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25eeab41706f7a439a240ef48333062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _audioConfig: {fileID: 0}
+  _audioConfig: {fileID: 11400000, guid: f859b9e7eeff1fc4aab11b10320961c2, type: 2}
   ID: 0
-  Name: {fileID: 0}
-  scoreValue: 0
+  Name: {fileID: 6236705258853314598, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
+  scoreValue: 15
   fromShelf: 0
-  canUseOnID: 
+  canUseOnID: ffffffff
   isPickupable: 1
-  pickupSounds: []
-  useSounds: []
-  collisionSounds: []
-  mixerGroup: {fileID: 0}
+  pickupSounds:
+  - {fileID: 8300000, guid: b4bbe371f641bbf4dab8e15ee643061b, type: 3}
+  - {fileID: 8300000, guid: fac91aba8353fbd40a330825fbec34f0, type: 3}
+  useSounds:
+  - {fileID: 8300000, guid: e6d4208eadcdfdc47899aeb2c8234173, type: 3}
+  - {fileID: 8300000, guid: da1dce2ee45f9e2458f6766c497d6f37, type: 3}
+  - {fileID: 8300000, guid: 96cbfaf6aa98b1543a16245c3445837f, type: 3}
+  collisionSounds:
+  - {fileID: 8300000, guid: c415007ee88db45478bd4b38491d088c, type: 3}
+  - {fileID: 8300000, guid: c8f821fbdc94303458c3960913a5b2bf, type: 3}
+  - {fileID: 8300000, guid: d3d18bd5d186cda4680e2eda97615d9c, type: 3}
+  - {fileID: 8300000, guid: 1ff0fc296ab4dba4a9d75bf5c92e562d, type: 3}
+  - {fileID: 8300000, guid: d63e18f584a410c48a3d5bafd3d30bd8, type: 3}
+  - {fileID: 8300000, guid: 50d83e5e3f10ae24f80b0c69819c9d9d, type: 3}
+  mixerGroup: {fileID: -5897884911702833026, guid: f8e1d340f5a3ec4428a40a9e23df65f5,
+    type: 2}
   throwMultiplier: 0.1
   controller: {fileID: 0}
   order:
@@ -151,10 +164,9 @@ MonoBehaviour:
                       request:
                         orderType: 0
                         orderPosition: 0
-                        requestedItemID: 0
                         specialRequirement: 0
                         orderFulfilled: 0
-                        assignedBoxMaterial: {x: 0, y: 0}
+                        assignedBoxMaterial: 0
                       queuePosition: {x: 0, y: 0}
                       requestNotTaken: 0
                       timeStart: 0
@@ -164,10 +176,9 @@ MonoBehaviour:
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
                     orderPosition: 0
-                    requestedItemID: 0
                     specialRequirement: 0
                     orderFulfilled: 0
-                    assignedBoxMaterial: {x: 0, y: 0}
+                    assignedBoxMaterial: 0
                   queuePosition: {x: 0, y: 0}
                   requestNotTaken: 0
                   timeStart: 0
@@ -177,10 +188,9 @@ MonoBehaviour:
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
                 orderPosition: 0
-                requestedItemID: 0
                 specialRequirement: 0
                 orderFulfilled: 0
-                assignedBoxMaterial: {x: 0, y: 0}
+                assignedBoxMaterial: 0
               queuePosition: {x: 0, y: 0}
               requestNotTaken: 0
               timeStart: 0
@@ -190,10 +200,9 @@ MonoBehaviour:
             requestObjectCreated: {fileID: 0}
             orderType: 0
             orderPosition: 0
-            requestedItemID: 0
             specialRequirement: 0
             orderFulfilled: 0
-            assignedBoxMaterial: {x: 0, y: 0}
+            assignedBoxMaterial: 0
           queuePosition: {x: 0, y: 0}
           requestNotTaken: 0
           timeStart: 0
@@ -203,10 +212,9 @@ MonoBehaviour:
         requestObjectCreated: {fileID: 0}
         orderType: 0
         orderPosition: 0
-        requestedItemID: 0
         specialRequirement: 0
         orderFulfilled: 0
-        assignedBoxMaterial: {x: 0, y: 0}
+        assignedBoxMaterial: 0
       queuePosition: {x: 0, y: 0}
       requestNotTaken: 0
       timeStart: 0
@@ -216,9 +224,31 @@ MonoBehaviour:
     requestObjectCreated: {fileID: 0}
     orderType: 0
     orderPosition: 0
-    requestedItemID: 0
     specialRequirement: 0
     orderFulfilled: 0
-    assignedBoxMaterial: {x: 0, y: 0}
-  containedItem: {fileID: 0}
+    assignedBoxMaterial: 0
+  containedItem: {fileID: 6190435878620182654, guid: e5a2859fd9bc35e4689ed98dd65f4dc2,
+    type: 3}
   futureBoxPrefab: {fileID: 0}
+--- !u!64 &1692562532377430603
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63892876875158129}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2432090755550338912, guid: 92911598faf0cdc4ab138e6594307a0a, type: 3}

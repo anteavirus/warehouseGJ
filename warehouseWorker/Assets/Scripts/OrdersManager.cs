@@ -128,8 +128,6 @@ public class OrdersManager : MonoBehaviour
 
     [Header("Spawning")]
     public List<GameObject> boxPrefabs = new List<GameObject>();  //setup
-    public List<Material> materialPrefabs = new List<Material>(); //setup
-    public List<Material> readyToUseMaterialsForBoxes = new List<Material>(); //step1
     public List<GameObject> readyToUseBoxes = new List<GameObject>(); //step2
     public List<Sprite> readyToUseBoxSprites = new List<Sprite>(); //step3
     public Transform spawnPosition;
@@ -220,39 +218,6 @@ public class OrdersManager : MonoBehaviour
             {
                 GameObject boxInstance = Instantiate(boxPrefab);
                 boxInstance.name = $"{boxPrefab.name}_Original";
-                readyToUseBoxes.Add(boxInstance);
-                boxInstance.SetActive(false);
-            }
-        }
-
-        foreach (GameObject boxPrefab in boxPrefabs)
-        {
-            if (boxPrefab == null) continue;
-
-            Renderer renderer = boxPrefab.GetComponent<Renderer>();
-            if (renderer == null) continue;
-
-            Material originalMaterial = renderer.sharedMaterial;
-
-            foreach (Material materialPrefab in materialPrefabs)
-            {
-                if (materialPrefab == null) continue;
-
-                Material newMaterial = new Material(materialPrefab);
-                newMaterial.name = $"{boxPrefab.name}_{materialPrefab.name}";
-
-                CreateTextureVariation(newMaterial, originalMaterial);
-
-                readyToUseMaterialsForBoxes.Add(newMaterial);
-
-                GameObject boxInstance = Instantiate(boxPrefab);
-                boxInstance.name = $"{boxPrefab.name}_{materialPrefab.name}_Variation";
-
-                if (boxInstance.TryGetComponent<Renderer>(out var instanceRenderer))
-                {
-                    instanceRenderer.material = newMaterial;
-                }
-
                 readyToUseBoxes.Add(boxInstance);
                 boxInstance.SetActive(false);
             }
@@ -602,10 +567,8 @@ public class OrdersManager : MonoBehaviour
         if (readyToUseBoxes.Count < 1 || spawnPosition == null || gameManager.itemTemplates.Count == 0) return;
 
         GameObject assignedBox = UsefulStuffs.RandomNonNullFromList(readyToUseBoxes, out int assignedBoxIndex);
-        Material assignedMaterial = UsefulStuffs.RandomNonNullFromList(readyToUseMaterialsForBoxes, out int assignedMaterialIndex);
 
         var newBox = Instantiate(assignedBox, spawnPosition.position, Quaternion.identity);
-        newBox.GetComponent<Renderer>().material = assignedMaterial;
 
         int randomIndex = Random.Range(0, gameManager.itemTemplates.Count);
         GameObject newItem = Instantiate(gameManager.itemTemplates[randomIndex].gameObject);
@@ -615,7 +578,6 @@ public class OrdersManager : MonoBehaviour
         {
             boxComponent.containedItem = newItem;
             boxComponent.order = requestee.request;
-            boxComponent.order.assignedBoxMaterial = assignedMaterialIndex;
             boxComponent.order.requestObjectCreated = newBox;
         }
         
