@@ -103,6 +103,7 @@ public class FileDataManipulator
         // Settings are typically configuration data that should be human-readable
         return type.Name.ToLower().Contains("settings") ||
                type.Name.ToLower().Contains("config") ||
+               type.Name.ToLower().Contains("json") ||
                type == typeof(string);
     }
 

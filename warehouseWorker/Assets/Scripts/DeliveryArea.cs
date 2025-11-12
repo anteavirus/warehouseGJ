@@ -9,34 +9,57 @@ public class DeliveryArea : MonoBehaviour
     OrdersManager orderManager;
     Vector3 originalPosition;
     public GameObject[] selectionGameObjects;
-    int selection;
     bool doorClosed = true;
-    [SerializeField] DoorMover up, down;
-    [SerializeField] ArrowShift left, right;
+    [SerializeField] DoorMover up, down;    // TODO: kick our 3d modeler to model the building proper now, this is shit and I want to rework the fuck out of this.
+    public ArrowControllableInt arrowedInt = new();
+    public ArrowShift left, right;
     Item itemInsideMe;
     bool processingDelivery;
     bool doorsMoving;
     [SerializeField] GameObject door;
     [SerializeField] TextMeshProUGUI selectedRequestee;
 
+    private bool isInitialized = false;
+
     private void Start()
     {
-        orderManager = OrdersManager.Instance;
-        if (orderManager == null)
-        {
-            StartCoroutine(FindOrderManagerSomeDay());
-        }
+        arrowedInt.left = left; arrowedInt.right = right;   
+        StartCoroutine(Initialize());
+    }
 
+    IEnumerator Initialize()
+    {
+        // Wait for OrderManager to be available
+        yield return StartCoroutine(FindOrderManagerSomeDay());
+
+        // Now initialize everything that depends on orderManager
         selectionGameObjects = new GameObject[orderManager.queue.GetLength(0)];
         orderManager.deliveryArea = this;
 
         if (up != null) up.area = this;
         if (down != null) down.area = this;
-        if (left != null) left.area = this;
-        if (right != null) right.area = this;
+
+        // Initialize ArrowControlledInt
+        if (arrowedInt != null)
+        {
+            arrowedInt.size = orderManager.queue.GetLength(0);
+            arrowedInt.OnSelectionChanged += HandleShiftSelection;
+            arrowedInt.left.area = arrowedInt.right.area = arrowedInt;
+        }
 
         originalPosition = door.transform.position;
+
+        isInitialized = true;
         StartCoroutine(MonitorForDelivery());
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up event subscription
+        if (arrowedInt != null)
+        {
+            arrowedInt.OnSelectionChanged -= HandleShiftSelection;
+        }
     }
 
     IEnumerator FindOrderManagerSomeDay()
@@ -125,24 +148,30 @@ public class DeliveryArea : MonoBehaviour
         door.position = targetPosition;
     }
 
-    public void ShiftSelection(bool shiftLeft)
+    // This method handles the selection shift from ArrowControlledInt
+    private void HandleShiftSelection(bool shiftLeft)
     {
-        if (orderManager == null || orderManager.queue == null) return;
-        selectionGameObjects[selection]?.SetActive(false);
+        if (!isInitialized || orderManager == null || orderManager.queue == null) return;
 
-        int queueLength = orderManager.queue.GetLength(0);
-        selection = (selection + (shiftLeft ? -1 : 1) + queueLength) % queueLength;
+        // Deactivate current selection
+        if (arrowedInt.selection < selectionGameObjects.Length)
+            selectionGameObjects[arrowedInt.selection]?.SetActive(false);
 
-        selectionGameObjects[selection]?.SetActive(true);
+        // Selection is already updated in ArrowControlledInt, just update visuals
+        if (arrowedInt.selection < selectionGameObjects.Length)
+            selectionGameObjects[arrowedInt.selection]?.SetActive(true);
+
         if (selectedRequestee != null)
-            selectedRequestee.text = (selection + 1).ToString();
+            selectedRequestee.text = (arrowedInt.selection + 1).ToString();
     }
 
     public void AttemptProcessDelivery()
     {
+        if (!isInitialized) return;
+
         if (itemInsideMe != null && GameManager.Instance != null)
         {
-            if (GameManager.Instance.ProcessDelivery(selection, itemInsideMe, itemInsideMe.fromShelf))
+            if (GameManager.Instance.ProcessDelivery(arrowedInt.selection, itemInsideMe, itemInsideMe.fromShelf))
             {
                 Destroy(itemInsideMe.gameObject);
                 itemInsideMe = null;
@@ -168,13 +197,18 @@ public class DeliveryArea : MonoBehaviour
 
     internal void UpdateYoShit()
     {
-        foreach(var item in selectionGameObjects)
+        if (!isInitialized || selectionGameObjects == null) return;
+
+        foreach (var item in selectionGameObjects)
         {
             if (item == null) continue;
             item.SetActive(false);
         }
-        
-        // TODO: it always appears the last one weirdly enough. 
-        selectionGameObjects[selection]?.SetActive(true);  // lazy. balls
+
+        // Use arrowedInt.selection instead of local selection variable
+        if (arrowedInt != null && arrowedInt.selection < selectionGameObjects.Length)
+        {
+            selectionGameObjects[arrowedInt.selection]?.SetActive(true);
+        }
     }
 }

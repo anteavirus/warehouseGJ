@@ -235,17 +235,14 @@ public static class UsefulStuffs
     /// </summary>
     public static string SecondsToTimeString(long seconds)
     {
-        if (seconds < 0 || seconds >= 86400)
-        {
-            throw new ArgumentException("Seconds must be between 0 and 86399");
-        }
-
         long hours = seconds / 3600;
         long minutes = (seconds % 3600) / 60;
         long secs = seconds % 60;
 
         return $"{hours:D2}:{minutes:D2}:{secs:D2}";
     }
+
+    public static string SecondsToTimeString(float seconds) => SecondsToTimeString((long)seconds);
 
     public static void PlaySound(this AudioSource audioSource, AudioClip[] soundList)
     {

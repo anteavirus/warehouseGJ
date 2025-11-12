@@ -9,7 +9,17 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [System.Serializable]
+    public class GameSave
+    {
+        public int score = 0;
+        public string gamemode = "none";
+    }
+
     public static GameManager Instance;
+
+    public FileDataManipulator gameSaveData;
+    public GameSave gameSave = new();
 
     // Game State
     public bool gameStarted;
@@ -84,10 +94,24 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        levelSeed = Random.Range(0, 1969);
+        levelSeed = UnityEngine.Random.Range(0, 1969);
         InitializeItemTemplates();
         InitializeAudio();
-        InitializeManagers();
+        InitializeManagers();        
+        
+        // timer is only initialized after other shit...
+        gameSaveData = FileDataManipulator.ForPersistentDataPath(gameSave, new string[] { "save.sav" });
+        if (gameSaveData.FileExists())
+        {
+        // load data from save too
+        // TODO: perhaps make it async? it can force the game to bend over in these moments...
+            var temp = gameSaveData.LoadData<GameSave>();
+            if (temp.gamemode == timer.gamemode)  // same gamemode, or rather timer lets be honest.
+            {
+                gameSave = temp;
+                score = gameSave.score;
+            }
+        }
     }
 
     void InitializeItemTemplates()
@@ -200,13 +224,16 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        failedEventCounter++;
-                        failureProbabilityMultiplier += FAILURE_MULTIPLIER_INCREMENT;
+                        if (Time.timeScale != 0)
+                        {
+                            failedEventCounter++;
+                            failureProbabilityMultiplier += FAILURE_MULTIPLIER_INCREMENT;
+                        }
                     }
                 }
 
                 currentEventTime = 0;
-                selectedRandomTimeEventDecrease = Random.Range(minRandomTimeEventDecrease, maxRandomTimeEventDecrease);
+                selectedRandomTimeEventDecrease = UnityEngine.Random.Range(minRandomTimeEventDecrease, maxRandomTimeEventDecrease);
             }
         }
     }
@@ -216,7 +243,7 @@ public class GameManager : MonoBehaviour
         if (failedEventCounter > 0)
         {
             float forcedEventChance = Mathf.Min(0.8f, failedEventCounter * 0.15f * failureProbabilityMultiplier);
-            return Random.value < forcedEventChance;
+            return UnityEngine.Random.value < forcedEventChance;
         }
         return false;
     }
@@ -266,6 +293,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        gameSave.score = score;  // TODO: save shit to save somewhere else probably
+        gameSaveData.SaveData(gameSave);
+
         gameStarted = true;
         if (ordersManager != null && items.Count > 0)
             ordersManager.GenerateNewOrderRequestee();
@@ -276,7 +306,7 @@ public class GameManager : MonoBehaviour
     {
         if (eventList.Count == 0) return false;
 
-        Debug.Log("Event should've started, but I can't fucking deal with this shit. Purge this code if you want to proceed.");
+        //Debug.Log("Event should've started, but I can't fucking deal with this shit. Purge this code if you want to proceed."); // actually fuck this no logging of this shit, just know TODO: highlight xd that this fucker is stopping all the events. dont push this shit into production you numbnuts
         return false;
 
         bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
@@ -291,7 +321,7 @@ public class GameManager : MonoBehaviour
             activeEvents.Clear();
         }
 
-        int randomIndex = Random.Range(0, eventList.Count);
+        int randomIndex = UnityEngine.Random.Range(0, eventList.Count);
         GameObject eventInstance = Instantiate(eventList[randomIndex]);
         Event newEvent = eventInstance.GetComponent<Event>();
         newEvent.StartEvent();
@@ -338,7 +368,8 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         if (!gameStarted) return;
-        
+
+        gameSaveData.DeleteFile();  // Oops, you died, autosave fucked over xd // TODO: is this fine? figure shit out.
         timer.StopTimer();
         
         foreach (var evt in activeEvents)
@@ -416,7 +447,7 @@ public class GameManager : MonoBehaviour
             "PotatoAim", "ProSK8R", "LootGnoblin", "CertifiedDerp", "ParticipationPrize"
         };
 
-        return tauntingNames[Random.Range(0, tauntingNames.Length)];
+        return tauntingNames[UnityEngine.Random.Range(0, tauntingNames.Length)];
     }
 
     LeaderboardWrapper LoadLeaderboard()
@@ -479,7 +510,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (validTemplates.Count == 0) return null;
-        return validTemplates[Random.Range(0, validTemplates.Count)];
+        return validTemplates[UnityEngine.Random.Range(0, validTemplates.Count)];
     }
 
     static void CreateDefaultLeaderboard(ref LeaderboardWrapper wrapper)

@@ -11,10 +11,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject menuVisuals;
     [SerializeField] private string visibleState = "Visible";
 
-    [Header("UI Controls")]
-    [SerializeField] private Button showUIButton;
-    [SerializeField] private Button hideUIButton;
-
     [Header("Game Settings")]
     public TMP_InputField usernameInput;
     public Toggle difficulty;
@@ -35,7 +31,6 @@ public class UIManager : MonoBehaviour
     void InitializeUI()
     {
         menuVisuals.SetActive(true);
-        menuAnimator.Play("ShowEverything", 0, 125f);
         menuAnimator.Update(0f);
         isMenuVisible = true;
     }
@@ -108,6 +103,11 @@ public class UIManager : MonoBehaviour
         SetMenuState(false);
         SaveGameSettings();
         FindFirstObjectByType<MainMenuZonerDoner>().BeginPlayerTransportationToGameplay();
+    }
+
+    public void NextShittilyCodedStepForGaming()
+    {
+        menuAnimator.SetInteger("gameMenuSelection", 1);  // This fucking sucks.  Hacks, hacks, hacks... it's as if I'm a hack!
     }
 
     public bool FuckingDie()

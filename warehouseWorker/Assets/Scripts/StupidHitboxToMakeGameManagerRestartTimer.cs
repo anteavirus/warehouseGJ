@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+// TODO: outdated, at some point discuss if this must stay. used to serve as hint as "correct performance, here is more time."
 public class StupidHitboxToMakeGameManagerRestartTimer : MonoBehaviour
 {
     public Light enlighten;
@@ -12,7 +13,8 @@ public class StupidHitboxToMakeGameManagerRestartTimer : MonoBehaviour
         var gm = FindObjectOfType<GameManager>();
         if (gm != null && gm.gameStarted && gm.setdownItem && other.GetComponent<PlayerController>() != null)
         {
-            gm.timer.ResetTimer();
+            if (gm.timer is EndlessGamemodeTimer)
+                gm.timer.ResetTimer();
             source.Play();
             StartCoroutine(nameof(blink));
         }

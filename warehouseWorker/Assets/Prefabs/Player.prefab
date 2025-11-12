@@ -538,6 +538,7 @@ MonoBehaviour:
   musicSource: {fileID: 8845611650389289601}
   alive: 1
   timeWatch: {fileID: 7187528568044205185}
+  timeWatchMoveToPosition: {x: 57, y: 146}
   heldItem: {fileID: 0}
   dragObject: {fileID: 0}
   previewObject: {fileID: 0}

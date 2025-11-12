@@ -1,21 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class GenericTimer : MonoBehaviour
 {
     protected GameManager gameManager;
     public bool enabledTimer;
+    public string gamemode;
 
     void Start()
     {
-        
+
     }
 
     public virtual void Initialize(GameManager gm)
     {
         gameManager = gm;
+        gamemode = "generic";
     }
 
     public virtual void UpdateTimer()

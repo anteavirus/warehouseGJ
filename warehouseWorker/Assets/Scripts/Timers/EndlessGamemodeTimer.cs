@@ -14,6 +14,7 @@ public class EndlessGamemodeTimer : GenericTimer
     {
         gameManager = gm;
         timeLeft = maxTimer;
+        gamemode = "endless";
     }
 
     public override void UpdateTimer()

@@ -1,6 +1,7 @@
 // ShiftsGamemodeTimer.cs
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class ShiftsGamemodeTimer : GenericTimer
 {
@@ -22,16 +23,19 @@ public class ShiftsGamemodeTimer : GenericTimer
     [SerializeField] private GameObject[] shiftChangeEffects;
     [SerializeField] private float timeJumpEffectDuration = 2f;
 
+    public TextMeshProUGUI timeOnAClock;
     private int currentShiftIndex = 0;
     private float shiftTimeElapsed = 0f;
     private Coroutine timeJumpCoroutine;
 
     public override void Initialize(GameManager gm)
     {
+        gamemode = "shifts";
         gameManager = gm;
         if (shifts.Length > 0)
         {
             currentTimeOfDay = shifts[0].startTime;
+            UpdateTimerUI();
         }
     }
 
@@ -66,20 +70,21 @@ public class ShiftsGamemodeTimer : GenericTimer
         timeJumpCoroutine = StartCoroutine(ShiftTransition());
     }
 
+    // TODO: this isn't actually being triggered, figure out why.
     private IEnumerator ShiftTransition()
     {
-        // Show shift change effect
-        if (shiftChangeEffects.Length > 0)
-        {
-            foreach (var effect in shiftChangeEffects)
-            {
-                if (effect != null)
-                    effect.SetActive(true);
-            }
-        }
+        //// Show shift change effect
+        //if (shiftChangeEffects.Length > 0)
+        //{
+        //    foreach (var effect in shiftChangeEffects)
+        //    {
+        //        if (effect != null)
+        //            effect.SetActive(true);
+        //    }
+        //}
 
-        // Wait for effect to play
-        yield return new WaitForSeconds(timeJumpEffectDuration);
+        //// Wait for effect to play
+        //yield return new WaitForSeconds(timeJumpEffectDuration);
 
         // Move to next shift
         currentShiftIndex = (currentShiftIndex + 1) % shifts.Length;
@@ -103,12 +108,16 @@ public class ShiftsGamemodeTimer : GenericTimer
         OnShiftChanged(nextShift);
 
         timeJumpCoroutine = null;
+        yield break;
     }
 
+    // TODO: incinerate all requestees, request workers to move to specific room, and uh pass time i guess idk fuck
     private void OnShiftChanged(Shift newShift)
     {
         // Notify other systems about shift change
         Debug.Log($"Shift changed to: {newShift.shiftName}");
+        gameManager.gameStarted = false;
+        // Uh .  Play sfx
 
         // You could trigger events here like:
         // - Different customer types
@@ -119,25 +128,18 @@ public class ShiftsGamemodeTimer : GenericTimer
 
     private void UpdateTimerUI()
     {
-        if (gameManager.timerUI != null)
+        if (timeOnAClock != null)
         {
             Shift currentShift = shifts[currentShiftIndex];
             float shiftProgress = (currentTimeOfDay - currentShift.startTime) /
                                  (currentShift.endTime - currentShift.startTime);
 
-            gameManager.timerUI.fillAmount = 1f - shiftProgress; // Countdown style
-
             // Update timer text to show current time
-            string timeString = FormatTime(currentTimeOfDay);
-            // You'd need to access a TextMeshPro component for this
+            string timeString = UsefulStuffs.SecondsToTimeString(currentTimeOfDay); 
+            string[] parts = timeString.Split(':');
+            string result = parts.Length >= 2 ? $"{parts[0]}:{parts[1]}" : timeString;  // cutting out the seconds... and maybe more.
+            timeOnAClock.text = result;
         }
-    }
-
-    private string FormatTime(float secondsFromMidnight)
-    {
-        int hours = Mathf.FloorToInt(secondsFromMidnight / 3600) % 24;
-        int minutes = Mathf.FloorToInt((secondsFromMidnight % 3600) / 60);
-        return $"{hours:00}:{minutes:00}";
     }
 
     public override void ResetTimer()

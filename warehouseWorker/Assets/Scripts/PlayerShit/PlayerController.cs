@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static SettingsManager;
@@ -95,6 +96,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Image timeWatch;
     private bool checkingTime;
     private Vector2 timeWatchStartPosition;
+    [SerializeField] private Vector2 timeWatchMoveToPosition;
 
     private Rigidbody rb;
     private float xRotation;
@@ -219,12 +221,13 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator MoveImage()
     {
-        float targetX = timeWatchStartPosition.x + (checkingTime ? -300 : 300);
-        Vector3 start = timeWatch.transform.position;
+        Vector2 targetPos = checkingTime ? timeWatchMoveToPosition : timeWatchStartPosition;
+        RectTransform rectTransform = timeWatch.GetComponent<RectTransform>();
+        Vector2 startPos = rectTransform.anchoredPosition;
 
         for (float t = 0; t < 1; t += Time.deltaTime / 0.3f)
         {
-            timeWatch.transform.position = Vector3.Lerp(start, new Vector3(targetX, start.y, start.z), t);
+            rectTransform.anchoredPosition = Vector2.Lerp(startPos, targetPos, Mathf.SmoothStep(0, 1, t));
             yield return null;
         }
     }
@@ -425,8 +428,6 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
                 out RaycastHit hit, pickupRange, interactableLayer))
             {
-                /// TODO
-                /// // wait why the fuck is the RIGHT ARROW triggerring this????? fucking .  done for the night. this is acceptable mess. it was looking beautiful and then "oh please make it be like [this] because it's more fun. yeah thanks. i think i'd rather now go back via git to an older build, this shit is even less fun.
                 hit.transform.GetComponent<Item>().OnUse(gameObject);
                 return;
             }

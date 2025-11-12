@@ -136,10 +136,36 @@ public class MainMenuZonerDoner : MonoBehaviour
         SceneManager.LoadScene(name);
     }
 
+    // TODO: when actually making multiplayer, we'll need to make ANOTHER screen for either CONNECTING to the lobby, or CREATING such lobby. at least make a stupid ass p2p connection; in theory we wish to make a source-like connection possible where the game also has a list of ips it can try to show the player if it's available including player own's, but so far? i have no hope 
     public void BeginPlayerTransportationToGameplay()
     {
         playerController.MoveToPosition(playerSpecialPosition, () => {
-            SceneManager.LoadScene("GameplayScene");
+            string coderIsFucker;
+            switch (PlayerPrefs.GetInt("gamemodeSelected", 0))
+            {
+                case 0:
+                    {
+                        coderIsFucker = "GameplayScene";
+                    }
+                    break;
+                case 1:
+                    {
+                        coderIsFucker = "GameplayShiftsScene";
+                    }
+                    break;
+                case 2:
+                    {
+                        coderIsFucker = "afuckingscenethatdoesn'texistbecausewedon'thavesuchafuckingstupidgamemodetosufferthroughyet";
+                    }
+                    break;
+                default:
+                    {
+                        Debug.LogError("Transportation impossible: Govno za komputerom");
+                        return;
+                    }
+
+            }
+            SceneManager.LoadScene(coderIsFucker);
         });
     }
 }

@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArrowShift : Item
+public class ArrowSet : Item
 {
     public ArrowControllableInt area = new(); // hack, no reason to use monobehavior on this other than to assign values beforehand
-    public bool iShiftLeft;
+    public int selection;
     private void Start()
     {
         isPickupable = false;
@@ -16,6 +16,6 @@ public class ArrowShift : Item
     }
     public override void OnUse(GameObject user)
     {
-        area.ShiftSelection(!iShiftLeft);  // im bad at variable names and this works so far
+        area.SetSelection(selection);
     }
 }

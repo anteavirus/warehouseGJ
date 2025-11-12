@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.Audio;
 using System;
 using System.Linq;
+using UnityEngine.Rendering;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class SettingsManager : MonoBehaviour
     {
         public string actionName;
         public KeyCode defaultKey;
-        [HideInInspector] public KeyCode currentKey;
+        public KeyCode currentKey;
     }
 
     [System.Serializable]
@@ -79,10 +80,6 @@ public class SettingsManager : MonoBehaviour
     private bool isRebinding;
     private KeyBind currentRebind;
 
-    // Lighting constants
-    private const string ENVIRONMENT_LIGHT_KEY = "EnvironmentLightColor";
-    private const string BRIGHTNESS_KEY = "EnvironmentLightBrightness";
-
     bool started = false;
 
     public void InitializeThyself()
@@ -94,6 +91,7 @@ public class SettingsManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
         ForceStart();
     }
@@ -107,9 +105,13 @@ public class SettingsManager : MonoBehaviour
 
     public void ForceStart()
     {
+        if (Instance == null) return;  
+        // theoretically, shouldn't be called, as we instantly run awake -> either instance is this OR it destroys itself, which means there is an instance.
+        // in practice, memleak, prolly.
         if (Instance.started) return;
         started = true;
         settingsFileManip = FileDataManipulator.ForPersistentDataPath(settings, new string[1] { "settings.json" });
+        settings = settingsFileManip.LoadData<Settings>();
 
         InitializeMouseSettings();
         InitializeResolutions();
@@ -136,7 +138,7 @@ public class SettingsManager : MonoBehaviour
 
     private void InitializeMouseSettings()
     {
-        float sensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
+        float sensitivity = settings.mouseSensitivity;
         mouseSensitivitySlider.value = sensitivity;
         SetMouseSensitivity(sensitivity);
     }
@@ -148,11 +150,12 @@ public class SettingsManager : MonoBehaviour
         {
             brightnessSlider.onValueChanged.AddListener(OnBrightnessChanged);
 
-            float savedBrightness = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, 1f);
+            float savedBrightness = settings.brightness;
             brightnessSlider.value = savedBrightness;
         }
 
-        currentEnvironmentLight = LoadColor(ENVIRONMENT_LIGHT_KEY, defaultEnvironmentLight);
+        currentEnvironmentLight = UsefulStuffs.ColorFromHex(string.IsNullOrEmpty(settings.environmentLightColor) ? UsefulStuffs.ColorToHex(defaultEnvironmentLight) : settings.environmentLightColor);
+        // bloatcode...
 
         float currentBrightness = brightnessSlider != null ? brightnessSlider.value : 1f;
         ApplyEnvironmentLight(currentEnvironmentLight, currentBrightness);
@@ -184,13 +187,13 @@ public class SettingsManager : MonoBehaviour
 
     void InitializeVolume()
     {
-        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        masterSlider.value = settings.masterVolume;
         SetVolume(masterSlider, "Master");
 
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        sfxSlider.value = settings.sfxVolume;
         SetVolume(sfxSlider, "SFX");
 
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        musicSlider.value = settings.musicVolume;
         SetVolume(musicSlider, "Music");
     }
 
@@ -364,24 +367,20 @@ public class SettingsManager : MonoBehaviour
         {
             case "Master":
                 audioMixer.SetFloat("Master", dB);
-                settings.masterVolume = dB;
-                PlayerPrefs.SetFloat("MasterVolume", volume);
+                settings.masterVolume = volume;
                 break;
             case "SFX":
                 audioMixer.SetFloat("SFX", dB);
-                settings.sfxVolume = dB;
-                PlayerPrefs.SetFloat("SFXVolume", volume);
+                settings.sfxVolume = volume;
                 break;
             case "Music":
                 audioMixer.SetFloat("MUS", dB);
-                settings.musicVolume = dB;
-                PlayerPrefs.SetFloat("MusicVolume", volume);
+                settings.musicVolume = volume;
                 break;
             default:
                 Debug.LogWarning("Invalid audio category: " + category);
                 break;
         }
-        PlayerPrefs.Save();
     }
 
     public void SetMasterVolume(Slider who)
@@ -409,9 +408,7 @@ public class SettingsManager : MonoBehaviour
     public void OnBrightnessChanged(float brightnessValue)
     {
         // Save brightness setting
-        PlayerPrefs.SetFloat(BRIGHTNESS_KEY, brightnessValue);
         settings.brightness = brightnessValue;
-        PlayerPrefs.Save();
 
         // Apply brightness to current color
         ApplyEnvironmentLight(currentEnvironmentLight, brightnessValue);
@@ -421,11 +418,8 @@ public class SettingsManager : MonoBehaviour
     {
         currentEnvironmentLight = newColor;
 
-        // Save color to PlayerPrefs (convert to hex first)
         string hex = UsefulStuffs.ColorToHex(newColor);
         settings.environmentLightColor = hex;
-        PlayerPrefs.SetString(ENVIRONMENT_LIGHT_KEY, hex);
-        PlayerPrefs.Save();
 
         // Apply with current brightness
         float currentBrightness = brightnessSlider != null ? brightnessSlider.value : 1f;
@@ -485,15 +479,6 @@ public class SettingsManager : MonoBehaviour
         RenderSettings.ambientSkyColor = finalColor;
     }
 
-    private Color LoadColor(string key, Color defaultColor)
-    {
-        if (PlayerPrefs.HasKey(key))
-        {
-            string hex = PlayerPrefs.GetString(key);
-            return UsefulStuffs.ColorFromHex(hex);
-        }
-        return defaultColor;
-    }
     #endregion
 
     #region Key Rebinding
@@ -545,69 +530,65 @@ public class SettingsManager : MonoBehaviour
 
     void SaveKeyBinds()
     {
-        foreach (KeyBind bind in keyBinds)
-        {
-            settings.keyBindings.Add(bind);
-            PlayerPrefs.SetInt(bind.actionName, (int)bind.currentKey);
-        }
+        settings.keyBindings.Clear();
+        settings.keyBindings.AddRange(keyBinds);
     }
 
     void LoadKeyBinds()
     {
         foreach (KeyBind bind in keyBinds)
         {
-            // TODO!!!: load save, make this method accept data and use it to .  uh load the actual keybind set. I think that's what I went with here. 
-            // I wish i wasn't this fucking stupid but oh well
-            settings.keyBindings.Add(bind);  // uh it is supposed to load this right
-            bind.currentKey = (KeyCode)PlayerPrefs.GetInt(bind.actionName, (int)bind.defaultKey);
+            var currentKeyBindInSettings = settings.keyBindings.Find(i => i.actionName == bind.actionName);
+            if (currentKeyBindInSettings != null)
+                bind.currentKey = currentKeyBindInSettings.currentKey == KeyCode.None ? bind.defaultKey : currentKeyBindInSettings.currentKey;
+            else
+                bind.currentKey = bind.defaultKey;
         }
     }
     #endregion
 
     #region Save/Load
-    public void SaveSettings()
+    public void SaveSettings()  // this is WRITING DATA on DISK! as in: do this last!
     {
-        PlayerPrefs.Save();
         settingsFileManip.SaveData(settings);
     }
 
     public void LoadSettings()
     {
         LoadKeyBinds();
-        masterSlider.value = PlayerPrefs.GetFloat("MasterVolume", .5f);
-        SetVolume(masterSlider.value, "Master");
 
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", .5f);
-        SetVolume(sfxSlider.value, "SFX");
-
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", .5f);
-        SetVolume(musicSlider.value, "Music");
-
-        mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 100f);
+        mouseSensitivitySlider.value = settings.mouseSensitivity;
         SetMouseSensitivity(mouseSensitivitySlider.value);
 
-        float brightness = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, 1f);
+        float brightness = settings.brightness;
         if (brightnessSlider != null)
         {
             brightnessSlider.value = brightness;
         }
-        currentEnvironmentLight = LoadColor(ENVIRONMENT_LIGHT_KEY, defaultEnvironmentLight);
-        ApplyEnvironmentLight(currentEnvironmentLight, brightness);
+        
+        currentEnvironmentLight = UsefulStuffs.ColorFromHex(string.IsNullOrEmpty(settings.environmentLightColor) ? UsefulStuffs.ColorToHex(defaultEnvironmentLight) : settings.environmentLightColor);
+        // bloatcode! I'll just make the computer the extra work for now, rather than making me do it myself. 
 
-        PlayerPrefs.Save();
+        ApplyEnvironmentLight(currentEnvironmentLight, brightness);
     }
 
     public void ResetToDefault()
     {
+        settings = new Settings();
         foreach (KeyBind bind in keyBinds)
         {
             bind.currentKey = bind.defaultKey;
+            settings.keyBindings.Add(bind);
         }
 
+        masterSlider.value = 1f;
+        sfxSlider.value = 1f;
+        musicSlider.value = 1f;
+
         AudioListener.volume = 1f;
-        SetVolume(.5f, "Master");
-        SetVolume(.5f, "SFX");
-        SetVolume(.5f, "Music");
+        SetVolume(1f, "Master");
+        SetVolume(1f, "SFX");
+        SetVolume(1f, "Music");
 
         mouseSensitivitySlider.value = 100f;
         SetMouseSensitivity(100f);
@@ -615,12 +596,12 @@ public class SettingsManager : MonoBehaviour
         // Reset lighting settings
         ResetToDefaultLight();
 
-        QualitySettings.SetQualityLevel(2);
-        PlayerPrefs.DeleteAll();
+        QualitySettings.SetQualityLevel(2); 
+        // Do i want to make a graphics menu..? not really... but it is kinda necessary, no..? actually, downsizing the window is fine enough...
+
         CreateKeyBindUI();
 
-        settings = new Settings();
-        settingsFileManip.SaveData(settings);
+        SaveSettings();
     }
     #endregion
 
@@ -653,8 +634,6 @@ public class SettingsManager : MonoBehaviour
     public void SetMouseSensitivity(float sensitivity)
     {
         settings.mouseSensitivity = sensitivity;
-        PlayerPrefs.SetFloat("MouseSensitivity", sensitivity);
-        PlayerPrefs.Save();
     }
     #endregion
 

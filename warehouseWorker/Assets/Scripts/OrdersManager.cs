@@ -41,6 +41,7 @@ public class OrdersManager : MonoBehaviour
         public float impatienceModifier;
         public float lastQueueJumpTime;
         public float timeSinceLastJump => Time.time - lastQueueJumpTime;
+        public bool alive;  // TODO: fill the slots with impossible amounts of time to run out, impatienceModifier hardset to 0 (not during class creation), fill out queues not in use with not alive requestees. [not in use queues => queues.amount - players.ingame (if someone joins, clear out. leaves, fill up, get rid of other requestees in queue, leave the requestee at the table.)]
 
         public OrderRequestee(Order request, float timeStart, float impatienceModif)
         {
@@ -54,6 +55,7 @@ public class OrdersManager : MonoBehaviour
 
         public void Update()
         {
+            if (!alive) return;
             timeRemaining -= Time.deltaTime * impatienceModifier;
 
             if (timeRemaining < 0)
@@ -62,6 +64,7 @@ public class OrdersManager : MonoBehaviour
                 {
                     Instance.FailOrder(request);
                 }
+                GameManager.Instance.IncreaseChanceOfEvent();
                 Instance.AnnihilateRequestee(queuePosition);
                 return;
             }
@@ -221,15 +224,6 @@ public class OrdersManager : MonoBehaviour
                 readyToUseBoxes.Add(boxInstance);
                 boxInstance.SetActive(false);
             }
-        }
-    }
-
-    private void CreateTextureVariation(Material material, Material originalMaterial, int textureSlot = 1)
-    {
-        string textureProperty = $"_Tex{textureSlot}";
-        if (material.HasProperty(textureProperty))
-        {
-            material.SetTexture(textureProperty, originalMaterial.mainTexture);
         }
     }
 
@@ -421,13 +415,19 @@ public class OrdersManager : MonoBehaviour
                 else
                 {
                     GameObject gameObject1 = UsefulStuffs.RandomNonNullFromList(createdOrderObjects, out var index);
-                    if (index > -1 && gameObject1.TryGetComponent<Box>(out var box))
+                    requestee.request.requestObjectCreated = gameObject1;
+                    if (index > -1 && gameObject1.TryGetComponent<Box>(out var box))  
+                        // todo: this can become null. i'm assuming this is because we destroy the object, and then there's a new requestee created, and they pull the same thing. ugh... i need to make a tiny bool to check if the item is already being requested.
                         requestee.request.assignedBoxMaterial = box.order.assignedBoxMaterial;
                 }
             }
         }
     }
 
+
+    // FUCK, I'm getting confused. I made the Delivery Area destroy the gameObjects, but THIS destroys the object from the list of pullable objects??
+    // Why am I so scatterbrained... This fucking sucks, needs rework, and probably have more thought put into
+    // tl;dr Shit must stay until customers receive their fucking shit, and if they don't they whine and bitch to the eldrich gods to fuck over the players
     public void CompleteOrder(Order order)
     {
         if (activeOrders.Contains(order))
@@ -435,7 +435,7 @@ public class OrdersManager : MonoBehaviour
             activeOrders[order.orderPosition] = null;
             gameManager.AddScore(orderCompleteScore, resetTimer: true, immediateReset: true);
             source.PlaySound(orderCompleteSound);
-            deliveryArea.selectionGameObjects[order.orderPosition] = null ;
+            deliveryArea.selectionGameObjects[order.orderPosition] = null;
 
             if (order.requestObjectCreated != null && order.orderType == OrderType.Receive)
             {
@@ -453,11 +453,6 @@ public class OrdersManager : MonoBehaviour
             source.PlaySound(orderFailSound);
             deliveryArea.selectionGameObjects[order.orderPosition] = null;
 
-            if (order.requestObjectCreated != null && order.orderType == OrderType.Receive)
-            {
-                createdOrderObjects.Remove(order.requestObjectCreated);
-                Destroy(order.requestObjectCreated);
-            }
             gameManager.IncreaseChanceOfEvent();
         }
     }
@@ -550,13 +545,6 @@ public class OrdersManager : MonoBehaviour
                 CompleteOrder(order);
                 return true;
             }
-            else
-            {
-                gameManager.AddScore(-deliveredItem.scoreValue, resetTimer: false);
-                source.PlaySound(orderFailSound);
-                gameManager.IncreaseChanceOfEvent();
-                return true;
-            }
         }
 
         return false;
@@ -579,6 +567,7 @@ public class OrdersManager : MonoBehaviour
             boxComponent.containedItem = newItem;
             boxComponent.order = requestee.request;
             boxComponent.order.requestObjectCreated = newBox;
+            boxComponent.order.assignedBoxMaterial = assignedBoxIndex;
         }
         
 
