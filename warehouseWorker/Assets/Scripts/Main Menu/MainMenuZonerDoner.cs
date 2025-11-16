@@ -137,10 +137,12 @@ public class MainMenuZonerDoner : MonoBehaviour
     }
 
     // TODO: when actually making multiplayer, we'll need to make ANOTHER screen for either CONNECTING to the lobby, or CREATING such lobby. at least make a stupid ass p2p connection; in theory we wish to make a source-like connection possible where the game also has a list of ips it can try to show the player if it's available including player own's, but so far? i have no hope 
+    // TODO: another todo, great; honestly, there SHOULDNT EVER BE MULTIPLE SCENES that are BASICALLY EXACTLY THE SAME. Surely we can just use a single scene, and then - on the fly - throw in the appropriate scripts. Like, case 0: Okay, load the scene async (SET TIME DILATION TO 0 or whatever the name is, can't have shit happen!), and on finishing, add appropriate classes. Like, "GenericTimer" if it's something. that's. uh. something. piss on player
     public void BeginPlayerTransportationToGameplay()
     {
         playerController.MoveToPosition(playerSpecialPosition, () => {
             string coderIsFucker;
+            // Not good, not great, not horrible; let's hope this hack won't get pushed to production
             switch (PlayerPrefs.GetInt("gamemodeSelected", 0))
             {
                 case 0:

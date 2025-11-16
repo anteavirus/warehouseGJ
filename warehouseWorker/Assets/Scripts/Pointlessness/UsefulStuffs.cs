@@ -286,6 +286,24 @@ public static class UsefulStuffs
         }
     }
 
+    public static int NonNullItems<T>(T[] tArray)
+    {
+        if (tArray == null)
+        {
+            return 0;
+        }
+
+        int count = 0;
+        foreach (T item in tArray)
+        {
+            if (item != null)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static List<T> ShuffleList<T>(List<T> list)
     {
         List<T> shuffled = new List<T>(list);

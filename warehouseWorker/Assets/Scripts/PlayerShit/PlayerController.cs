@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(FindBindsNamesLater());
     }
 
-
+    // TODO: figure what the fuck this actually does, and what's this important for.
     IEnumerator FindBindsNamesLater()
     {
         yield return new WaitForSecondsRealtime(1f);

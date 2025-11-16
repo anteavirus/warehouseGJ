@@ -36,6 +36,8 @@ public class PlayerGrabbyScript : MonoBehaviour
         }
     }
 
+    //TODO: start ignoring the storageareas, they're only there to count the boxes stored now
+
     private object GetFocusedTarget()
     {
         // Raycast takes priority

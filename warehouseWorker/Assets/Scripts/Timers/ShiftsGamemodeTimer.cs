@@ -25,7 +25,7 @@ public class ShiftsGamemodeTimer : GenericTimer
 
     public TextMeshProUGUI timeOnAClock;
     private int currentShiftIndex = 0;
-    private float shiftTimeElapsed = 0f;
+    private int shiftsElapsed;
     private Coroutine timeJumpCoroutine;
 
     public override void Initialize(GameManager gm)
@@ -50,7 +50,6 @@ public class ShiftsGamemodeTimer : GenericTimer
         // Calculate time progression based on shift time scale
         float deltaTime = Time.deltaTime * currentShift.timeScale;
         currentTimeOfDay += deltaTime;
-        shiftTimeElapsed += deltaTime;
 
         // Check if shift ended
         if (currentTimeOfDay >= currentShift.endTime)
@@ -70,7 +69,6 @@ public class ShiftsGamemodeTimer : GenericTimer
         timeJumpCoroutine = StartCoroutine(ShiftTransition());
     }
 
-    // TODO: this isn't actually being triggered, figure out why.
     private IEnumerator ShiftTransition()
     {
         //// Show shift change effect
@@ -92,7 +90,7 @@ public class ShiftsGamemodeTimer : GenericTimer
 
         // Jump time to start of next shift
         currentTimeOfDay = nextShift.startTime;
-        shiftTimeElapsed = 0f;
+        shiftsElapsed++;
 
         // Hide effects
         if (shiftChangeEffects.Length > 0)
