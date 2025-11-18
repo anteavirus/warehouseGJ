@@ -40,11 +40,12 @@ public class ShopManager : MonoBehaviour
     IEnumerator AtSomePointGenerateIcons()
     {
         yield return new WaitUntil(() => IconManager.Instance != null);
+        int w = 128, h = 128;
         for (int index = 0; index < shopElements.Length; index++)
         {
             PurchasableElement item = shopElements[index];
             if (item.sprite != null) continue;  // skip, we forced a sprite upon it, certainly must be with reason!  it's a horse.png isn't it
-            Sprite newSprite = Sprite.Create(IconManager.Instance.RenderCopyToTexture(item.prefab, 128, 128), new Rect(), UsefulStuffs.Vect2OneHalved);
+            Sprite newSprite = Sprite.Create(IconManager.Instance.RenderCopyToTexture(item.prefab, w, h), new Rect(0,0,w,h), UsefulStuffs.Vect2OneHalved);
             item.sprite = newSprite;
             generatedSprites.Add(newSprite);
         }

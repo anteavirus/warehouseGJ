@@ -11,14 +11,17 @@ public class Terminal : MonoBehaviour
     readonly ArrowControllableInt canvas_selector = new();
     public ArrowSet[] canvas_selection_buttons = new ArrowSet[8];  // lets hardcode 8 for now, should be golden. terminal won't have any more than that, right?
 
-    public List<Camera> cameras = new(10);  // i don't know why but i'd like for this to have a limit
+    public Camera[] cameras = new Camera[10];  // i don't know why but i'd like for this to have a limit
     
     [SerializeField] RenderTexture cameraVision;
     
     readonly ArrowControllableInt selection_cam = new();
+    public TextMeshProUGUI selectedCamera;
     ArrowShift left_cam;
     ArrowShift right_cam;
 
+    public GameObject currentlySelectedCameraImage;
+    public GameObject shitNotFoundImage;
 
     public GameObject shopProductPrefab;
     // TODO: set camera priority -100
@@ -28,8 +31,6 @@ public class Terminal : MonoBehaviour
     void Start()
     {
         canvas_selector.OnSelectionChanged += CanvasSetter;
-        selection_cam.OnSelectionChanged += CamShifter;
-
         foreach (var canvas in terminalCanvasi)
         {
             if (canvas == null) continue;
@@ -43,9 +44,11 @@ public class Terminal : MonoBehaviour
             button.area = canvas_selector;
         }
 
+        selection_cam.OnSelectionChanged += CamShifter;
+        left_cam = terminalCanvasi[1].transform.GetChild(2).GetComponentInChildren<ArrowShift>();
+        right_cam = terminalCanvasi[1].transform.GetChild(3).GetComponentInChildren<ArrowShift>();
+        left_cam.area = right_cam.area = selection_cam;  // I should get better at writing code
         selection_cam.left = left_cam; selection_cam.right = right_cam;
-        left_cam = terminalCanvasi[1].transform.GetChild(1).GetComponent<ArrowShift>();
-        right_cam = terminalCanvasi[1].transform.GetChild(2).GetComponent<ArrowShift>();
 
         GetTheFuckingShopAtSomePoint ??= StartCoroutine(nameof(GetTheShittyShopAndFillYourShittyShop));
     }
@@ -85,7 +88,7 @@ public class Terminal : MonoBehaviour
     // TODO: successful / failed purchase, notification, perhaps even an actual explanation
     void ExtraSpecialFunctionTomfuckery(ShopManager.PurchasableElement item)
     {
-        if (GameManager.Instance.score - item.cost <= 0) return; // Can't have people going into debt
+        if (GameManager.Instance.score - item.cost < 0) return; // Can't have people going into debt
 
         var fuckingGameObject = Instantiate(item.prefab);
         fuckingGameObject.transform.SetPositionAndRotation(GameManager.Instance.blackHoleSpawnPosition.position, Quaternion.identity);
@@ -96,12 +99,24 @@ public class Terminal : MonoBehaviour
             {
                 case "camera":
                     {
-                        if (cameras.Count + 1 < cameras.Capacity)
+                        int nonNullCameras = 0;
+                        for (int i = 0; i < cameras.Length; i++)
+                        {
+                            if (cameras[i] != null) nonNullCameras++;
+                        }
+                        if (nonNullCameras + 1 < cameras.Length)
                         {
                             if (selection_cam.selection > 0 && selection_cam.selection < selection_cam.size && cameras[selection_cam.selection] != null)
                                 cameras[selection_cam.selection].targetTexture = null;  // unsetting it, for it is no longer the chosen one
                             var fuckingCameraCamera = fuckingGameObject.GetComponent<Camera>();
-                            cameras.Add(fuckingCameraCamera);
+                            for (int i = 0; i < cameras.Length; i++)
+                            {
+                                if (cameras[i] == null)
+                                {
+                                    cameras[i] = fuckingCameraCamera;  // we *did* catch the fact that we can't add it, right? hoping we did.
+                                    break;
+                                }
+                            }
                             fuckingCameraCamera.targetTexture = cameraVision;
                             fuckingCameraCamera.depth = -100; // LAST! Todo: figure out what to do when the player managed to turn themselves into Gaster. They can't just be a Cameraman from now on, can they..?
                         }
@@ -137,14 +152,35 @@ public class Terminal : MonoBehaviour
 
     void CamShifter(bool left)
     {
-        cameras[selection_cam.selection].targetTexture = null;  // unsetting it, for it is no longer the chosen one
-        selection_cam.ShiftSelection(left);
+        int previousSelection = selection_cam.selection;
+
+        var new_selection = (selection_cam.selection + (left ? -1 : 1)) % selection_cam.size;
+        if (new_selection < 0)
+            new_selection += selection_cam.size;
+
+        if (previousSelection >= 0 && previousSelection < cameras.Length && cameras[previousSelection] != null)
+        {
+            cameras[previousSelection].targetTexture = null;
+        }
+
+
+        if (selection_cam.selection >= cameras.Length || cameras[selection_cam.selection] == null)
+        {
+            currentlySelectedCameraImage.SetActive(false);
+            shitNotFoundImage.SetActive(true);
+        }
+        else
+        {
+            cameras[selection_cam.selection].targetTexture = cameraVision;
+            currentlySelectedCameraImage.SetActive(true);
+            shitNotFoundImage.SetActive(false);
+        }
+
         UpdateUI();
     }
 
     void UpdateUI()
     {
-        cameras[selection_cam.selection].targetTexture = cameraVision;
-            
+        selectedCamera.text = $"Selected camera: [{selection_cam.selection}]";
     }
 }
