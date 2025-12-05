@@ -57,14 +57,6 @@ public class PlayerGrabbyScript : MonoBehaviour
             controller.playerCamera.transform.forward, out RaycastHit hit,
             controller.pickupRange, controller.interactableLayer))
         {
-            // Used to contain item condition; unnecessary, I assume, seein' above
-
-            if (hit.collider.TryGetComponent<StorageArea>(out var area))
-            {
-                if (area.isActiveAndEnabled)
-                    return area;
-            }
-
             var collidedGameObj = hit.collider.gameObject;
             if (collidedGameObj.layer == LayerMask.NameToLayer("Draggable"))
             {
@@ -200,11 +192,6 @@ public class PlayerGrabbyScript : MonoBehaviour
         {
             if (item.isActiveAndEnabled && item.isPickupable)
                 return item;
-        }
-        if (collider.TryGetComponent<StorageArea>(out var area))
-        {
-            if (area.isActiveAndEnabled)
-                return area;
         }
 
         var collidedGameObj = collider.gameObject;

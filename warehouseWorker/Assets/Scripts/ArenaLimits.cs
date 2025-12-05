@@ -17,7 +17,7 @@ public class ArenaLimits : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Unmonitored object left the Arena Limits: {other.name}");
+            Debug.LogWarning($"Unmonitored object left the Arena Limits: {other.name}");
         }
     }
 }

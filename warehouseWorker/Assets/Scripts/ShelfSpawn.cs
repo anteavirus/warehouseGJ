@@ -6,14 +6,10 @@ public class ShelfSpawn : MonoBehaviour
     [Header("Spawn Restrictions")]
     [Tooltip("Leave empty to accept all shelf types")]
     public int[] acceptedShelfTypes;
+    readonly bool stopEatingMyFPSWhenLookedViewedGizmos = false;
+    ShelvesStockManager shelfManager;
 
-    // These fields track which item/shelf has been assigned to this spawn
-    [NonSerialized]
-    public int assignedItemID = 0; // 0 means no item
-    [NonSerialized]
     public StorageArea assignedShelfPrefab = null;
-    [NonSerialized]
-    public int assignedItemAmount = 0;
 
     public bool CanAcceptShelfType(int shelfTypeID)
     {
@@ -35,21 +31,18 @@ public class ShelfSpawn : MonoBehaviour
 
     public bool IsAssigned()
     {
-        return assignedShelfPrefab != null && assignedItemID != 0;
+        return assignedShelfPrefab != null;
     }
 
+    // todo: clear up methods and. just everything cuz. shit is kinda outdated
     public void AssignItemAndShelf(int ID, StorageArea chosenShelf, int amount = 0)
     {
-        assignedItemID = ID;
         assignedShelfPrefab = chosenShelf;
-        assignedItemAmount = amount;
     }
 
     public void ResetAssignment()
     {
-        assignedItemID = 0;
         assignedShelfPrefab = null;
-        assignedItemAmount = 0;
     }
 
     private void OnDrawGizmos()
@@ -77,5 +70,46 @@ public class ShelfSpawn : MonoBehaviour
 
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(origin, origin + zDirection * axisLength);
+
+#if UNITY_EDITOR
+        if (stopEatingMyFPSWhenLookedViewedGizmos) return;
+        // TODO: this might be laggy. piss on thisa
+
+        assignedShelfPrefab = null;
+        if (shelfManager == null)
+            shelfManager = FindObjectOfType<ShelvesStockManager>();
+        var shelfPrefabs = shelfManager.shelfPrefabs;
+
+        if (shelfPrefabs?.Count <= 0)
+            shelfManager.UpdateShelfStoragesFromPrefabs();
+
+        if (shelfPrefabs?.Count > 0)
+        {
+            foreach (var item in shelfPrefabs)
+            {
+                var a = UsefulStuffs.FindComponentInChildren<StorageArea>(item);
+                if (a != null)
+                {
+                    foreach (var b in acceptedShelfTypes)
+                    {
+                        if (a.allowedItemIDs.Contains(b))
+                        {
+                            assignedShelfPrefab = a;
+                        }
+                    if (assignedShelfPrefab != null) break;
+                    }
+                }
+            }
+        }
+
+        if (assignedShelfPrefab != null)
+        {
+            Gizmos.color = new Color(1,1,1,0.05f);
+            var meshShit = assignedShelfPrefab.transform.parent.GetComponent<MeshFilter>();
+            Gizmos.DrawWireMesh(meshShit.sharedMesh, 0, transform.position, transform.rotation, UsefulStuffs.Multiply(Vector3.one,meshShit.transform.localScale));
+        }
+#else
+        var definitelyNotDataMinedString = "Hi! If this were to be a development build, you'd see a lot more of disgusting shit where I hackily render every single shelf mesh on screen. Every single frame. Created and destroyed. Just to show that. Pretty cool, right? Anyway I'm sure you don't wanna see *that*, right? >:3 oh btw yeah that's what that bool is for (i.e. 'fuck off i dont wanna see ts')";
+#endif
     }
 }

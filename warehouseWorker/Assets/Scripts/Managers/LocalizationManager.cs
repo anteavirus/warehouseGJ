@@ -6,9 +6,8 @@ using System.IO;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LocalizationManager : MonoBehaviour
+public class LocalizationManager : GenericManager<LocalizationManager>
 {
-    public static LocalizationManager Instance;
     public GameObject languageSelectionButtonPrefab;
     public GameObject languageSelectionContent;
 
@@ -26,23 +25,9 @@ public class LocalizationManager : MonoBehaviour
 
     public event Action OnLanguageChanged;
 
-    void Awake()
+    public override void Initialize()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            Initialize();
-        }
-        else
-        {
-            Destroy(gameObject);
-            Instance.Initialize();
-        }
-    }
-
-    public void Initialize()
-    {
+        base.Initialize();
         currentLanguage = PlayerPrefs.GetString("SelectedLanguage", defaultLanguage);   // TODO: HOW MANY TIMES DO I HAVE TO TEACH ME THIS LESSON?
         LoadLanguages();
     }
@@ -110,7 +95,7 @@ public class LocalizationManager : MonoBehaviour
         }
     }
 
-    public void LoadScene(string name, object labubu)
+    public void LoadScene(string name, object labubu)   // I don't remember what the fuck is this fucking fukc hack was but this looks so fucking stupid
     {
         if (labubu == null)
         {
@@ -167,6 +152,7 @@ public class LocalizationManager : MonoBehaviour
                     {
                         languages.Remove(existingLang);
                         Debug.Log($"Overriding hardcoded language {languageData.languageCode} with custom version");
+                        languageData.languageName += " [CUSTOM]";
                     }
 
                     languages.Add(languageData);

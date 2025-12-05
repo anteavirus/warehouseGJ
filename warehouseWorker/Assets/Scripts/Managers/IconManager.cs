@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IconManager : MonoBehaviour
+public class IconManager : GenericManager<IconManager>
 {
-    public static IconManager Instance;
     public static string IconNamePrefix(string text) => $"[{text}]";
     public List<Item> itemTemplates = new();
 
@@ -15,18 +14,9 @@ public class IconManager : MonoBehaviour
     public List<Sprite> previewSprites;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Initialize()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
+        base.Initialize();
         DontDestroyOnLoad(gameObject);
         GeneratePreviews();
     }
@@ -109,6 +99,9 @@ public class IconManager : MonoBehaviour
 
         RenderTexture.active = null;
 
+        // I've stepped on this spot twice, THIS IS MANDATORY.
+        // We destroy this IMMEDIATELY so that we DONT WAIT just to let Unity ~safely~ destroy a GameObject.
+        // This way it does the do, we clean this up ourselves and it's all gucci. 
         DestroyImmediate(rt);
         DestroyImmediate(cam.gameObject);
         DestroyImmediate(lightObj);

@@ -36,7 +36,7 @@ public class Shredder : MonoBehaviour
             if (other.TryGetComponent<Box>(out var box))
             {
                 if (GameManager.Instance != null)
-                    GameManager.Instance.AddScore(box.scoreValue, false);
+                    ((GameManager)GameManager.Instance).AddScore(box.scoreValue, false);
             }
             if (other.TryGetComponent<C4Item>(out var bomb))
             {

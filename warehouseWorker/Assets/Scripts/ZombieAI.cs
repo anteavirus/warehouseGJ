@@ -56,7 +56,7 @@ public class ZombieAI : MonoBehaviour
         player = FindObjectOfType<PlayerController>().transform;    // TODO: mustn't know player from start. we are going to make this multiplayer at some point, so...
         footstepSource = gameObject.AddComponent<AudioSource>();
         footstepSource.spatialBlend = 1f;
-        footstepSource.outputAudioMixerGroup = GameManager.Instance.sfx;
+        footstepSource.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx;
 
         SetRandomDirection();
         directionTimer = directionChangeCooldown;
@@ -358,7 +358,7 @@ public class ZombieAI : MonoBehaviour
 
         GameObject boom = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         AudioSource audioSource = boom.AddComponent<AudioSource>();
-        audioSource.outputAudioMixerGroup = GameManager.Instance.sfx;
+        audioSource.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx;
         audioSource.PlayOneShot(boomClip);
         Destroy(boom, 2f);
         Destroy(gameObject);

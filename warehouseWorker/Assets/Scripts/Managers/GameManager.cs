@@ -7,7 +7,7 @@ using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameManager : GenericManager<GameManager>
 {
     [System.Serializable]
     public class GameSave
@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
         public int score = 0;
         public string gamemode = "none";
     }
-
-    public static GameManager Instance;
 
     public FileDataManipulator gameSaveData;
     public GameSave gameSave = new();
@@ -38,7 +36,6 @@ public class GameManager : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] TextMeshProUGUI scoreUI;
     [SerializeField] public Image timerUI;
-    [SerializeField] TextMeshProUGUI orderListUI;
     [SerializeField] Image difficultyImage;
 
     // Items & Templates
@@ -82,18 +79,10 @@ public class GameManager : MonoBehaviour
     [Header("Leaderboard")]
     public LeaderboardEntry leaderboardEntry;
 
-    void Awake()
+    public override void Initialize()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Debug.Log("Dupe game manager; killed.");
-            Destroy(gameObject);
-        }
-
+        base.Initialize();
+    
         levelSeed = UnityEngine.Random.Range(0, 1969);
         InitializeItemTemplates();
         InitializeAudio();
@@ -101,17 +90,25 @@ public class GameManager : MonoBehaviour
         
         // timer is only initialized after other shit...
         gameSaveData = FileDataManipulator.ForPersistentDataPath(gameSave, new string[] { "save.sav" });
-        if (gameSaveData.FileExists())
+        try
         {
-        // load data from save too
-        // TODO: perhaps make it async? it can force the game to bend over in these moments...
-            var temp = gameSaveData.LoadData<GameSave>();
-            if (temp.gamemode == timer.gamemode)  // same gamemode, or rather timer lets be honest.
+            if (gameSaveData.FileExists())
             {
-                gameSave = temp;
-                score = gameSave.score;
+            // load data from save too
+            // TODO: perhaps make it async? it can force the game to bend over in these moments...
+                var temp = gameSaveData.LoadData<GameSave>();
+                if (temp.gamemode == timer.gamemode)  // same gamemode, or rather timer lets be honest.
+                {
+                    gameSave = temp;
+                    score = gameSave.score;
+                }
             }
         }
+        catch
+        {
+            Debug.LogWarning("Loading savedata failed. I wish I cared enough to not shove it into a trycatch statement but I've got bigger fishes to fry");
+        }
+
     }
 
     void InitializeItemTemplates()
@@ -294,7 +291,15 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         gameSave.score = score;  // TODO: save shit to save somewhere else probably
-        gameSaveData.SaveData(gameSave);
+        try
+        {
+            gameSaveData.SaveData(gameSave);
+
+        }
+        catch
+        {
+            Debug.LogWarning("oh no. gameSaveData failed to save data game save. oh no. i am putting this into a trycatch statement. oh no im not giving a fuck............");
+        }
 
         gameStarted = true;
         if (ordersManager != null && items.Count > 0)
@@ -369,7 +374,15 @@ public class GameManager : MonoBehaviour
     {
         if (!gameStarted) return;
 
+        try
+        {
+            
         gameSaveData.DeleteFile();  // Oops, you died, autosave fucked over xd // TODO: is this fine? figure shit out.
+        }
+        catch
+        {
+            // Piss off negroid cunt
+        }
         timer.StopTimer();
         
         foreach (var evt in activeEvents)
@@ -425,6 +438,8 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(name);
     }
 
+
+    // TODO: fucking shove this somewhere else, some other seperate leaderboard class which'll at least visually debloat this slightly
     LeaderboardEntry CreateLeaderboardEntry()
     {
         string username = PlayerPrefs.GetString("CurrentUsername", "");

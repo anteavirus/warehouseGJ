@@ -24,7 +24,7 @@ public class WindyEvent : Event
         if (!TryGetComponent<AudioSource>(out var audioSource))
         {
             audioSource = slave.gameObject.AddComponent<AudioSource>();
-            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx;
+            audioSource.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx;
         }
         audioSource.clip = sfx;
         audioSource.loop = true;
@@ -61,7 +61,7 @@ public class WindyEvent : Event
         // If there's an Item component, check if it's in GameManager.itemTemplates
         if (itemComponent != null)
         {
-            return GameManager.Instance.itemTemplates.Any(i => i.ID == itemComponent.ID);
+            return ((GameManager)GameManager.Instance).itemTemplates.Any(i => i.ID == itemComponent.ID);
         }
 
         // If no Item component found, allow playing by default

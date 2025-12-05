@@ -66,7 +66,7 @@ public class ShutOffLightsEvent : Event
         if (!TryGetComponent<AudioSource>(out var audioSource))
         {
             audioSource = slave.AddComponent<AudioSource>();
-            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
+            audioSource.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx; // shittiest hakc
         }
         audioSource.PlayOneShot(associatedSfx);
 

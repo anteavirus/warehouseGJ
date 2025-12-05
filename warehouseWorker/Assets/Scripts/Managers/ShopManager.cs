@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopManager : MonoBehaviour
+public class ShopManager : GenericManager<ShopManager>
 {
-    public static ShopManager Instance;
     [System.Serializable]
     public class PurchasableElement
     {
@@ -19,20 +18,12 @@ public class ShopManager : MonoBehaviour
 
     public List<Sprite> generatedSprites;   
     public PurchasableElement[] shopElements;
-    
+    public bool finishedGeneratingShopSprites = false;
     Coroutine stupidMakeSureShitWorks = null;
 
-    private void Start()
+    public override void Initialize()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Initialize();
 
         stupidMakeSureShitWorks ??= StartCoroutine(nameof(AtSomePointGenerateIcons));
     }
@@ -49,6 +40,7 @@ public class ShopManager : MonoBehaviour
             item.sprite = newSprite;
             generatedSprites.Add(newSprite);
         }
+        finishedGeneratingShopSprites = true;
         yield break;
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,7 +25,6 @@ public class Terminal : MonoBehaviour
     public GameObject shitNotFoundImage;
 
     public GameObject shopProductPrefab;
-    // TODO: set camera priority -100
 
     Coroutine GetTheFuckingShopAtSomePoint;
 
@@ -56,6 +56,7 @@ public class Terminal : MonoBehaviour
     IEnumerator GetTheShittyShopAndFillYourShittyShop()
     {
         yield return new WaitUntil(() => ShopManager.Instance != null);
+        
         // TODO: fucking... needs a better way to know what's where. I'm currently hardcoding this shit, and this shit ain't shitting when it's outta sync.
         foreach (var item in UsefulStuffs.FindComponentsInChildren<Transform>(terminalCanvasi[0].gameObject)) // This has an error if I do it with Unity's own method...
         {
@@ -63,7 +64,10 @@ public class Terminal : MonoBehaviour
             Destroy(item.gameObject);
         }
 
-        foreach (var item in ShopManager.Instance.shopElements)
+        yield return new WaitUntil(() => (ShopManager.Instance != null && ((ShopManager)ShopManager.Instance).finishedGeneratingShopSprites));  
+        // Don't allow race conditions. I keep forgetting that this is C#; this is all COPIES of objects; if original is changed, copy ain't gonna hear that.
+        
+        foreach (var item in ((ShopManager)ShopManager.Instance).shopElements)
         {
             var shopButton = Instantiate(shopProductPrefab, terminalCanvasi[0].transform);
             // Ughh.. we gotta somehow find the fucking elements within the prefab...
@@ -72,6 +76,7 @@ public class Terminal : MonoBehaviour
 
             var icon = shopButton.transform.Find("icon");
             icon.GetComponent<Image>().sprite = item.sprite;
+
             var datacard = shopButton.transform.Find("datacard");
             datacard.Find("name").GetComponent<TextMeshProUGUI>().text = item.name;
             datacard.Find("descr").GetComponent<TextMeshProUGUI>().text = item.description;
@@ -88,10 +93,10 @@ public class Terminal : MonoBehaviour
     // TODO: successful / failed purchase, notification, perhaps even an actual explanation
     void ExtraSpecialFunctionTomfuckery(ShopManager.PurchasableElement item)
     {
-        if (GameManager.Instance.score - item.cost < 0) return; // Can't have people going into debt
+        if (((GameManager) GameManager.Instance).score - item.cost < 0) return; // Can't have people going into debt
 
         var fuckingGameObject = Instantiate(item.prefab);
-        fuckingGameObject.transform.SetPositionAndRotation(GameManager.Instance.blackHoleSpawnPosition.position, Quaternion.identity);
+        fuckingGameObject.transform.SetPositionAndRotation(((GameManager)GameManager.Instance).blackHoleSpawnPosition.position, Quaternion.identity);
 
         if (!string.IsNullOrEmpty(item.extraSpecialFunctionThatIsHardcodedWithinTerminalToDoSomethingUnique))
         {
@@ -134,7 +139,7 @@ public class Terminal : MonoBehaviour
             }
         }
 
-        GameManager.Instance.score -= item.cost;    
+        ((GameManager)GameManager.Instance).score -= item.cost;    
         return; // Successful purchase
     }
 
@@ -152,26 +157,23 @@ public class Terminal : MonoBehaviour
 
     void CamShifter(bool left)
     {
-        int previousSelection = selection_cam.selection;
+        int currentSelection = selection_cam.selection;
+        // wait ? huh? why is this working? this isn't supposed to work??
 
-        var new_selection = (selection_cam.selection + (left ? -1 : 1)) % selection_cam.size;
-        if (new_selection < 0)
-            new_selection += selection_cam.size;
-
-        if (previousSelection >= 0 && previousSelection < cameras.Length && cameras[previousSelection] != null)
+        if (currentSelection >= 0 && currentSelection < cameras.Length && cameras[currentSelection] != null)
         {
-            cameras[previousSelection].targetTexture = null;
+            cameras[currentSelection].targetTexture = null;
         }
 
 
-        if (selection_cam.selection >= cameras.Length || cameras[selection_cam.selection] == null)
+        if (currentSelection >= cameras.Length || cameras[currentSelection] == null)
         {
             currentlySelectedCameraImage.SetActive(false);
             shitNotFoundImage.SetActive(true);
         }
         else
         {
-            cameras[selection_cam.selection].targetTexture = cameraVision;
+            cameras[currentSelection].targetTexture = cameraVision;
             currentlySelectedCameraImage.SetActive(true);
             shitNotFoundImage.SetActive(false);
         }

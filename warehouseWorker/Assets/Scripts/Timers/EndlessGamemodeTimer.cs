@@ -1,7 +1,7 @@
 // EndlessGamemodeTimer.cs
 using UnityEngine;
 
-public class EndlessGamemodeTimer : GenericTimer
+public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
 {
     [Header("Endless Timer Settings")]
     [SerializeField] private float maxTimer = 30f;
@@ -19,6 +19,7 @@ public class EndlessGamemodeTimer : GenericTimer
 
     public override void UpdateTimer()
     {
+        if (gameManager == null) gameManager = GameManager.Instance; // BAD, Don't care anymore
         if (!enabledTimer || !gameManager.gameStarted) return;
 
         // Calculate difficulty-based time decay

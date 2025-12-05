@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7160990520485505022}
   - component: {fileID: 5621654567607555312}
   - component: {fileID: 333509865968439177}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 2385156710108560347}
   - component: {fileID: 7709090550926598673}
   - component: {fileID: 1909870644069625747}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 220667452893037475}
   - component: {fileID: 221818869223362687}
   - component: {fileID: 7225423550831786048}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 2423036347233634437}
   - component: {fileID: 8014423271788365956}
   - component: {fileID: 4739823053459783657}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,7 +434,9 @@ GameObject:
   - component: {fileID: 5001885593243499941}
   - component: {fileID: 4829141496944883945}
   - component: {fileID: 1162462655704298260}
-  m_Layer: 8
+  - component: {fileID: 2412548633264598873}
+  - component: {fileID: 7022179071547544670}
+  m_Layer: 6
   m_Name: shittyasscameraprefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -626,3 +628,137 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &2412548633264598873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798566007551496966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f1d16582d7110a409977f4bbaa02553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioConfig: {fileID: 0}
+  ID: 0
+  Name: {fileID: 0}
+  scoreValue: 0
+  fromShelf: 0
+  canUseOnID: 
+  isPickupable: 1
+  pickupSounds: []
+  useSounds: []
+  collisionSounds: []
+  mixerGroup: {fileID: 0}
+  throwMultiplier: 0.1
+  controller: {fileID: 0}
+  order:
+    requestee:
+      request:
+        requestee:
+          request:
+            requestee:
+              request:
+                requestee:
+                  request:
+                    requestee:
+                      request:
+                        orderType: 0
+                        orderPosition: 0
+                        specialRequirement: 0
+                        orderFulfilled: 0
+                        assignedBoxMaterial: 0
+                      queuePosition: {x: 0, y: 0}
+                      requestNotTaken: 0
+                      timeStart: 0
+                      timeRemaining: 0
+                      impatienceModifier: 0
+                      lastQueueJumpTime: 0
+                      alive: 0
+                    requestObjectCreated: {fileID: 0}
+                    orderType: 0
+                    orderPosition: 0
+                    specialRequirement: 0
+                    orderFulfilled: 0
+                    assignedBoxMaterial: 0
+                  queuePosition: {x: 0, y: 0}
+                  requestNotTaken: 0
+                  timeStart: 0
+                  timeRemaining: 0
+                  impatienceModifier: 0
+                  lastQueueJumpTime: 0
+                  alive: 0
+                requestObjectCreated: {fileID: 0}
+                orderType: 0
+                orderPosition: 0
+                specialRequirement: 0
+                orderFulfilled: 0
+                assignedBoxMaterial: 0
+              queuePosition: {x: 0, y: 0}
+              requestNotTaken: 0
+              timeStart: 0
+              timeRemaining: 0
+              impatienceModifier: 0
+              lastQueueJumpTime: 0
+              alive: 0
+            requestObjectCreated: {fileID: 0}
+            orderType: 0
+            orderPosition: 0
+            specialRequirement: 0
+            orderFulfilled: 0
+            assignedBoxMaterial: 0
+          queuePosition: {x: 0, y: 0}
+          requestNotTaken: 0
+          timeStart: 0
+          timeRemaining: 0
+          impatienceModifier: 0
+          lastQueueJumpTime: 0
+          alive: 0
+        requestObjectCreated: {fileID: 0}
+        orderType: 0
+        orderPosition: 0
+        specialRequirement: 0
+        orderFulfilled: 0
+        assignedBoxMaterial: 0
+      queuePosition: {x: 0, y: 0}
+      requestNotTaken: 0
+      timeStart: 0
+      timeRemaining: 0
+      impatienceModifier: 0
+      lastQueueJumpTime: 0
+      alive: 0
+    requestObjectCreated: {fileID: 0}
+    orderType: 0
+    orderPosition: 0
+    specialRequirement: 0
+    orderFulfilled: 0
+    assignedBoxMaterial: 0
+  isBroken: 0
+--- !u!54 &7022179071547544670
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798566007551496966}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

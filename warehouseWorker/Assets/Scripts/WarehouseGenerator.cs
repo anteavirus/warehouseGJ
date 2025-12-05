@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MissionManager : MonoBehaviour
+// TODO: probably singleton, created right after starting, doors closed, warehouse generated, then we open the doors. mayhaps we'll have an event that'll literally re-generate us a new warehouse
+public class WarehouseGenerator : MonoBehaviour
 {
-    // TODO: copy language, and work to give player characters missions. load premade missions. perhaps allow player made missions. 
     // Start is called before the first frame update
     void Start()
     {

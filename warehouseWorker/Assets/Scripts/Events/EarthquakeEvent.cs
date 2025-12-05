@@ -28,7 +28,7 @@ public class EarthquakeEvent : Event
         if (!TryGetComponent<AudioSource>(out var audioSource))
         {
             audioSource = slave.gameObject.AddComponent<AudioSource>();
-            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx;
+            audioSource.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx;
         }
         audioSource.PlayOneShot(sfx);
 

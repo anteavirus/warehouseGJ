@@ -73,7 +73,7 @@ public class TalkingDeliveryItem : MonoBehaviour
     private bool TryGetCurrentEventItem(out Item item)
     {
         item = null;
-        foreach (var i in GameManager.Instance.activeEvents)
+        foreach (var i in ((GameManager)GameManager.Instance).activeEvents)
         {
             if (i is DeliveryEvent deliveryEvent)
             {
@@ -87,7 +87,7 @@ public class TalkingDeliveryItem : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!_canComment) return;
-        foreach (var i in GameManager.Instance.activeEvents)
+        foreach (var i in ((GameManager)GameManager.Instance).activeEvents)
         {
             if (i is not DeliveryEvent) return;
         }
@@ -104,7 +104,7 @@ public class TalkingDeliveryItem : MonoBehaviour
         _canComment = false;
 
         DeliveryEvent deliveryEvent = null;
-        foreach (var i in GameManager.Instance.activeEvents)
+        foreach (var i in ((GameManager)GameManager.Instance).activeEvents)
         {
             if (i is DeliveryEvent a)
             {
@@ -122,7 +122,7 @@ public class TalkingDeliveryItem : MonoBehaviour
         if (isCorrect)
         {
             PlayRandomClip(eventItemConfig.correctDeliveryClips);
-            GameManager.Instance.ProcessDelivery(0, item, true); // todo: finish creating this stupid event, maybe?  some day later.
+            ((GameManager)GameManager.Instance).ProcessDelivery(0, item, true); // todo: finish creating this stupid event, maybe?  some day later.
             yield return new WaitForSeconds(commentCooldown * 2);
             if (_reminderRoutine != null) StopCoroutine(_reminderRoutine);
         }

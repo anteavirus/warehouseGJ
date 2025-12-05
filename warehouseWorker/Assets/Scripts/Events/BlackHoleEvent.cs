@@ -18,8 +18,8 @@ public class BlackHoleEvent : Event
     public override void StartEvent()
     {
         base.StartEvent();
-        spawnPoint = GameManager.Instance.blackHoleSpawnPosition;
-        weakerSpawnPoint = OrdersManager.Instance.spawnPosition;
+        spawnPoint = ((GameManager)GameManager.Instance).blackHoleSpawnPosition;
+        weakerSpawnPoint = ((OrdersManager)OrdersManager.Instance).spawnPosition;
         Invoke(nameof(SpawnBlackHole), 2f);
     }
 
@@ -28,7 +28,7 @@ public class BlackHoleEvent : Event
         blackHoleInstance = Instantiate(blackHolePrefab, spawnPoint.position, Quaternion.identity);
         weakerBlackHoleInstance = Instantiate(blackHolePrefab, weakerSpawnPoint.position, Quaternion.identity);
         var audio = weakerBlackHoleInstance.AddComponent<AudioSource>();
-        audio.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
+        audio.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx; // shittiest hakc
         audio.maxDistance = 50;
         audio.spatialBlend = 1;
         audio.rolloffMode = AudioRolloffMode.Linear;

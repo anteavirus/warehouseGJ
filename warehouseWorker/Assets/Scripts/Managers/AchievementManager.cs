@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class AchievementManager : MonoBehaviour
+public class AchievementManager : GenericManager<AchievementManager>
 {
     [System.Serializable]
     public class Achievement
@@ -25,10 +25,12 @@ public class AchievementManager : MonoBehaviour
     public Transform achievementsContainer;
     public GameObject achievementPrefab;
 
-    private void Start()
+    public override void Initialize()
     {
         achievementsManip = FileDataManipulator.ForPersistentDataPath(achievements, new string[1] { "achievements.sv" });
         achievements = (Achievements) achievementsManip.LoadData();  // TODO: needs to load achievements from somewhere. perhaps creating a new "localization" folder is fine.
+        Debug.LogWarning("I should be properly created. Currently I technically do *some* work, but this isn't enough I believe.");
+        return;
         PopulateUI();
     }
 

@@ -742,12 +742,18 @@ public class PlayerController : MonoBehaviour
                        + playerCameraTransform.forward * placementMaxDistance;
         }
 
-        Quaternion targetRot = Quaternion.Euler(0,
-            Quaternion.LookRotation(
-                Vector3.ProjectOnPlane(playerCameraTransform.forward, Vector3.up)
-            ).eulerAngles.y + currentRotationOffset,
-            0
-        );
+        // Shitty hack to stop the console spam of "waah the rotation is zero!!!" like no bitch, shit
+        Vector3 cameraForward = playerCameraTransform.forward;
+        Vector3 projectedForward = Vector3.ProjectOnPlane(cameraForward, Vector3.up);
+
+        Quaternion targetRot = Quaternion.identity;
+        if (cameraForward != Vector3.zero && projectedForward != Vector3.zero)
+        {
+            targetRot = Quaternion.Euler(0,
+                Quaternion.LookRotation(projectedForward).eulerAngles.y + currentRotationOffset,
+                0
+            );
+        }
 
         previewObject.transform.SetPositionAndRotation(targetPos, targetRot);
         UpdatePreviewAppearance();
@@ -978,6 +984,6 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        GameManager.Instance.LoadSceneStr("Main Menu");
+        ((GameManager)GameManager.Instance).LoadSceneStr("Main Menu");
     }
 }

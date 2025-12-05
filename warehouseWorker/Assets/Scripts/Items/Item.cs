@@ -94,7 +94,7 @@ public class Item : MonoBehaviour
         if (useSounds.Length > 0 && useSounds.All(i=>i!=null))
         {
             AudioClip clip = useSounds[Random.Range(0, useSounds.Length)];
-            audioSource.PlayOneShot(clip);
+            audioSource?.PlayOneShot(clip);
         }
 
         Debug.Log($"{gameObject.name} used by {user.name}");

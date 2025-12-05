@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 
-public class ShiftsGamemodeTimer : GenericTimer
+public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
 {
     [System.Serializable]
     public class Shift
@@ -41,6 +41,7 @@ public class ShiftsGamemodeTimer : GenericTimer
 
     public override void UpdateTimer()
     {
+        if (gameManager == null) gameManager = GameManager.Instance; // BAD, Don't care anymore
         if (!enabledTimer || !gameManager.gameStarted) return;
 
         if (shifts.Length == 0) return;

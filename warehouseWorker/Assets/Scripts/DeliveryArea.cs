@@ -75,11 +75,11 @@ public class DeliveryArea : MonoBehaviour
     {
         while (true)
         {
-            Debug.Log("Waiting for item.");
+            //Debug.Log("Waiting for item.");
             yield return new WaitUntil(() => doorClosed && itemInsideMe != null && !processingDelivery);
-            Debug.Log("Item received, door closed");
+            //Debug.Log("Item received, door closed");
             yield return StartCoroutine(ProcessDeliverySequence());
-            Debug.Log("waiting to stop processing the delivery");
+            //Debug.Log("waiting to stop processing the delivery");
             yield return new WaitWhile(() => processingDelivery);
         }
     }

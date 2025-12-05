@@ -36,7 +36,7 @@ public class C4Item : Item
         }
         else
         {
-            GameManager.Instance.AddScore(scoreValue, resetTimer: true, immediateReset: true);
+            ((GameManager)GameManager.Instance).AddScore(scoreValue, resetTimer: true, immediateReset: true);
         }
     }
 
@@ -49,7 +49,7 @@ public class C4Item : Item
     {
         armed = false;
         // the boom is forced by gameover now. idk why.
-        GameManager.Instance.ForceGameOver();
+        ((GameManager)GameManager.Instance).ForceGameOver();
         yield break;
     }
 }

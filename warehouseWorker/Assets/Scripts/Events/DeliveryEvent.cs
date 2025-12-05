@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+
+// TODO: this event kinda sucks. We should probably comment it out probably, and decide if it still fits.
 public class DeliveryEvent : Event
 {
     [Header("Delivery Settings")]
@@ -21,15 +23,15 @@ public class DeliveryEvent : Event
         SelectMainItem();
         SpawnMainItem();
         SpawnDecoys();
-        if (GameManager.Instance.talkingDeliveryItem == null)
-            GameManager.Instance.talkingDeliveryItem = Instantiate(talkingDeliveryItem);
+        if (((GameManager)GameManager.Instance).talkingDeliveryItem == null)
+            ((GameManager)GameManager.Instance).talkingDeliveryItem = Instantiate(talkingDeliveryItem);
     }
 
     private void SpawnMainItem()
     {
         // Find the corresponding prefab from GameManager's items list
         GameObject mainItemPrefab = null;
-        foreach (var itemPrefab in GameManager.Instance.itemTemplates)
+        foreach (var itemPrefab in ((GameManager)GameManager.Instance).itemTemplates)
         {
             if (itemPrefab.TryGetComponent<Item>(out var itemComponent) && itemComponent.ID == _mainItem.ID)
             {
@@ -51,7 +53,7 @@ public class DeliveryEvent : Event
 
     private void SelectMainItem()
     {
-        var validItems = GameManager.Instance.itemTemplates;
+        var validItems = ((GameManager)GameManager.Instance).itemTemplates;
 
         _mainItem = validItems[Random.Range(0, validItems.Count)];
         

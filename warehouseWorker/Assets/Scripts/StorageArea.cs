@@ -51,7 +51,7 @@ public class StorageArea : MonoBehaviour
                 if (GameManager.Instance != null && !item.fromShelf && item.order.orderType == OrdersManager.OrderType.Deposit)
                 {
                     item.order.orderFulfilled = true;
-                    GameManager.Instance.setdownItem = true; // is this necessary anymore? whatever it'll stay until we get rid of this
+                    ((GameManager)GameManager.Instance).setdownItem = true; // is this necessary anymore? whatever it'll stay until we get rid of this
                 }
             }
         }

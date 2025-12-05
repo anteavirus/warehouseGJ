@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OrdersManager : MonoBehaviour
+public class OrdersManager : GenericManager<OrdersManager>
 {
-    public static OrdersManager Instance;
-
     [System.Serializable]
     public enum OrderType
     {
@@ -33,7 +30,7 @@ public class OrdersManager : MonoBehaviour
     [System.Serializable]
     public class OrderRequestee
     {
-        public Order request;
+        public Order request; // this creates a loop of classes, preferrably needs reworking but lowest of priorities as it works... barely acceptably, and that's all i need
         public Vector2Int queuePosition;
         public bool requestNotTaken;
         public float timeStart = 30;
@@ -41,7 +38,7 @@ public class OrdersManager : MonoBehaviour
         public float impatienceModifier;
         public float lastQueueJumpTime;
         public float timeSinceLastJump => Time.time - lastQueueJumpTime;
-        public bool alive;  // TODO: fill the slots with impossible amounts of time to run out, impatienceModifier hardset to 0 (not during class creation), fill out queues not in use with not alive requestees. [not in use queues => queues.amount - players.ingame (if someone joins, clear out. leaves, fill up, get rid of other requestees in queue, leave the requestee at the table.)]
+        public bool alive = true;  // TODO: fill the slots with impossible amounts of time to run out, impatienceModifier hardset to 0 (not during class creation), fill out queues not in use with not alive requestees. [not in use queues => queues.amount - players.ingame (if someone joins, clear out. leaves, fill up, get rid of other requestees in queue, leave the requestee at the table.)]
 
         public OrderRequestee(Order request, float timeStart, float impatienceModif)
         {
@@ -83,22 +80,22 @@ public class OrdersManager : MonoBehaviour
                 {
                     int[] nearestQueues = new int[3];
                     for (int i = 0; i < 3; i++)
-                        nearestQueues[i] = Instance.HighestQueuePosition(queuePosition, i - 1); // Fixed: i-1 to get [-1, 0, 1]
+                        nearestQueues[i] = Instance.HighestQueuePosition(queuePosition, i - 1);
 
                     int minValOfQueue = int.MaxValue;
                     int indexOfQueue = 0;
                     for (int index = 0; index < nearestQueues.Length; index++)
                     {
-                        if (nearestQueues[index] != -1 && nearestQueues[index] < minValOfQueue) // FIXED: Changed comparison
+                        if (nearestQueues[index] != -1 && nearestQueues[index] < minValOfQueue)
                         {
                             minValOfQueue = nearestQueues[index];
                             indexOfQueue = index;
                         }
                     }
 
-                    if (minValOfQueue != int.MaxValue && minValOfQueue + 1 < queuePosition.y) // FIXED: Compare with current position
+                    if (minValOfQueue != int.MaxValue && minValOfQueue + 1 < queuePosition.y)
                     {
-                        Instance.MoveRequesteeToQueue(this, queuePosition.x + (indexOfQueue - 1)); // FIXED: Correct index offset
+                        Instance.MoveRequesteeToQueue(this, queuePosition.x + (indexOfQueue - 1));
                         lastQueueJumpTime = Time.time;
                     }
                 }
@@ -176,6 +173,8 @@ public class OrdersManager : MonoBehaviour
         }
 
         gameManager = gm;
+        if (gameManager == null)
+            gameManager = GameManager.Instance; // I don't know atp
         source = GetComponent<AudioSource>();
 
         for (int i = 0; i < queue.GetLength(0); i++)
@@ -202,7 +201,7 @@ public class OrdersManager : MonoBehaviour
         {
             GameObject item = readyToUseBoxes[i];
             if (item == null) continue;
-            var texture = IconManager.Instance.RenderCopyToTexture(item, 128, 128);
+            var texture = ((IconManager) IconManager.Instance).RenderCopyToTexture(item, 128, 128);
             if (texture != null)
             {
                 Rect rect = new Rect(0, 0, texture.width, texture.height);
@@ -229,6 +228,7 @@ public class OrdersManager : MonoBehaviour
 
     private void ClearCanvas()
     {
+        if (canvas == null) return;
         foreach (Transform child in canvas)
             Destroy(child.gameObject);
     }
@@ -336,7 +336,13 @@ public class OrdersManager : MonoBehaviour
 
     public void UpdateOrders()
     {
+        // I give up, fuck game dev fuck logic fuck every single fuckin thing around me. I shall shit and you shall clean this up, I fucking hate you all
+
+        if (gameManager == null) gameManager = GameManager.Instance; // fuck you
         if (!gameManager.gameStarted) return;
+
+        if (canvas == null)
+            canvas = GameObject.Find("OrdersCanvas").GetComponent<RectTransform>();
 
         orderTimer += Time.deltaTime;
         if (orderTimer >= orderCooldown)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LobbyManager : MonoBehaviour
+public class LobbyManager : GenericManager<LobbyManager>
 {
     // blank dummy... TODO: start using it early because we're going on through with this idea. of multiplayer, of course
     public int playerCount = 1;

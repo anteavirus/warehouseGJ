@@ -90,7 +90,7 @@ public class BoogeymanAndLightsTurnOffEvent : Event
         if (!TryGetComponent<AudioSource>(out var audioSource))
         {
             audioSource = slave.gameObject.AddComponent<AudioSource>();
-            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
+            audioSource.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx; // shittiest hakc
         }
 
         audioSource.PlayOneShot(associatedSfx);

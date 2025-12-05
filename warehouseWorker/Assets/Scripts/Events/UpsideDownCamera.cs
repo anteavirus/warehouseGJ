@@ -29,7 +29,7 @@ public class UpsideDownCameraEvent : Event
         if (!slave.TryGetComponent<AudioSource>(out var audioSource))
         {
             audioSource = slave.gameObject.AddComponent<AudioSource>();
-            audioSource.outputAudioMixerGroup = GameManager.Instance.sfx; // shittiest hakc
+            audioSource.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx; // shittiest hakc
         }
         audioSource.PlayOneShot(rotato);
 
