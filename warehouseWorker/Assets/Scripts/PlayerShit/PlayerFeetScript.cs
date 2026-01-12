@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFeetScript : MonoBehaviour
+public class PlayerFeetScript : NetworkBehaviour
 {
     public bool isGrounded;
     public List<Collider> objects = new List<Collider>(16);

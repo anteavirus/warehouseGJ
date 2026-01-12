@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4440094061194307998}
   - component: {fileID: 3569427044036885523}
+  - component: {fileID: -5771030743935980220}
   m_Layer: 3
   m_Name: ShelfSpawn
   m_TagString: Untagged
@@ -44,4 +45,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025cad5cf734320439c15a2c7e70eb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   acceptedShelfTypes: 01000000
+  assignedShelfPrefab: {fileID: 0}
+--- !u!114 &-5771030743935980220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6595973693287127716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 1650444948
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

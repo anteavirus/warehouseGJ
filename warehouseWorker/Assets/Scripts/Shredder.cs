@@ -1,10 +1,11 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(AudioSource))]
-public class Shredder : MonoBehaviour
+public class Shredder : NetworkBehaviour
 {
     [SerializeField] AudioClip[] shredderDestroySFX;
     [SerializeField] ParticleSystem shredderParticle;

@@ -3,7 +3,11 @@ guid: a62e42f80b56933479261ea88cdd4f9c
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - spawnPosition: {instanceID: 0}
+  - canvas: {instanceID: 0}
+  - depositImage: {fileID: 21300000, guid: 8507a965ce51d8c499fad722313d01e1, type: 3}
+  - requesteeImage: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

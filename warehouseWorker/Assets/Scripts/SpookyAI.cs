@@ -1,7 +1,8 @@
+using Mirror;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer), typeof(AudioSource), typeof(Collider))]
-public class BoogeymanAI : MonoBehaviour
+public class BoogeymanAI : NetworkBehaviour
 {
     [Header("Spawning Settings")]
     public float vanishCooldown = 5f;

@@ -118,3 +118,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0729514e1f0bb5f46a0cfd88b27a0e4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  selectionGameObjects: []
+  up: {fileID: 0}
+  down: {fileID: 0}
+  left: {fileID: 0}
+  right: {fileID: 0}
+  door: {fileID: 0}
+  selectedRequestee: {fileID: 0}

@@ -1,10 +1,11 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 // TODO: outdated, at some point discuss if this must stay. used to serve as hint as "correct performance, here is more time."
-public class StupidHitboxToMakeGameManagerRestartTimer : MonoBehaviour
+public class StupidHitboxToMakeGameManagerRestartTimer : NetworkBehaviour
 {
     public Light enlighten;
     public AudioSource source;

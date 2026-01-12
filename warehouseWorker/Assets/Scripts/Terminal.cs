@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -5,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Terminal : MonoBehaviour
+public class Terminal : NetworkBehaviour
 {
     public Canvas[] terminalCanvasi = new Canvas[8];  // same amount as selection buttons... lets hope there won't be any more
     

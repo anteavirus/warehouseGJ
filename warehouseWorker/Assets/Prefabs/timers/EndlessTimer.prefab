@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6651110872579318328}
-  - component: {fileID: 2643450788121199540}
+  - component: {fileID: 6414486196593117921}
+  - component: {fileID: -8140566573594225792}
   m_Layer: 0
   m_Name: EndlessTimer
   m_TagString: Untagged
@@ -32,7 +33,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2643450788121199540
+--- !u!114 &6414486196593117921
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,26 +42,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 6898375982121201960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfc820cc239b405459ec774bb860d14f, type: 3}
+  m_Script: {fileID: 11500000, guid: b9452f5a351c0f44592914c9b35c6dbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   enabledTimer: 0
-  gamemode: shifts
-  shifts:
-  - shiftName: Monday whatever
-    startTime: 0
-    endTime: 1000
-    timeScale: 100
-  - shiftName: Sunday i guess
-    startTime: 0
-    endTime: 1000
-    timeScale: 100
-  - shiftName: Zhopaden CHANGEME!!!!!
-    startTime: 0
-    endTime: 1000
-    timeScale: 100
-  currentTimeOfDay: 28800
-  totalDayLength: 86400
-  shiftChangeEffects: []
-  timeJumpEffectDuration: 0
-  timeOnAClock: {fileID: 0}
+  gamemode: endless
+  maxTimer: 30
+  timerRestore: 1
+--- !u!114 &-8140566573594225792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898375982121201960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2858923881
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

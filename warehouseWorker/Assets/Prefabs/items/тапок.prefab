@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9173116245386481493}
   - component: {fileID: 2691207570838273859}
   - component: {fileID: 80205751560596950}
+  - component: {fileID: -5945854274662811968}
   m_Layer: 6
   m_Name: "\u0442\u0430\u043F\u043E\u043A"
   m_TagString: Untagged
@@ -139,6 +140,87 @@ MonoBehaviour:
   mixerGroup: {fileID: 0}
   throwMultiplier: 0.1
   controller: {fileID: 0}
+  order:
+    requestee:
+      request:
+        requestee:
+          request:
+            requestee:
+              request:
+                requestee:
+                  request:
+                    requestee:
+                      request:
+                        orderType: 0
+                        orderPosition: 0
+                        specialRequirement: 0
+                        orderFulfilled: 0
+                        assignedBoxMaterial: 0
+                      queuePosition: {x: 0, y: 0}
+                      requestNotTaken: 0
+                      timeStart: 0
+                      timeRemaining: 0
+                      impatienceModifier: 0
+                      lastQueueJumpTime: 0
+                      alive: 0
+                    requestObjectCreated: {fileID: 0}
+                    orderType: 0
+                    orderPosition: 0
+                    specialRequirement: 0
+                    orderFulfilled: 0
+                    assignedBoxMaterial: 0
+                  queuePosition: {x: 0, y: 0}
+                  requestNotTaken: 0
+                  timeStart: 0
+                  timeRemaining: 0
+                  impatienceModifier: 0
+                  lastQueueJumpTime: 0
+                  alive: 0
+                requestObjectCreated: {fileID: 0}
+                orderType: 0
+                orderPosition: 0
+                specialRequirement: 0
+                orderFulfilled: 0
+                assignedBoxMaterial: 0
+              queuePosition: {x: 0, y: 0}
+              requestNotTaken: 0
+              timeStart: 0
+              timeRemaining: 0
+              impatienceModifier: 0
+              lastQueueJumpTime: 0
+              alive: 0
+            requestObjectCreated: {fileID: 0}
+            orderType: 0
+            orderPosition: 0
+            specialRequirement: 0
+            orderFulfilled: 0
+            assignedBoxMaterial: 0
+          queuePosition: {x: 0, y: 0}
+          requestNotTaken: 0
+          timeStart: 0
+          timeRemaining: 0
+          impatienceModifier: 0
+          lastQueueJumpTime: 0
+          alive: 0
+        requestObjectCreated: {fileID: 0}
+        orderType: 0
+        orderPosition: 0
+        specialRequirement: 0
+        orderFulfilled: 0
+        assignedBoxMaterial: 0
+      queuePosition: {x: 0, y: 0}
+      requestNotTaken: 0
+      timeStart: 0
+      timeRemaining: 0
+      impatienceModifier: 0
+      lastQueueJumpTime: 0
+      alive: 0
+    requestObjectCreated: {fileID: 0}
+    orderType: 0
+    orderPosition: 0
+    specialRequirement: 0
+    orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!64 &2691207570838273859
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -175,3 +257,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizationKey: item_slipper
   text: 
+--- !u!114 &-5945854274662811968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7043401547634284611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2759365480
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

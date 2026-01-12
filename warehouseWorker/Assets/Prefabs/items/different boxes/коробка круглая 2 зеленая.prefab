@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8017985819176256189}
   - component: {fileID: 1872165473299464105}
   - component: {fileID: 1692562532377430603}
+  - component: {fileID: 3776750419972952344}
   m_Layer: 0
   m_Name: "\u043A\u043E\u0440\u043E\u0431\u043A\u0430 \u043A\u0440\u0443\u0433\u043B\u0430\u044F
     2 \u0437\u0435\u043B\u0435\u043D\u0430\u044F"
@@ -173,6 +174,7 @@ MonoBehaviour:
                       timeRemaining: 0
                       impatienceModifier: 0
                       lastQueueJumpTime: 0
+                      alive: 0
                     requestObjectCreated: {fileID: 0}
                     orderType: 0
                     orderPosition: 0
@@ -185,6 +187,7 @@ MonoBehaviour:
                   timeRemaining: 0
                   impatienceModifier: 0
                   lastQueueJumpTime: 0
+                  alive: 0
                 requestObjectCreated: {fileID: 0}
                 orderType: 0
                 orderPosition: 0
@@ -197,6 +200,7 @@ MonoBehaviour:
               timeRemaining: 0
               impatienceModifier: 0
               lastQueueJumpTime: 0
+              alive: 0
             requestObjectCreated: {fileID: 0}
             orderType: 0
             orderPosition: 0
@@ -209,6 +213,7 @@ MonoBehaviour:
           timeRemaining: 0
           impatienceModifier: 0
           lastQueueJumpTime: 0
+          alive: 0
         requestObjectCreated: {fileID: 0}
         orderType: 0
         orderPosition: 0
@@ -221,6 +226,7 @@ MonoBehaviour:
       timeRemaining: 0
       impatienceModifier: 0
       lastQueueJumpTime: 0
+      alive: 0
     requestObjectCreated: {fileID: 0}
     orderType: 0
     orderPosition: 0
@@ -230,6 +236,10 @@ MonoBehaviour:
   containedItem: {fileID: 6190435878620182654, guid: e5a2859fd9bc35e4689ed98dd65f4dc2,
     type: 3}
   futureBoxPrefab: {fileID: 0}
+  containmentProcedure: 0
+  containmentProcedureSuccessful: 1
+  containmentProcedureMaxTime: 30
+  containmentProcedureClock: 30
 --- !u!64 &1692562532377430603
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -252,3 +262,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: 92911598faf0cdc4ab138e6594307a0a, type: 3}
+--- !u!114 &3776750419972952344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63892876875158129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 647367055
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

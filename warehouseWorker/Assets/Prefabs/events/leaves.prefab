@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9052148839566857156}
   - component: {fileID: 873552632067579904}
   - component: {fileID: -3374606539002646355}
+  - component: {fileID: 6992426315617231411}
   m_Layer: 0
   m_Name: leaves
   m_TagString: Untagged
@@ -120,9 +121,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 15
   isActive: 0
-  leavesParticleSystem: {fileID: 0}
+  leavesParticleSystems: []
+  leavesParentName: LeavesParent
   windDirection: {x: 0, y: 0, z: -1}
   windStrength: 5
   swayFrequency: 1
   swayAmplitude: 0.5
   sfx: {fileID: 8300000, guid: fdb2498ce7973554a9a017457e5a1c0e, type: 3}
+--- !u!114 &6992426315617231411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2967366868401370336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 178981620
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

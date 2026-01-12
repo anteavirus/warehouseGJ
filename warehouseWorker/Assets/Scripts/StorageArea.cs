@@ -1,10 +1,11 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
-public class StorageArea : MonoBehaviour
+public class StorageArea : NetworkBehaviour
 {
     [SerializeField] private List<int> _allowedItemIDs = new();
     public List<int> allowedItemIDs => _allowedItemIDs;

@@ -117,6 +117,7 @@ public class GameManager : GenericManager<GameManager>
         foreach (var item in items)
         {
             var obj = Instantiate(item);
+            obj.transform.SetParent(transform);
             var localname = obj.GetComponent<LocalizedText>();
             localname.UpdateText();
             obj.name = localname.text;

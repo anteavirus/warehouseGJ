@@ -1,20 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class LobbyManager : GenericManager<LobbyManager>
+public class LobbyManager : NetworkRoomManager
 {
-    // blank dummy... TODO: start using it early because we're going on through with this idea. of multiplayer, of course
-    public int playerCount = 1;
-    // actually is the one spawning the players in.
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+}
+
+// network message as class to inherit from as to update every client
+public struct PosMessage : NetworkMessage
+{
+    public Vector2 vector2;
 }

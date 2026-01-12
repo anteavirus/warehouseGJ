@@ -5049,6 +5049,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d63ae914d097a4795116064282f7fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   shredderDestroySFX:
   - {fileID: 8300000, guid: a7069814449731b4f81d94634347f596, type: 3}
   shredderParticle: {fileID: 2844202693498038520}

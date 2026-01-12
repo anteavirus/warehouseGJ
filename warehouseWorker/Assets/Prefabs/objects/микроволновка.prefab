@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3007732851977109935}
+  - component: {fileID: -4459455957905106617}
   m_Layer: 8
   m_Name: "\u043C\u0438\u043A\u0440\u043E\u0432\u043E\u043B\u043D\u043E\u0432\u043A\u0430"
   m_TagString: Untagged
@@ -33,6 +34,23 @@ Transform:
   - {fileID: 7445533825247189418}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-4459455957905106617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796739916676926053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 1949048239
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &2457469998537981429
 GameObject:
   m_ObjectHideFlags: 0

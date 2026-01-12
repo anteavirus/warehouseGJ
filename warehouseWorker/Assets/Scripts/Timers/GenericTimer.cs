@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenericTimer : MonoBehaviour
+public class GenericTimer : NetworkBehaviour
 {
     protected GameManager gameManager;
     public bool enabledTimer;

@@ -1,10 +1,11 @@
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class DeliveryArea : MonoBehaviour
+public class DeliveryArea : NetworkBehaviour
 {
     OrdersManager orderManager;
     Vector3 originalPosition;

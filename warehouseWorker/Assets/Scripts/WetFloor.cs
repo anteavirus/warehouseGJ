@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WetFloor : MonoBehaviour
+public class WetFloor : NetworkBehaviour
 {
     PhysicMaterial physMaterialOriginal;
     Material materialOriginal;

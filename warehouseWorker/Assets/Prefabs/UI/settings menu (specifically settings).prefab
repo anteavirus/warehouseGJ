@@ -554,6 +554,7 @@ GameObject:
   - component: {fileID: 4173259787093457431}
   - component: {fileID: 2817193101007449984}
   - component: {fileID: 7752697410756797023}
+  - component: {fileID: 5710538681287995146}
   m_Layer: 5
   m_Name: settings menu (specifically settings)
   m_TagString: Untagged
@@ -693,6 +694,23 @@ MonoBehaviour:
   defaultEnvironmentLight: {r: 0.023529412, g: 0.023529412, b: 0.02745098, a: 1}
   currentEnvironmentLight: {r: 0, g: 0, b: 0, a: 0}
   brightnessSlider: {fileID: 803552107577514295}
+--- !u!114 &5710538681287995146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537712719411415217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2660764145
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &651926766441999012
 GameObject:
   m_ObjectHideFlags: 0

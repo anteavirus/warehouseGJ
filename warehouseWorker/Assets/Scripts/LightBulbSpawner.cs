@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 
-public class StableHangingLight : MonoBehaviour
+// I wonder just how much data this sends over the internet. It's probably a dangerous amount. Like, megabytes worth of data. oh look im setting this on to be networkbehaviour and not monobehavior
+public class StableHangingLight : NetworkBehaviour
 {
     [Header("Light Settings")]
     public float lightIntensity = 2f;

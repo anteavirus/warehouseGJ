@@ -1,8 +1,9 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using Mirror;
 
-public class PauseMenuUI : MonoBehaviour
+public class PauseMenuUI : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private Animator pauseAnimator;
@@ -35,7 +36,8 @@ public class PauseMenuUI : MonoBehaviour
 
     IEnumerator PauseStateUpdate()
     {
-        Time.timeScale = isPaused ? 0f : 1f;
+        if (LobbyManager.singleton.numPlayers < 2)  // This is probably fine. No pause for the wicked multiplayer players.
+            Time.timeScale = isPaused ? 0f : 1f;
         pauseAnimator.SetBool("animationComplete", false);
 
         yield return new WaitUntil(() =>

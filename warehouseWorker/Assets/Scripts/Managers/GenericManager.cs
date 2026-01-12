@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenericManager<T> : MonoBehaviour where T : GenericManager<T>
+public class GenericManager<T> : NetworkBehaviour where T : GenericManager<T>
 {
     public static T Instance;
 

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using UnityEngine;
 
-public class ShelfSpawn : MonoBehaviour
+public class ShelfSpawn : NetworkBehaviour
 {
     [Header("Spawn Restrictions")]
     [Tooltip("Leave empty to accept all shelf types")]

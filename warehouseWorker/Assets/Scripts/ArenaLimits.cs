@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArenaLimits : MonoBehaviour
+public class ArenaLimits : NetworkBehaviour
 {
     private void OnTriggerExit(Collider other)
     {

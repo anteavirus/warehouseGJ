@@ -708,8 +708,8 @@ Transform:
   m_GameObject: {fileID: 699483667631814006}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.81, y: 7.684, z: 32.7166}
-  m_LocalScale: {x: 13.881797, y: 8.664082, z: 0.6161322}
+  m_LocalPosition: {x: 10.81, y: 7.684, z: 32.6982}
+  m_LocalScale: {x: 13.881797, y: 8.664082, z: 0.65297693}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9156832149424367348}
@@ -1189,6 +1189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de68922ac9ec2b4fb289b589eebb94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: 0
   Name: {fileID: 0}
@@ -1627,6 +1631,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c39bd255660ff140b1fda4601265df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: -125
   Name: {fileID: 0}
@@ -2228,6 +2236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9156832149424367348}
+  - component: {fileID: 7806699073495548680}
   m_Layer: 3
   m_Name: Resting Place
   m_TagString: Untagged
@@ -2305,6 +2314,23 @@ Transform:
   - {fileID: 6870135732184237327}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7806699073495548680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964989811101244957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 536908874
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &1978241941493893146
 GameObject:
   m_ObjectHideFlags: 0
@@ -2529,6 +2555,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8147844e7c8eea44896167fd286b6f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   lightIntensity: 4
   lightRange: 12
   lightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -3476,6 +3506,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab2468bdff0fe0f41a4642012338a49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: 0
   Name: {fileID: 0}
@@ -6804,6 +6838,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab2468bdff0fe0f41a4642012338a49e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: 0
   Name: {fileID: 0}
@@ -7228,6 +7266,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eef97b5fc6213e4f9a49b08c12ad41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   terminalCanvasi:
   - {fileID: 7949022137469490577}
   - {fileID: 4316224886493417409}
@@ -7795,6 +7837,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c39bd255660ff140b1fda4601265df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: -125
   Name: {fileID: 0}
@@ -8446,6 +8492,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e817d7cf768cffe43925a39f5b74424d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: -3
   Name: {fileID: 0}
@@ -8916,6 +8966,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c39bd255660ff140b1fda4601265df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: 0
   Name: {fileID: 0}
@@ -10147,6 +10201,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8147844e7c8eea44896167fd286b6f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   lightIntensity: 4
   lightRange: 12
   lightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -12629,6 +12687,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de68922ac9ec2b4fb289b589eebb94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: 0
   Name: {fileID: 0}
@@ -12823,6 +12885,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c39bd255660ff140b1fda4601265df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: -125
   Name: {fileID: 0}
@@ -14607,6 +14673,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3191504449621726572}
     m_Modifications:
+    - target: {fileID: -5917559244171242709, guid: 6da295f98e88463488d13dab1b1d736d,
+        type: 3}
+      propertyPath: _assetId
+      value: 536908874
+      objectReference: {fileID: 0}
     - target: {fileID: 687201958941254365, guid: 6da295f98e88463488d13dab1b1d736d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14685,6 +14756,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontSize
       value: 7.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 724201096579103614, guid: 79d1d6dceca513f428a7cdd51ef24a37,
+        type: 3}
+      propertyPath: _assetId
+      value: 536908874
+      objectReference: {fileID: 0}
+    - target: {fileID: 1215251367879379001, guid: 79d1d6dceca513f428a7cdd51ef24a37,
+        type: 3}
+      propertyPath: _assetId
+      value: 536908874
       objectReference: {fileID: 0}
     - target: {fileID: 2610272908218366498, guid: 79d1d6dceca513f428a7cdd51ef24a37,
         type: 3}
@@ -14910,6 +14991,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6707132580504506183}
     m_Modifications:
+    - target: {fileID: 2019716241351350368, guid: a436d48efa4ae9b43904e840b0e972c5,
+        type: 3}
+      propertyPath: _assetId
+      value: 536908874
+      objectReference: {fileID: 0}
     - target: {fileID: 2727187295589138996, guid: a436d48efa4ae9b43904e840b0e972c5,
         type: 3}
       propertyPath: m_Name
@@ -14984,6 +15070,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9156832149424367348}
     m_Modifications:
+    - target: {fileID: -1890365513752053250, guid: ee272e8bb2ecadb4b835305ea3ac089a,
+        type: 3}
+      propertyPath: _assetId
+      value: 536908874
+      objectReference: {fileID: 0}
     - target: {fileID: 3358749429625893543, guid: ee272e8bb2ecadb4b835305ea3ac089a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15044,7 +15135,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: fucking thing that i entered the room
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -1890365513752053250, guid: ee272e8bb2ecadb4b835305ea3ac089a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -15063,6 +15155,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4534221496364037130}
     m_Modifications:
+    - target: {fileID: -3070100612838801667, guid: 9517c16f05399e74fabb32226b7b0566,
+        type: 3}
+      propertyPath: _assetId
+      value: 536908874
+      objectReference: {fileID: 0}
     - target: {fileID: 2001012973629679836, guid: 9517c16f05399e74fabb32226b7b0566,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -15182,6 +15279,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9156832149424367348}
     m_Modifications:
+    - target: {fileID: -8355069854211188608, guid: e6f35762ef89d134d9f9b709e253f702,
+        type: 3}
+      propertyPath: _assetId
+      value: 536908874
+      objectReference: {fileID: 0}
     - target: {fileID: 3760892421407270846, guid: e6f35762ef89d134d9f9b709e253f702,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15237,7 +15339,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shredder
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -8355069854211188608, guid: e6f35762ef89d134d9f9b709e253f702, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

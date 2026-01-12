@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5019583724863663005}
   - component: {fileID: -753270972979521322}
   - component: {fileID: 6194884068084814332}
+  - component: {fileID: -7261763133467508332}
   m_Layer: 0
   m_Name: "\u044F\u0449\u0438\u043A"
   m_TagString: Untagged
@@ -150,7 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioConfig: {fileID: 0}
   ID: 0
-  Name: "\u043A\u043E\u0440\u043E\u0431\u043A\u0430"
+  Name: {fileID: 0}
   scoreValue: 0
   fromShelf: 1
   canUseOnID: 
@@ -162,6 +163,87 @@ MonoBehaviour:
     type: 2}
   throwMultiplier: 0.1
   controller: {fileID: 0}
+  order:
+    requestee:
+      request:
+        requestee:
+          request:
+            requestee:
+              request:
+                requestee:
+                  request:
+                    requestee:
+                      request:
+                        orderType: 0
+                        orderPosition: 0
+                        specialRequirement: 0
+                        orderFulfilled: 0
+                        assignedBoxMaterial: 0
+                      queuePosition: {x: 0, y: 0}
+                      requestNotTaken: 0
+                      timeStart: 0
+                      timeRemaining: 0
+                      impatienceModifier: 0
+                      lastQueueJumpTime: 0
+                      alive: 0
+                    requestObjectCreated: {fileID: 0}
+                    orderType: 0
+                    orderPosition: 0
+                    specialRequirement: 0
+                    orderFulfilled: 0
+                    assignedBoxMaterial: 0
+                  queuePosition: {x: 0, y: 0}
+                  requestNotTaken: 0
+                  timeStart: 0
+                  timeRemaining: 0
+                  impatienceModifier: 0
+                  lastQueueJumpTime: 0
+                  alive: 0
+                requestObjectCreated: {fileID: 0}
+                orderType: 0
+                orderPosition: 0
+                specialRequirement: 0
+                orderFulfilled: 0
+                assignedBoxMaterial: 0
+              queuePosition: {x: 0, y: 0}
+              requestNotTaken: 0
+              timeStart: 0
+              timeRemaining: 0
+              impatienceModifier: 0
+              lastQueueJumpTime: 0
+              alive: 0
+            requestObjectCreated: {fileID: 0}
+            orderType: 0
+            orderPosition: 0
+            specialRequirement: 0
+            orderFulfilled: 0
+            assignedBoxMaterial: 0
+          queuePosition: {x: 0, y: 0}
+          requestNotTaken: 0
+          timeStart: 0
+          timeRemaining: 0
+          impatienceModifier: 0
+          lastQueueJumpTime: 0
+          alive: 0
+        requestObjectCreated: {fileID: 0}
+        orderType: 0
+        orderPosition: 0
+        specialRequirement: 0
+        orderFulfilled: 0
+        assignedBoxMaterial: 0
+      queuePosition: {x: 0, y: 0}
+      requestNotTaken: 0
+      timeStart: 0
+      timeRemaining: 0
+      impatienceModifier: 0
+      lastQueueJumpTime: 0
+      alive: 0
+    requestObjectCreated: {fileID: 0}
+    orderType: 0
+    orderPosition: 0
+    specialRequirement: 0
+    orderFulfilled: 0
+    assignedBoxMaterial: 0
 --- !u!82 &6194884068084814332
 AudioSource:
   m_ObjectHideFlags: 0
@@ -259,3 +341,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-7261763133467508332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2491937487662539029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 621924631
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

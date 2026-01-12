@@ -28,6 +28,8 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     private int shiftsElapsed;
     private Coroutine timeJumpCoroutine;
 
+    public Action<void> OnShiftChange;
+
     public override void Initialize(GameManager gm)
     {
         gamemode = "shifts";
@@ -117,7 +119,7 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
         Debug.Log($"Shift changed to: {newShift.shiftName}");
         gameManager.gameStarted = false;
         // Uh .  Play sfx
-
+	OnShiftChange?.Invoke();
         // You could trigger events here like:
         // - Different customer types
         // - Changed difficulty

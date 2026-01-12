@@ -201,7 +201,7 @@ public class OrdersManager : GenericManager<OrdersManager>
         {
             GameObject item = readyToUseBoxes[i];
             if (item == null) continue;
-            var texture = ((IconManager) IconManager.Instance).RenderCopyToTexture(item, 128, 128);
+            var texture = IconManager.Instance.RenderCopyToTexture(item, 128, 128);
             if (texture != null)
             {
                 Rect rect = new Rect(0, 0, texture.width, texture.height);
@@ -221,6 +221,7 @@ public class OrdersManager : GenericManager<OrdersManager>
                 GameObject boxInstance = Instantiate(boxPrefab);
                 boxInstance.name = $"{boxPrefab.name}_Original";
                 readyToUseBoxes.Add(boxInstance);
+                boxInstance.transform.SetParent(transform);
                 boxInstance.SetActive(false);
             }
         }

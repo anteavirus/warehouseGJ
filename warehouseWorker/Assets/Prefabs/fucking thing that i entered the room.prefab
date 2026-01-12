@@ -346,6 +346,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 898f8a5ac3f227546bc47c7a3ccb4394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   enlighten: {fileID: 4118610978526744844}
   source: {fileID: 6160738455457888129}
 --- !u!65 &5293996271361667812

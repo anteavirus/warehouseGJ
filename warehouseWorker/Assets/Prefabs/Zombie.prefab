@@ -1076,6 +1076,7 @@ GameObject:
   - component: {fileID: 8015329841153480306}
   - component: {fileID: 5694359554010677236}
   - component: {fileID: 2905824139972556073}
+  - component: {fileID: -1194070000854249133}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Untagged
@@ -1160,6 +1161,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6e510df5f1a22468a70dcb4b16349b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   wanderSpeed: 4
   chaseSpeed: 6
   wanderRadius: 15
@@ -1191,7 +1196,25 @@ MonoBehaviour:
   slipRiskIncreasePerFootstep: 0.1
   maxSlipRisk: 1
   minSlipSpeed: 1
+  isDead: 0
   animator: {fileID: 8015329841153480306}
+--- !u!114 &-1194070000854249133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8288833385887010158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 1911456045
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &8582677001630163807
 GameObject:
   m_ObjectHideFlags: 0

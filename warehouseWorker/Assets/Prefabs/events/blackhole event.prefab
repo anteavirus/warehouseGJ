@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9052148839566857156}
   - component: {fileID: 873552632067579904}
   - component: {fileID: 1651157805285912748}
+  - component: {fileID: -8442147137718894631}
   m_Layer: 0
   m_Name: blackhole event
   m_TagString: Untagged
@@ -126,3 +127,20 @@ MonoBehaviour:
   rangeOfForce: 1924
   forceMultiplierToPlayer: 4
   suckingSFX: {fileID: 8300000, guid: 8a0163a1e2792cb49b1860a8d7fec342, type: 3}
+--- !u!114 &-8442147137718894631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2967366868401370336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2801273078
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

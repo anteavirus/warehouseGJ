@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerGrabbyScript : MonoBehaviour
+public class PlayerGrabbyScript : NetworkBehaviour
 {
     [Header("References")]
     public PlayerController controller;
