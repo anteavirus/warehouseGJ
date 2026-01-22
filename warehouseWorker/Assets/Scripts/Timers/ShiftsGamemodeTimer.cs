@@ -134,6 +134,7 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
         {
             var player = FindObjectOfType<PlayerController>().GetComponent<SerializableDictionaryObjectContainer>();
             timeOnAClock = ((GameObject)player.Fetch("timerNumber")).GetComponent<TextMeshProUGUI>(); // i know it's a gameobject because of how lazy my fucking ass is
+            timeOnAClock.gameObject.SetActive(true);
         }
         if (timeOnAClock != null) {
             Shift currentShift = shifts[currentShiftIndex];

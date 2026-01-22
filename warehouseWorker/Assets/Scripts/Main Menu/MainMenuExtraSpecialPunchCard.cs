@@ -34,9 +34,9 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
 
     public override void OnPickup(Transform holder)
     {
+        if (bastard != null) StopCoroutine(bastard);
         base.OnPickup(holder);
         rb.useGravity = true;
-        if (bastard != null) StopCoroutine(bastard);
         bastard = null;
         transform.position = hoverStartPosition;
     }

@@ -588,7 +588,6 @@ GameObject:
   m_Component:
   - component: {fileID: 62703838}
   - component: {fileID: 62703839}
-  - component: {fileID: 62703840}
   m_Layer: 3
   m_Name: ShelfSpawn (13)
   m_TagString: Untagged
@@ -626,23 +625,6 @@ MonoBehaviour:
   acceptedShelfTypes: 02000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: cccd51cfc9d7c024a817850f82d4de21,
     type: 3}
---- !u!114 &62703840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 62703837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1546831164
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &64798858
 GameObject:
   m_ObjectHideFlags: 0
@@ -11170,7 +11152,6 @@ GameObject:
   m_Component:
   - component: {fileID: 170108018}
   - component: {fileID: 170108019}
-  - component: {fileID: 170108020}
   m_Layer: 3
   m_Name: ShelfSpawn (7)
   m_TagString: Untagged
@@ -11208,23 +11189,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &170108020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 170108017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1535461080
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!224 &198420336 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 197999849150374646, guid: 834846cacdafb0e459a0494676bfe555,
@@ -11345,7 +11309,6 @@ GameObject:
   m_Component:
   - component: {fileID: 219001267}
   - component: {fileID: 219001268}
-  - component: {fileID: 219001269}
   m_Layer: 3
   m_Name: ShelfSpawn (2)
   m_TagString: Untagged
@@ -11383,23 +11346,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &219001269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 219001266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1966594504
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &220564895 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -17720,7 +17666,6 @@ GameObject:
   m_Component:
   - component: {fileID: 385446309}
   - component: {fileID: 385446310}
-  - component: {fileID: 385446311}
   m_Layer: 3
   m_Name: ShelfSpawn (11)
   m_TagString: Untagged
@@ -17758,23 +17703,6 @@ MonoBehaviour:
   acceptedShelfTypes: 02000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: cccd51cfc9d7c024a817850f82d4de21,
     type: 3}
---- !u!114 &385446311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 385446308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1731252239
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1001 &387046011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23001,7 +22929,6 @@ GameObject:
   m_Component:
   - component: {fileID: 433095225}
   - component: {fileID: 433095226}
-  - component: {fileID: 433095227}
   m_Layer: 3
   m_Name: ShelfSpawn (1)
   m_TagString: Untagged
@@ -23039,23 +22966,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &433095227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 433095224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1422103311
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1001 &437616881
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23564,7 +23474,6 @@ GameObject:
   m_Component:
   - component: {fileID: 574888878}
   - component: {fileID: 574888879}
-  - component: {fileID: 574888880}
   m_Layer: 3
   m_Name: ShelfSpawn (10)
   m_TagString: Untagged
@@ -23602,23 +23511,6 @@ MonoBehaviour:
   acceptedShelfTypes: 02000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: cccd51cfc9d7c024a817850f82d4de21,
     type: 3}
---- !u!114 &574888880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 574888877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 427695397
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &583795167
 GameObject:
   m_ObjectHideFlags: 0
@@ -31359,7 +31251,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1024534580}
   - component: {fileID: 1024534581}
-  - component: {fileID: 1024534582}
   m_Layer: 3
   m_Name: ShelfSpawn (15)
   m_TagString: Untagged
@@ -31397,23 +31288,6 @@ MonoBehaviour:
   acceptedShelfTypes: 03000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: 503e8d847d250d445a7e38d077087ec8,
     type: 3}
---- !u!114 &1024534582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1024534579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 4053803432
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1032625276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -31593,7 +31467,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1083814012}
   - component: {fileID: 1083814013}
-  - component: {fileID: 1083814014}
   m_Layer: 3
   m_Name: ShelfSpawn (7)
   m_TagString: Untagged
@@ -31631,23 +31504,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1083814014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1083814011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 553866618
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &1096612823
 GameObject:
   m_ObjectHideFlags: 0
@@ -32326,7 +32182,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1197200665}
   - component: {fileID: 1197200666}
-  - component: {fileID: 1197200667}
   m_Layer: 3
   m_Name: ShelfSpawn (9)
   m_TagString: Untagged
@@ -32364,23 +32219,6 @@ MonoBehaviour:
   acceptedShelfTypes: 02000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: cccd51cfc9d7c024a817850f82d4de21,
     type: 3}
---- !u!114 &1197200667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1197200664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1891841454
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1197684189 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -32875,7 +32713,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1248927259}
   - component: {fileID: 1248927260}
-  - component: {fileID: 1248927261}
   m_Layer: 3
   m_Name: ShelfSpawn (4)
   m_TagString: Untagged
@@ -32913,23 +32750,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1248927261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1248927258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 2446938536
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1251082436 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -38792,7 +38612,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1400179428}
   - component: {fileID: 1400179429}
-  - component: {fileID: 1400179430}
   m_Layer: 3
   m_Name: ShelfSpawn (1)
   m_TagString: Untagged
@@ -38830,23 +38649,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1400179430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400179427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 2520705988
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1001 &1407678147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39446,7 +39248,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1451418021}
   - component: {fileID: 1451418022}
-  - component: {fileID: 1451418023}
   m_Layer: 3
   m_Name: ShelfSpawn (4)
   m_TagString: Untagged
@@ -39484,23 +39285,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1451418023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451418020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 2905075703
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &1456153654
 GameObject:
   m_ObjectHideFlags: 0
@@ -39582,7 +39366,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1461726667}
   - component: {fileID: 1461726668}
-  - component: {fileID: 1461726669}
   m_Layer: 3
   m_Name: ShelfSpawn (6)
   m_TagString: Untagged
@@ -39620,23 +39403,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1461726669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1461726666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 4130448238
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &1478572417
 GameObject:
   m_ObjectHideFlags: 0
@@ -39700,7 +39466,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1484038690}
   - component: {fileID: 1484038691}
-  - component: {fileID: 1484038692}
   m_Layer: 3
   m_Name: ShelfSpawn (2)
   m_TagString: Untagged
@@ -39738,23 +39503,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1484038692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1484038689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 3657167565
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1001 &1494868810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40098,7 +39846,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1528142184}
   - component: {fileID: 1528142185}
-  - component: {fileID: 1528142186}
   m_Layer: 3
   m_Name: ShelfSpawn (3)
   m_TagString: Untagged
@@ -40136,23 +39883,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1528142186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528142183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 3335929561
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &1552291351
 GameObject:
   m_ObjectHideFlags: 0
@@ -40433,7 +40163,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1566976778}
   - component: {fileID: 1566976779}
-  - component: {fileID: 1566976780}
   m_Layer: 3
   m_Name: ShelfSpawn (3)
   m_TagString: Untagged
@@ -40471,23 +40200,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1566976780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566976777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 189334974
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1585953969 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -40608,7 +40320,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1623679868}
   - component: {fileID: 1623679869}
-  - component: {fileID: 1623679870}
   m_Layer: 3
   m_Name: ShelfSpawn (17)
   m_TagString: Untagged
@@ -40646,23 +40357,6 @@ MonoBehaviour:
   acceptedShelfTypes: 03000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: 503e8d847d250d445a7e38d077087ec8,
     type: 3}
---- !u!114 &1623679870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1623679867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 2342124161
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1639599244 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -45933,7 +45627,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1709360933}
   - component: {fileID: 1709360934}
-  - component: {fileID: 1709360935}
   m_Layer: 3
   m_Name: ShelfSpawn (12)
   m_TagString: Untagged
@@ -45971,23 +45664,6 @@ MonoBehaviour:
   acceptedShelfTypes: 02000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: cccd51cfc9d7c024a817850f82d4de21,
     type: 3}
---- !u!114 &1709360935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1709360932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 3471176159
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1001 &1717243541
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46287,7 +45963,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1735973361}
   - component: {fileID: 1735973362}
-  - component: {fileID: 1735973363}
   m_Layer: 3
   m_Name: ShelfSpawn (16)
   m_TagString: Untagged
@@ -46325,23 +46000,6 @@ MonoBehaviour:
   acceptedShelfTypes: 03000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: 503e8d847d250d445a7e38d077087ec8,
     type: 3}
---- !u!114 &1735973363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735973360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 2501796660
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1744868113 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -46810,7 +46468,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1833733831}
   - component: {fileID: 1833733832}
-  - component: {fileID: 1833733833}
   m_Layer: 3
   m_Name: ShelfSpawn (14)
   m_TagString: Untagged
@@ -46848,23 +46505,6 @@ MonoBehaviour:
   acceptedShelfTypes: 03000000
   assignedShelfPrefab: {fileID: 993628995229982570, guid: 503e8d847d250d445a7e38d077087ec8,
     type: 3}
---- !u!114 &1833733833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1833733830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 1196500915
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1839914870 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -47465,7 +47105,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1967484029}
   - component: {fileID: 1967484030}
-  - component: {fileID: 1967484031}
   m_Layer: 3
   m_Name: ShelfSpawn (5)
   m_TagString: Untagged
@@ -47503,23 +47142,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &1967484031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1967484028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 3847877704
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!4 &1981440933 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -47851,7 +47473,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2038402306}
   - component: {fileID: 2038402307}
-  - component: {fileID: 2038402308}
   m_Layer: 3
   m_Name: ShelfSpawn (6)
   m_TagString: Untagged
@@ -47889,23 +47510,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &2038402308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2038402305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 3656769687
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &2044139081
 GameObject:
   m_ObjectHideFlags: 0
@@ -47916,7 +47520,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2044139082}
   - component: {fileID: 2044139083}
-  - component: {fileID: 2044139084}
   m_Layer: 3
   m_Name: ShelfSpawn (5)
   m_TagString: Untagged
@@ -47954,23 +47557,6 @@ MonoBehaviour:
   acceptedShelfTypes: 01000000
   assignedShelfPrefab: {fileID: 2708225698122886749, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff,
     type: 3}
---- !u!114 &2044139084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2044139081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 4051945147
-  _assetId: 0
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1001 &2051026386
 PrefabInstance:
   m_ObjectHideFlags: 0

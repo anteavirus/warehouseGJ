@@ -168,7 +168,7 @@ public class OrdersManager : GenericManager<OrdersManager>
         }
         else
         {
-            Debug.Log("Dupe orders manager; killed.");
+            Debug.LogWarning("Dupe orders manager; killed.");
             Destroy(gameObject);
             return;
         }

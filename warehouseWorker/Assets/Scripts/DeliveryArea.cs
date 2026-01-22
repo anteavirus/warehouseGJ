@@ -14,7 +14,6 @@ public class DeliveryArea : MonoBehaviour
     bool processingDelivery;
     bool doorsMoving;
     [SerializeField] GameObject door;
-    [SerializeField] TextMeshProUGUI selectedRequestee;
     private bool playerAtDoor;
     private Coroutine autoCloseCoroutine;
 

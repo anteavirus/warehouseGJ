@@ -1,5 +1,7 @@
 // EndlessGamemodeTimer.cs
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
 {
@@ -9,12 +11,17 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
 
     private float timeLeft;
     private float progressTimer;
+    private Image timerUI;
 
     public override void Initialize(GameManager gm)
     {
         gameManager = gm;
         timeLeft = maxTimer;
         gamemode = "endless";
+        var player = FindObjectOfType<PlayerController>().GetComponent<SerializableDictionaryObjectContainer>();
+        timerUI = ((GameObject)player.Fetch("timerCircle")).GetComponent<Image>(); // i know it's a gameobject because of how lazy my fucking ass is
+        timerUI.gameObject.SetActive(true);
+        ((GameObject)player.Fetch("timerFire")).SetActive(true);
     }
 
     public override void UpdateTimer()
@@ -48,12 +55,12 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
 
     private void UpdateTimerUI()
     {
-        if (gameManager.timerUI != null)
+        if (timerUI != null)
         {
-            gameManager.timerUI.fillAmount = progressTimer;
-            var color = gameManager.timerUI.color;
+            timerUI.fillAmount = progressTimer;
+            var color = timerUI.color;
             color.a = progressTimer;
-            gameManager.timerUI.color = color;
+            timerUI.color = color;
         }
     }
 
