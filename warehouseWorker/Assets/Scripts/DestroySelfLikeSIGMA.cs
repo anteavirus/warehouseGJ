@@ -1,7 +1,6 @@
-using Mirror;
 using UnityEngine;
 
-public class DestroySelfLikeSIGMA : NetworkBehaviour
+public class DestroySelfLikeSIGMA : MonoBehaviour
 {
     public void DestroySelf()
     {

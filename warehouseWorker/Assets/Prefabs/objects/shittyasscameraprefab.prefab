@@ -436,7 +436,6 @@ GameObject:
   - component: {fileID: 1162462655704298260}
   - component: {fileID: 2412548633264598873}
   - component: {fileID: 7022179071547544670}
-  - component: {fileID: 2504153227160771957}
   m_Layer: 6
   m_Name: shittyasscameraprefab
   m_TagString: Untagged
@@ -641,10 +640,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1d16582d7110a409977f4bbaa02553, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMethod: 0
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: 0
   Name: {fileID: 0}
@@ -767,20 +762,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2504153227160771957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8798566007551496966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 3450839309
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0

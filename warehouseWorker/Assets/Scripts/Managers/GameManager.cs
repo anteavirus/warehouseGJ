@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -61,7 +62,7 @@ public class GameManager : GenericManager<GameManager>
     // Difficulty Settings
     [Header("Difficulty Settings")]
     [SerializeField] AnimationCurve difficultyCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-    [SerializeField] public float minimalDifficulty = 2, maximumDifficulty = 3;
+    public float minimalDifficulty = 1, maximumDifficulty = 3;
     [SerializeField] float maxDifficultyTime = 120f;
     private float totalGameTime;
     private float currentDifficulty;
@@ -113,6 +114,11 @@ public class GameManager : GenericManager<GameManager>
 
     void InitializeItemTemplates()
     {
+        var existing = transform.Find("[Template]s Parent");
+        if (!existing.IsTrulyNull())
+        {
+            Destroy(existing.gameObject);
+        }
         var parent = new GameObject("[Template]s Parent");
         foreach (var item in items)
         {
@@ -127,6 +133,7 @@ public class GameManager : GenericManager<GameManager>
             itemTemplates.Add(itemComp);
             obj.SetActive(false);
         }
+        parent.transform.SetParent(transform);
     }
 
     void InitializeAudio()
@@ -140,6 +147,28 @@ public class GameManager : GenericManager<GameManager>
 
     void InitializeManagers()
     {
+        var player = FindObjectOfType<PlayerController>()?.GetComponent<SerializableDictionaryObjectContainer>();
+        if (player == null) return; // we probably dont have to do this right now? something sometihng me complaining
+        if (scoreUI == null)
+        {
+            scoreUI = player.Fetch("scoreUI").GetComponent<TextMeshProUGUI>();
+        }
+
+        if (timerUI == null)
+        {
+            timerUI = player.Fetch("timerCircle").GetComponent<Image>();
+        }
+
+        if (difficultyImage == null)
+        {
+            difficultyImage = player.Fetch("timerFire").GetComponent<Image>();
+        }
+
+        if ( blackHoleSpawnPosition == null)
+        {
+            blackHoleSpawnPosition = GameObject.Find("black hole spawn")?.transform;
+        }
+
         if (shelvesStockManager != null)
         {
             shelvesStockManager.Initialize(this);

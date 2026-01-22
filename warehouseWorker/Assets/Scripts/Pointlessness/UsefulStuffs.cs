@@ -16,6 +16,15 @@ public static class UsefulStuffs
         );
     }
 
+    public static bool ContainsLayer(this LayerMask mask, int layer)
+    {
+        return mask == (mask | (1 << layer));
+    }
+
+    public static bool IsTrulyNull(this object obj)
+    {
+        return obj == null || (UnityEngine.Object) obj == null;
+    }
 
     /// <summary>
     /// Converts a time string to seconds since midnight

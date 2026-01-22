@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
 
-public class ZombieAI : NetworkBehaviour
+public class ZombieAI : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float wanderSpeed = 2f;

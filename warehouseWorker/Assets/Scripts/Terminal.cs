@@ -1,4 +1,3 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Terminal : NetworkBehaviour
+public class Terminal : MonoBehaviour
 {
     public Canvas[] terminalCanvasi = new Canvas[8];  // same amount as selection buttons... lets hope there won't be any more
     
@@ -45,11 +44,13 @@ public class Terminal : NetworkBehaviour
             button.area = canvas_selector;
         }
 
-        selection_cam.OnSelectionChanged += CamShifter;
-        left_cam = terminalCanvasi[1].transform.GetChild(2).GetComponentInChildren<ArrowShift>();
-        right_cam = terminalCanvasi[1].transform.GetChild(3).GetComponentInChildren<ArrowShift>();
-        left_cam.area = right_cam.area = selection_cam;  // I should get better at writing code
-        selection_cam.left = left_cam; selection_cam.right = right_cam;
+        //selection_cam.OnSelectionChanged += CamShifter;
+        // TODO: dehardcode, plus . the fucking cameras ARE useless rn. they have no point in existing. :/
+        
+        //left_cam = terminalCanvasi[0].transform.GetChild(2).GetComponentInChildren<ArrowShift>();
+        //right_cam = terminalCanvasi[0].transform.GetChild(3).GetComponentInChildren<ArrowShift>();
+        //left_cam.area = right_cam.area = selection_cam;  // I should get better at writing code
+        //selection_cam.left = left_cam; selection_cam.right = right_cam;
 
         GetTheFuckingShopAtSomePoint ??= StartCoroutine(nameof(GetTheShittyShopAndFillYourShittyShop));
     }
@@ -94,10 +95,10 @@ public class Terminal : NetworkBehaviour
     // TODO: successful / failed purchase, notification, perhaps even an actual explanation
     void ExtraSpecialFunctionTomfuckery(ShopManager.PurchasableElement item)
     {
-        if (((GameManager) GameManager.Instance).score - item.cost < 0) return; // Can't have people going into debt
+        if (GameManager.Instance.score - item.cost < 0) return; // Can't have people going into debt
 
         var fuckingGameObject = Instantiate(item.prefab);
-        fuckingGameObject.transform.SetPositionAndRotation(((GameManager)GameManager.Instance).blackHoleSpawnPosition.position, Quaternion.identity);
+        fuckingGameObject.transform.SetPositionAndRotation(GameManager.Instance.blackHoleSpawnPosition.position, Quaternion.identity);
 
         if (!string.IsNullOrEmpty(item.extraSpecialFunctionThatIsHardcodedWithinTerminalToDoSomethingUnique))
         {

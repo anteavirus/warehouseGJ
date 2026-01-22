@@ -148,7 +148,6 @@ GameObject:
   - component: {fileID: 7005252296006083412}
   - component: {fileID: 5091684199811343471}
   - component: {fileID: 2387751702983037156}
-  - component: {fileID: -139602007964319815}
   m_Layer: 5
   m_Name: rebind prefab
   m_TagString: Untagged
@@ -285,23 +284,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &-139602007964319815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4295571955386951048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 2874181556
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &6515602683748187652
 GameObject:
   m_ObjectHideFlags: 0

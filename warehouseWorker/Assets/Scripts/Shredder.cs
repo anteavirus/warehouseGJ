@@ -1,11 +1,10 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(AudioSource))]
-public class Shredder : NetworkBehaviour
+public class Shredder : MonoBehaviour
 {
     [SerializeField] AudioClip[] shredderDestroySFX;
     [SerializeField] ParticleSystem shredderParticle;
@@ -37,11 +36,17 @@ public class Shredder : NetworkBehaviour
             if (other.TryGetComponent<Box>(out var box))
             {
                 if (GameManager.Instance != null)
-                    ((GameManager)GameManager.Instance).AddScore(box.scoreValue, false);
+                    GameManager.Instance.AddScore(box.scoreValue, false);
             }
             if (other.TryGetComponent<C4Item>(out var bomb))
             {
                 bomb.HandleShredded();
+            }
+
+            if (other.TryGetComponent<PlayerController>(out var playerController))
+            {
+                playerController.EndingSequence();
+                return;
             }
             Destroy(other.gameObject);
 

@@ -3641,7 +3641,6 @@ GameObject:
   - component: {fileID: 5571620141662759097}
   - component: {fileID: 6119833304804143678}
   - component: {fileID: 4822787424550742591}
-  - component: {fileID: 7730669550980392654}
   m_Layer: 5
   m_Name: PauseUI
   m_TagString: Untagged
@@ -3765,10 +3764,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d84f6a53ee85045a9c56f388b444a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMethod: 0
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   pauseAnimator: {fileID: 5571620141662759097}
   pauseVisuals: {fileID: 5806976570433083496}
   endlessScroller: {fileID: 2090498511707472730}
@@ -3785,23 +3780,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2239b29b25a24e842b058af942280f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7730669550980392654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4619322705897579797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 337786041
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &4940231543476802296
 GameObject:
   m_ObjectHideFlags: 0

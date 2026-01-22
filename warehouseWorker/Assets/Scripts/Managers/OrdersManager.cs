@@ -119,6 +119,7 @@ public class OrdersManager : GenericManager<OrdersManager>
     }
 
     public OrderRequestee[,] queue = new OrderRequestee[4, 4];
+    public DeliveryArea[] doors = new DeliveryArea[4];  // hardcoded 4 because there's only 4 holes in the walls for the packages. theoretically it should be 4 for the 4 players that can play max, but... i'd like to do multiplayer whenever i'll start rotting
 
     [Header("Order Settings")]
     [SerializeField, Range(0, 90)] float orderCooldown = 25f;
@@ -184,6 +185,8 @@ public class OrdersManager : GenericManager<OrdersManager>
                 queue[i, j] = null;
             }
         }
+
+        doors = FindObjectsOfType<DeliveryArea>();  
 
         PrepareBoxes();
         StartCoroutine(nameof(PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue));

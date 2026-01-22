@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
-using Mirror;
 
-public class Item : NetworkBehaviour
+public class Item : MonoBehaviour
 {
     [SerializeField] private DeliveryAudioConfig _audioConfig;
     public DeliveryAudioConfig AudioConfig => _audioConfig;

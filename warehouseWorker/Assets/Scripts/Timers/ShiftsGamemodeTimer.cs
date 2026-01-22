@@ -28,7 +28,7 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     private int shiftsElapsed;
     private Coroutine timeJumpCoroutine;
 
-    public Action<void> OnShiftChange;
+    //public Action<void> OnShiftChange;
 
     public override void Initialize(GameManager gm)
     {
@@ -113,13 +113,14 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     }
 
     // TODO: incinerate all requestees, request workers to move to specific room, and uh pass time i guess idk fuck
+    // TODO: don't incinerate deposit requestees, only request requestees. and do the rest yeah
     private void OnShiftChanged(Shift newShift)
     {
         // Notify other systems about shift change
         Debug.Log($"Shift changed to: {newShift.shiftName}");
         gameManager.gameStarted = false;
         // Uh .  Play sfx
-	OnShiftChange?.Invoke();
+	//OnShiftChange?.Invoke();
         // You could trigger events here like:
         // - Different customer types
         // - Changed difficulty
@@ -129,8 +130,12 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
 
     private void UpdateTimerUI()
     {
-        if (timeOnAClock != null)
+        if (timeOnAClock == null)
         {
+            var player = FindObjectOfType<PlayerController>().GetComponent<SerializableDictionaryObjectContainer>();
+            timeOnAClock = ((GameObject)player.Fetch("timerNumber")).GetComponent<TextMeshProUGUI>(); // i know it's a gameobject because of how lazy my fucking ass is
+        }
+        if (timeOnAClock != null) {
             Shift currentShift = shifts[currentShiftIndex];
             float shiftProgress = (currentTimeOfDay - currentShift.startTime) /
                                  (currentShift.endTime - currentShift.startTime);

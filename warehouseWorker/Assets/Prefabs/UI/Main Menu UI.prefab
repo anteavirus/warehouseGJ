@@ -11387,7 +11387,6 @@ GameObject:
   - component: {fileID: 1002452876779163535}
   - component: {fileID: 6125707440231558210}
   - component: {fileID: 7078357359501679291}
-  - component: {fileID: -6903301411441614235}
   m_Layer: 5
   m_Name: Main Menu UI
   m_TagString: Untagged
@@ -11530,23 +11529,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2239b29b25a24e842b058af942280f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-6903301411441614235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7754403805619904081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 2433403020
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &7869153206707322948
 GameObject:
   m_ObjectHideFlags: 0
@@ -13471,12 +13453,12 @@ PrefabInstance:
     - target: {fileID: 1273495822864212176, guid: c4b6c8ca0eae56a43a9453d5af5bd9d9,
         type: 3}
       propertyPath: m_Size
-      value: 1
+      value: 0.00000054730583
       objectReference: {fileID: 0}
     - target: {fileID: 1273495822864212176, guid: c4b6c8ca0eae56a43a9453d5af5bd9d9,
         type: 3}
       propertyPath: m_Value
-      value: 0
+      value: -0.0000012467227
       objectReference: {fileID: 0}
     - target: {fileID: 1287936149297112939, guid: c4b6c8ca0eae56a43a9453d5af5bd9d9,
         type: 3}
@@ -13536,12 +13518,12 @@ PrefabInstance:
     - target: {fileID: 3632630448084681128, guid: c4b6c8ca0eae56a43a9453d5af5bd9d9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -546.6978
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 3632630448084681128, guid: c4b6c8ca0eae56a43a9453d5af5bd9d9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1321.089
+      value: 48.956482
       objectReference: {fileID: 0}
     - target: {fileID: 4809652114799089759, guid: c4b6c8ca0eae56a43a9453d5af5bd9d9,
         type: 3}
@@ -13853,7 +13835,8 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5710538681287995146, guid: c4b6c8ca0eae56a43a9453d5af5bd9d9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

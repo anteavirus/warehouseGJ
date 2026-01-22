@@ -718,7 +718,6 @@ GameObject:
   - component: {fileID: 7549271624390854855}
   - component: {fileID: 6497176284409443290}
   - component: {fileID: 7949160781190590874}
-  - component: {fileID: -5006459546980981317}
   m_Layer: 6
   m_Name: extra special punch card
   m_TagString: Item
@@ -858,10 +857,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 866bd4d3ce9ff4a4a81f6d9b8041368c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMethod: 0
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: -1
   Name: {fileID: 0}
@@ -963,23 +958,6 @@ MonoBehaviour:
   riseHeight: 2
   riseDuration: 1
   rotationSpeed: 30
---- !u!114 &-5006459546980981317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6282414257990337225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 1002637195
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!1 &6540975235419381454
 GameObject:
   m_ObjectHideFlags: 0

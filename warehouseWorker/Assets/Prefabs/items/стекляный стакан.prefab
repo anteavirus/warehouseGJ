@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: -5991190754000391110}
   - component: {fileID: 5256417286446600357}
   - component: {fileID: 2026838482605217328}
-  - component: {fileID: 353874064126368188}
   m_Layer: 6
   m_Name: "\u0441\u0442\u0435\u043A\u043B\u044F\u043D\u044B\u0439 \u0441\u0442\u0430\u043A\u0430\u043D"
   m_TagString: Item
@@ -361,20 +360,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizationKey: item_glass
   text: 
---- !u!114 &353874064126368188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3811767882528823929}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 160515978
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0

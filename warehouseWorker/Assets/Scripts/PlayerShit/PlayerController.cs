@@ -1,12 +1,9 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static SettingsManager;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : MonoBehaviour
 {
     // === CAN BE CHANGED ===
     [Header("Movement Settings")]
@@ -15,7 +12,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float airControlFactor = 0.5f;
     [SerializeField] private float groundDrag = 5f;
     [SerializeField] private float airDrag = 0.5f;
-    [SerializeField] private LayerMask groundLayer;
+    public LayerMask groundLayer;
 
     [Header("Camera Inversion Settings")]
     public float inversionProgress = 0f;
@@ -79,8 +76,7 @@ public class PlayerController : NetworkBehaviour
     [Header("Settings Reference")]
     [SerializeField] private SettingsManager settingsManager;
 
-    private float currentMouseSensitivity => settingsManager != null ?
-        PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity) : defaultMouseSensitivity;
+    private float currentMouseSensitivity = 100;
 
     private Vector3 lastMovementDirection;
 
@@ -123,7 +119,10 @@ public class PlayerController : NetworkBehaviour
             settingsManager = FindObjectOfType<SettingsManager>();
 
         if (settingsManager != null)
+        {
             settingsManager.InitializeThyself();
+            settingsManager.LoadSettings();
+        }
 
         if (feet == null)
             feet = transform.Find("feet")?.GetComponent<PlayerFeetScript>();
@@ -145,19 +144,6 @@ public class PlayerController : NetworkBehaviour
         playerCameraTransform = playerCamera.transform;
         originalCameraLocalPosition = playerCameraTransform.localPosition;
         timeWatchStartPosition = timeWatch.transform.position;
-
-        StartCoroutine(FindBindsNamesLater());
-    }
-
-    // TODO: figure what the fuck this actually does, and what's this important for.
-    IEnumerator FindBindsNamesLater()
-    {
-        yield return new WaitForSecondsRealtime(1f);
-        settingsManager.LoadSettings();
-        KeyBind pickupBind = settingsManager.keyBinds.Find(b => b.actionName == "Pickup");
-        KeyBind useBind = settingsManager.keyBinds.Find(b => b.actionName == "Use");
-
-        // Why do we need this, again? TODO: IMPLEMENT DISPLAYNAME! LMB, RMB, ETC! 
     }
 
     void Update()

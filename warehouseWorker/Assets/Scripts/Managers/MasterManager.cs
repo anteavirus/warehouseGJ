@@ -26,8 +26,12 @@ public class MasterManager : GenericManager<MasterManager>
     {
         base.Initialize();
         // SO . Fuck base.XXX() because it continues even if the base returns...
-        if (Instance != this) return;
-        DontDestroyOnLoad(gameObject); // we're keeping this mistake. 
+        if (Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+            DontDestroyOnLoad(gameObject); // we're keeping this mistake. 
 
         LocalizationManager = FindManager<LocalizationManager>(LocalizationManager);
         LocalizationManager.Initialize();

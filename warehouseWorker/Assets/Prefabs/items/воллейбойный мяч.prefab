@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 817207783436163896}
   - component: {fileID: 7476347335163460571}
   - component: {fileID: 4884665318913467210}
-  - component: {fileID: 6614186019110982425}
   m_Layer: 6
   m_Name: "\u0432\u043E\u043B\u043B\u0435\u0439\u0431\u043E\u0439\u043D\u044B\u0439
     \u043C\u044F\u0447"
@@ -361,20 +360,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizationKey: item_volleyball
   text: 
---- !u!114 &6614186019110982425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2707247244306727588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 1504062093
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0

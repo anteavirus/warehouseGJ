@@ -151,6 +151,8 @@ public class MainMenuZonerDoner : MonoBehaviour
             // Not good, not great, not horrible; let's hope this hack won't get pushed to production
             switch (PlayerPrefs.GetInt("gamemodeSelected", 0))
             {
+
+                // TODO: we HAVE to have only one gameplay scene, the only difference is how the gameManager will be set up and what timers will be used.
                 case 0:
                     {
                         coderIsFucker = "GameplayScene";
@@ -158,16 +160,14 @@ public class MainMenuZonerDoner : MonoBehaviour
                         tempShitFuckDev = Instantiate(endlessGamemodeTimerPrefab);
                         foreach (var item in UsefulStuffs.FindComponentsInChildren<Transform>(timerMan))
                         {
-                            if (item == timerMan.transform) continue;  // not u gtfo
-                            Destroy(item.gameObject);   // DESTROY
+                            if (item == timerMan.transform) continue;  
+                            Destroy(item.gameObject);   
                         }
                         tempShitFuckDev.transform.SetParent(timerMan.transform);
                         GameManager.Instance.timer = tempShitFuckDev.GetComponent<EndlessGamemodeTimer>();
                         Debug.Log(tempShitFuckDev.GetComponent<GenericTimer>());
                         if (GameManager.Instance.timer == null)
                             GameManager.Instance.timer = tempShitFuckDev.GetComponent<GenericTimer>();
-                        // FUCKKKKKKKKK. IT NEEDS TO BE FULLY COPIED :(
-                        // FUCk you I'm going all hack
                     }
                     break;
                 case 1:
@@ -176,8 +176,8 @@ public class MainMenuZonerDoner : MonoBehaviour
                         tempShitFuckDev = Instantiate(shiftsGamemodeTimerPrefab);
                         foreach (var item in UsefulStuffs.FindComponentsInChildren<Transform>(timerMan))
                         {
-                            if (item == timerMan.transform) continue;  // not u gtfo
-                            Destroy(item.gameObject);   // DESTROY
+                            if (item == timerMan.transform) continue; 
+                            Destroy(item.gameObject);
                         }
                         tempShitFuckDev.transform.SetParent(timerMan.transform);
                         GameManager.Instance.timer = tempShitFuckDev.GetComponent<ShiftsGamemodeTimer>();
@@ -188,8 +188,6 @@ public class MainMenuZonerDoner : MonoBehaviour
                     break;
                 case 2:
                     {
-                        coderIsFucker = "afuckingscenethatdoesn'texistbecausewedon'thavesuchafuckingstupidgamemodetosufferthroughyet";
-                        coderIsFucker = "Though we're still going to load *SOME* thing because *OF COURSE* someone will WANT TO PRESS THIS FUCKIN BUTTON. BECAUSE OF COURSE THIS SHIT WILL GO PUBLIC SOMEHOW";
                         coderIsFucker = "GameplayScene";
                         tempShitFuckDev = Instantiate(endlessGamemodeTimerPrefab);
                         foreach (var item in UsefulStuffs.FindComponentsInChildren<Transform>(timerMan))
@@ -202,6 +200,9 @@ public class MainMenuZonerDoner : MonoBehaviour
                         Debug.Log(tempShitFuckDev.GetComponent<GenericTimer>());
                         if (GameManager.Instance.timer == null)
                             GameManager.Instance.timer = tempShitFuckDev.GetComponent<GenericTimer>();
+
+
+
                     }
                     break;
                 default:
@@ -213,7 +214,15 @@ public class MainMenuZonerDoner : MonoBehaviour
             }
 
 
-            SceneManager.LoadScene(coderIsFucker);
+            var op = SceneManager.LoadSceneAsync(coderIsFucker);
+            op.completed += (u) => {
+                // TODO: shove in here ALL the code that the gameManager must inherit, i'm pretty sure
+                // 
+                u.allowSceneActivation = true;
+
+                GameManager.Instance.Initialize();
+
+            };
         });
     }
 }

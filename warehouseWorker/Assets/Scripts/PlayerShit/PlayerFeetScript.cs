@@ -1,40 +1,50 @@
-using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFeetScript : NetworkBehaviour
+public class PlayerFeetScript : MonoBehaviour
 {
     public bool isGrounded;
     public List<Collider> objects = new List<Collider>(16);
+    public PlayerController controller;
+
+    private void Awake()
+    {
+        if (controller == null) 
+            controller = GetComponentInParent<PlayerController>();
+    }
 
     public void CleanUp()
     {
         for (int i = 0; i < objects.Count; i++)
         {
-            if (objects[i] == null)
+            if (objects[i].IsTrulyNull())
             {
                 objects.RemoveAt(i);
             }
+        }
+
+        if (objects.Count == 0)
+        {
+            isGrounded = false;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.isTrigger) return;
-        // Check if layer is 3 (grass) or 6 (interactable)
-        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Draggable") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
+        if (other.isTrigger || !other.enabled) return;
+        if (controller.groundLayer.ContainsLayer(other.gameObject.layer) &&
             !objects.Contains(other))
         {
             objects.Add(other);
             isGrounded = true;
         }
     }
-    // TODO: beg PlayerController for ground instead, dumbass
+
     private void OnTriggerExit(Collider other)
     {
         CleanUp();
-        if ((other.gameObject.layer == LayerMask.NameToLayer("Grass") || other.gameObject.layer == LayerMask.NameToLayer("Draggable") || other.gameObject.layer == LayerMask.NameToLayer("Interactable")) &&
+        if (controller.groundLayer.ContainsLayer(other.gameObject.layer) &&
             objects.Contains(other))
         {
             objects.Remove(other);

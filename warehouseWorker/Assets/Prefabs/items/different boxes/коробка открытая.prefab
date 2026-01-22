@@ -18,7 +18,6 @@ GameObject:
   - component: {fileID: 8270707916308040439}
   - component: {fileID: 8674620794110148353}
   - component: {fileID: -1912338986645983489}
-  - component: {fileID: -28996874263918243}
   m_Layer: 6
   m_Name: "\u043A\u043E\u0440\u043E\u0431\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u0430\u044F"
   m_TagString: Item
@@ -410,20 +409,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: 9f7dad6f4a928934bac427fd9efa76ef, type: 3}
---- !u!114 &-28996874263918243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4684404609544575223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 526752530
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
