@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -175,24 +176,32 @@ public class OrdersManager : GenericManager<OrdersManager>
 
         gameManager = gm;
         if (gameManager == null)
-            gameManager = GameManager.Instance; // I don't know atp
+            gameManager = GameManager.Instance;
         source = GetComponent<AudioSource>();
 
-        for (int i = 0; i < queue.GetLength(0); i++)
+        // Don't initialize UI on server (headless) unless it's a host
+        if (!isServer || (isServer && NetworkServer.active && NetworkClient.active)) // Host
         {
-            for (int j = 0; j < queue.GetLength(1); j++)
-            {
-                queue[i, j] = null;
-            }
+            CreatePanels();
+            CreateGridSlots();
+            UpdateOrderUI(); // Initial UI update
         }
 
-        doors = FindObjectsOfType<DeliveryArea>();  
+        // Server-only initialization
+        if (isServer)
+        {
+            for (int i = 0; i < queue.GetLength(0); i++)
+            {
+                for (int j = 0; j < queue.GetLength(1); j++)
+                {
+                    queue[i, j] = null;
+                }
+            }
 
-        PrepareBoxes();
-        StartCoroutine(nameof(PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue));
-        ClearCanvas();
-        CreatePanels();
-        CreateGridSlots();
+            doors = FindObjectsOfType<DeliveryArea>();
+            PrepareBoxes();
+            StartCoroutine(nameof(PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue));
+        }
     }
 
     IEnumerator PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue()
@@ -222,10 +231,17 @@ public class OrdersManager : GenericManager<OrdersManager>
             if (boxPrefab != null)
             {
                 GameObject boxInstance = Instantiate(boxPrefab);
-                boxInstance.name = $"{boxPrefab.name}_Original";
+                boxInstance.name = $"{boxPrefab.name}_Template";
                 readyToUseBoxes.Add(boxInstance);
                 boxInstance.transform.SetParent(transform);
                 boxInstance.SetActive(false);
+
+                // Remove NetworkIdentity if it exists on the template
+                NetworkIdentity netIdentity = boxInstance.GetComponent<NetworkIdentity>();
+                if (netIdentity != null)
+                {
+                    Destroy(netIdentity);
+                }
             }
         }
     }
@@ -340,27 +356,34 @@ public class OrdersManager : GenericManager<OrdersManager>
 
     public void UpdateOrders()
     {
-        // I give up, fuck game dev fuck logic fuck every single fuckin thing around me. I shall shit and you shall clean this up, I fucking hate you all
-
-        if (gameManager == null) gameManager = GameManager.Instance; // fuck you
+        if (gameManager == null) gameManager = GameManager.Instance;
         if (!gameManager.gameStarted) return;
 
         if (canvas == null)
-            canvas = GameObject.Find("OrdersCanvas").GetComponent<RectTransform>();
+            canvas = GameObject.Find("OrdersCanvas")?.GetComponent<RectTransform>();
 
-        orderTimer += Time.deltaTime;
-        if (orderTimer >= orderCooldown)
+        // Server handles order generation and updates
+        if (isServer)
         {
-            GenerateNewOrderRequestee();
-            orderTimer = 0;
+            orderTimer += Time.deltaTime;
+            if (orderTimer >= orderCooldown)
+            {
+                GenerateNewOrderRequestee();
+                orderTimer = 0;
+            }
+
+            // Server updates requestees
+            UpdateRequestees();
         }
 
-        UpdateRequestees();
+        // All clients update UI
         UpdateOrderUI();
     }
 
     void UpdateRequestees()
     {
+        if (!isServer) return;
+        
         for (int width = 0; width < queue.GetLength(0); width++)
         {
             for (int height = 0; height < queue.GetLength(1); height++)
@@ -375,6 +398,7 @@ public class OrdersManager : GenericManager<OrdersManager>
         MoveTheQueues();
     }
 
+    [Server]
     public void GenerateNewOrderRequestee()
     {
         if (gameManager.itemTemplates.Count == 0) return;
@@ -393,7 +417,20 @@ public class OrdersManager : GenericManager<OrdersManager>
         };
         queue[emptySpot.Value.x, emptySpot.Value.y] = newRequestee;
 
-        source.PlaySound(newOrderSound);
+        RpcPlayOrderSound(0);
+    }
+    
+    [ClientRpc]
+    private void RpcPlayOrderSound(int soundIndex)
+    {
+        if (source == null) source = GetComponent<AudioSource>();
+        
+        switch (soundIndex)
+        {
+            case 0: source.PlaySound(newOrderSound); break;
+            case 1: source.PlaySound(orderCompleteSound); break;
+            case 2: source.PlaySound(orderFailSound); break;
+        }
     }
 
     private Vector2Int? FindEmptyQueueSpot()
@@ -409,43 +446,59 @@ public class OrdersManager : GenericManager<OrdersManager>
         return null;
     }
 
+    [Server]
     public void CreateOrderForRequestee(OrderRequestee requestee)
     {
         if (!activeOrders.Contains(requestee.request))
         {
-            // TODO: lynch LLMs
             if (activeOrders[requestee.queuePosition.x] == null)
             {
                 activeOrders[requestee.queuePosition.x] = requestee.request;
                 requestee.request.orderPosition = requestee.queuePosition.x;
 
-
                 if (requestee.request.orderType == OrderType.Deposit)
+                {
+                    // Make sure to spawn the item on the server only
                     SpawnItem(requestee);
+
+                    // IMPORTANT: Sync the order UI to all clients
+                    RpcUpdateOrderUI();
+                }
                 else
                 {
                     GameObject gameObject1 = UsefulStuffs.RandomNonNullFromList(createdOrderObjects, out var index);
                     requestee.request.requestObjectCreated = gameObject1;
-                    if (index > -1 && gameObject1.TryGetComponent<Box>(out var box))  
-                        // todo: this can become null. i'm assuming this is because we destroy the object, and then there's a new requestee created, and they pull the same thing. ugh... i need to make a tiny bool to check if the item is already being requested.
-                        requestee.request.assignedBoxMaterial = box.order.assignedBoxMaterial;
+                    if (index > -1 && gameObject1 != null && gameObject1.TryGetComponent<Box>(out var box))
+                    {
+                        if (box.order != null)
+                            requestee.request.assignedBoxMaterial = box.order.assignedBoxMaterial;
+                        else
+                            requestee.request.assignedBoxMaterial = Random.Range(0, readyToUseBoxes.Count);
+                    }
+                    else
+                    {
+                        // Handle case where no box is available
+                        requestee.request.assignedBoxMaterial = Random.Range(0, readyToUseBoxes.Count);
+                    }
                 }
             }
         }
     }
 
-
     // FUCK, I'm getting confused. I made the Delivery Area destroy the gameObjects, but THIS destroys the object from the list of pullable objects??
     // Why am I so scatterbrained... This fucking sucks, needs rework, and probably have more thought put into
     // tl;dr Shit must stay until customers receive their fucking shit, and if they don't they whine and bitch to the eldrich gods to fuck over the players
+    // EDITED: CompleteOrder now only runs on server
+    [Server]
     public void CompleteOrder(Order order)
     {
         if (activeOrders.Contains(order))
         {
             activeOrders[order.orderPosition] = null;
             gameManager.AddScore(orderCompleteScore, resetTimer: true, immediateReset: true);
-            source.PlaySound(orderCompleteSound);
-            deliveryArea.selectionGameObjects[order.orderPosition] = null;
+            RpcPlayOrderSound(1); // 1 = orderCompleteSound
+            if (deliveryArea != null)
+                deliveryArea.selectionGameObjects[order.orderPosition] = null;
 
             if (order.requestObjectCreated != null && order.orderType == OrderType.Receive)
             {
@@ -454,14 +507,17 @@ public class OrdersManager : GenericManager<OrdersManager>
         }
     }
 
+    // EDITED: FailOrder now only runs on server
+    [Server]
     public void FailOrder(Order order)
     {
         if (activeOrders.Contains(order))
         {
             activeOrders[order.orderPosition] = null;
             gameManager.AddScore(orderFailPenalty, resetTimer: false);
-            source.PlaySound(orderFailSound);
-            deliveryArea.selectionGameObjects[order.orderPosition] = null;
+            RpcPlayOrderSound(2); // 2 = orderFailSound
+            if (deliveryArea != null)
+                deliveryArea.selectionGameObjects[order.orderPosition] = null;
 
             gameManager.IncreaseChanceOfEvent();
         }
@@ -537,13 +593,43 @@ public class OrdersManager : GenericManager<OrdersManager>
         }
     }
 
+    // EDITED: ProcessOrderDelivery now properly handles server/client calls
     public bool ProcessOrderDelivery(int table, Item deliveredItem, bool fromShelf)
     {
+        if (!isServer)
+        {
+            // Client requests server to process delivery
+            CmdProcessOrderDelivery(table, deliveredItem.netId, fromShelf);
+            return false; // Client doesn't know result yet
+        }
+        
+        // Server processes delivery
+        return ProcessOrderDeliveryServer(table, deliveredItem, fromShelf);
+    }
+    
+    [Command(requiresAuthority = false)]
+    private void CmdProcessOrderDelivery(int table, uint itemNetId, bool fromShelf)
+    {
+        if (!NetworkServer.spawned.ContainsKey(itemNetId)) return;
+        
+        GameObject itemObj = NetworkServer.spawned[itemNetId].gameObject;
+        Item deliveredItem = itemObj.GetComponent<Item>();
+        if (deliveredItem == null) return;
+        
+        ProcessOrderDeliveryServer(table, deliveredItem, fromShelf);
+    }
+    
+    [Server]
+    private bool ProcessOrderDeliveryServer(int table, Item deliveredItem, bool fromShelf)
+    {
         // FIXED: Check if there's an active order at this table position
+        if (table < 0 || table >= activeOrders.Length) return false;
+        
         Order order = activeOrders[table];
 
         // todo. something. mateirals ids and shits fuck balls. if doesn't align, then minus score. else add score.
         if (order != null &&
+            deliveredItem.order != null &&
             deliveredItem.order.assignedBoxMaterial == order.assignedBoxMaterial &&
             !order.orderFulfilled &&
             order.orderType == OrderType.Receive)
@@ -560,17 +646,62 @@ public class OrdersManager : GenericManager<OrdersManager>
         return false;
     }
 
+    [ClientRpc]
+    private void RpcUpdateOrderUI()
+    {
+        UpdateOrderUI();
+    }
+
+    [Server]
     void SpawnItem(OrderRequestee requestee)
     {
         if (readyToUseBoxes.Count < 1 || spawnPosition == null || gameManager.itemTemplates.Count == 0) return;
 
-        GameObject assignedBox = UsefulStuffs.RandomNonNullFromList(readyToUseBoxes, out int assignedBoxIndex);
+        GameObject assignedBoxTemplate = UsefulStuffs.RandomNonNullFromList(readyToUseBoxes, out int assignedBoxIndex);
+        if (assignedBoxTemplate == null) return;
 
-        var newBox = Instantiate(assignedBox, spawnPosition.position, Quaternion.identity);
+        // Get the original prefab from boxPrefabs, not the template
+        GameObject boxPrefab = boxPrefabs[assignedBoxIndex];
 
-        int randomIndex = Random.Range(0, gameManager.itemTemplates.Count);
-        GameObject newItem = Instantiate(gameManager.itemTemplates[randomIndex].gameObject);
-        newItem.SetActive(false);
+        // Instantiate the box from the registered network prefab
+        var newBox = Instantiate(boxPrefab, spawnPosition.position, Quaternion.identity);
+
+        // Make sure the box has NetworkIdentity and NetworkTransform components
+        if (newBox.GetComponent<NetworkIdentity>() == null)
+        {
+            newBox.AddComponent<NetworkIdentity>();
+        }
+
+        // Add NetworkTransform if not present
+        if (newBox.GetComponent<NetworkTransformReliable>() == null)
+        {
+            newBox.AddComponent<NetworkTransformReliable>();
+        }
+
+        newBox.SetActive(true);
+        NetworkServer.Spawn(newBox);
+
+        // Spawn item if gameManager.itemTemplates exists
+        GameObject newItem = null;
+        if (gameManager.itemTemplates != null && gameManager.itemTemplates.Count > 0)
+        {
+            int randomIndex = Random.Range(0, gameManager.itemTemplates.Count);
+            newItem = Instantiate(gameManager.itemTemplates[randomIndex].gameObject);
+
+            if (newItem.GetComponent<NetworkIdentity>() == null)
+            {
+                newItem.AddComponent<NetworkIdentity>();
+            }
+
+            if (newItem.GetComponent<NetworkTransformReliable>() == null)
+            {
+                newItem.AddComponent<NetworkTransformReliable>();
+            }
+
+            newItem.SetActive(true);
+            NetworkServer.Spawn(newItem);
+            newItem.SetActive(false); // Item is inside the box
+        }
 
         if (newBox.TryGetComponent<Box>(out var boxComponent))
         {
@@ -579,15 +710,19 @@ public class OrdersManager : GenericManager<OrdersManager>
             boxComponent.order.requestObjectCreated = newBox;
             boxComponent.order.assignedBoxMaterial = assignedBoxIndex;
         }
-        
 
         if (newBox.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
-        deliveryArea.selectionGameObjects[requestee.queuePosition.x] = newBox;
-        deliveryArea.UpdateYoShit();
-        newBox.SetActive(true);
+
+        if (deliveryArea != null)
+        {
+            deliveryArea.selectionGameObjects[requestee.queuePosition.x] = newBox;
+            // Make sure to update delivery area on all clients
+            deliveryArea.UpdateYoShit();
+        }
+
         createdOrderObjects.Add(newBox);
     }
 

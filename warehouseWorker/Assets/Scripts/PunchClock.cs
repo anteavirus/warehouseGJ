@@ -21,18 +21,39 @@ public class PunchClock : Item
         }
     }
 
+    // EDITED: OnUse now properly handles network - only server starts game
     public override void OnUse(GameObject user)
     {
         if (!user.TryGetComponent<PunchCard>(out var _)) return;
         if (GameManager.Instance != null && !GameManager.Instance.gameStarted)
         {
             base.OnUse(gameObject);
-            GameManager.Instance.StartGame();
-            GameManager.Instance.timer.StartTimer();
+            
+            // EDITED: Only server can start the game
+            if (Mirror.NetworkServer.active)
+            {
+                GameManager.Instance.StartGame();
+            }
+            else
+            {
+                // Client requests server to start game
+                CmdStartGame();
+            }
+            
+            // Move objects up on all clients
             for (int i = 0; i < thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform.childCount; i++)
             {
                 StartCoroutine(MoveObjectUp(thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform.GetChild(i), 15, 1));
             }
+        }
+    }
+    
+    [Mirror.Command(requiresAuthority = false)]
+    private void CmdStartGame()
+    {
+        if (GameManager.Instance != null && !GameManager.Instance.gameStarted)
+        {
+            GameManager.Instance.StartGame();
         }
     }
 

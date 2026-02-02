@@ -216,8 +216,6 @@ public class MainMenuPlayerController : MonoBehaviour
         throwHintUI.gameObject.SetActive(show);
     }
 
-    // Rest of your existing methods...
-
     public void MoveToPosition(Transform target, System.Action onComplete = null)
     {
         try

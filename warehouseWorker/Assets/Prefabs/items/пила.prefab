@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8550617204275409185}
   - component: {fileID: -4824437831737161499}
   - component: {fileID: 8026182463746653033}
+  - component: {fileID: 7620184684700225231}
   m_Layer: 6
   m_Name: "\u043F\u0438\u043B\u0430"
   m_TagString: Untagged
@@ -148,6 +149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d27a905e9adcad4abcb404d3c4d04a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 0}
   ID: 13
   Name: {fileID: 8026182463746653033}
@@ -257,3 +262,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizationKey: item_saw
   text: 
+--- !u!114 &7620184684700225231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886748629304806966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 178755779
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

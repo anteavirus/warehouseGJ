@@ -1,8 +1,10 @@
+using Mirror;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 
-public class Item : MonoBehaviour
+[RequireComponent(typeof(NetworkIdentity))]
+public class Item : NetworkBehaviour
 {
     [SerializeField] private DeliveryAudioConfig _audioConfig;
     public DeliveryAudioConfig AudioConfig => _audioConfig;
@@ -31,6 +33,12 @@ public class Item : MonoBehaviour
 
     protected virtual void Awake()
     {
+        // Ensure NetworkIdentity exists 
+        if (GetComponent<NetworkIdentity>() == null)
+        {
+            gameObject.AddComponent<NetworkIdentity>();
+        }
+
         if (Name == null) Name = GetComponent<LocalizedText>();
         audioSource = GetComponent<AudioSource>();
         if (!audioSource)
@@ -39,6 +47,12 @@ public class Item : MonoBehaviour
         audioSource.spatialBlend = 1;
         audioSource.rolloffMode = AudioRolloffMode.Linear;
         audioSource.maxDistance = 30;
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        // Server spawns items
     }
 
     private void Start()

@@ -34,7 +34,7 @@ public class MainMenuExtraSpecialPunchCard : PunchCard
 
     public override void OnPickup(Transform holder)
     {
-        if (bastard != null) StopCoroutine(bastard);
+        if (bastard != null) StopAllCoroutines();
         base.OnPickup(holder);
         rb.useGravity = true;
         bastard = null;

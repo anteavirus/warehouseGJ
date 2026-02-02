@@ -27,6 +27,7 @@ public class AchievementManager : GenericManager<AchievementManager>
 
     public override void Initialize()
     {
+        if (achievements == null) return;  // tripped with multiplayer stuff, TODO: figure ts out, tho probs shouldn't even really be called with network shit
         achievementsManip = FileDataManipulator.ForPersistentDataPath(achievements, new string[1] { "achievements.sv" });
         achievements = (Achievements) achievementsManip.LoadData();  // TODO: needs to load achievements from somewhere. perhaps creating a new "localization" folder is fine.
         Debug.LogWarning("I should be properly created. Currently I technically do *some* work, but this isn't enough I believe.");

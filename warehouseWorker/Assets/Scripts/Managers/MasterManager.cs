@@ -15,7 +15,7 @@ public class MasterManager : GenericManager<MasterManager>
     public OrdersManager OrdersManager; 
     public ShelvesStockManager ShelvesStockManager; 
     public ShopManager ShopManager; 
-    public WarehouseGeneratorManager WarehouseGeneratorManager;
+    //public WarehouseGeneratorManager WarehouseGeneratorManager;
 
     void Awake()
     {
@@ -56,8 +56,8 @@ public class MasterManager : GenericManager<MasterManager>
         ShopManager = FindManager<ShopManager>(ShopManager);
         ShopManager.Initialize();
 
-        WarehouseGeneratorManager = FindManager<WarehouseGeneratorManager>(WarehouseGeneratorManager);
-        WarehouseGeneratorManager.Initialize();
+        //WarehouseGeneratorManager = FindManager<WarehouseGeneratorManager>(WarehouseGeneratorManager);
+        //WarehouseGeneratorManager.Initialize();
 
         GameManager.Initialize();
     }

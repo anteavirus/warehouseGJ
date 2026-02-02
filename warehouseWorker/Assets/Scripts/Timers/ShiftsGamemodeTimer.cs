@@ -41,10 +41,14 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
         }
     }
 
+    // EDITED: UpdateTimer now only runs on server for synchronization
     public override void UpdateTimer()
     {
         if (gameManager == null) gameManager = GameManager.Instance; // BAD, Don't care anymore
         if (!enabledTimer || !gameManager.gameStarted) return;
+        
+        // EDITED: Only server updates timer to keep it synchronized
+        if (!Mirror.NetworkServer.active) return;
 
         if (shifts.Length == 0) return;
 
@@ -132,7 +136,7 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     {
         if (timeOnAClock == null)
         {
-            var player = FindObjectOfType<PlayerController>().GetComponent<SerializableDictionaryObjectContainer>();
+            var player = FindObjectOfType<PlayerController>(true).GetComponent<SerializableDictionaryObjectContainer>();
             timeOnAClock = ((GameObject)player.Fetch("timerNumber")).GetComponent<TextMeshProUGUI>(); // i know it's a gameobject because of how lazy my fucking ass is
             timeOnAClock.gameObject.SetActive(true);
         }

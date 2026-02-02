@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     // === CAN BE CHANGED ===
     [Header("Movement Settings")]
@@ -110,19 +111,23 @@ public class PlayerController : MonoBehaviour
     PlayerGrabbyScript grabby;
 
 
-    void Start()
+    [SyncVar(hook = nameof(OnHeldItemChanged))]
+    private uint heldItemNetId = 0;
+
+    [SyncVar]
+    private Vector3 networkPosition;
+
+    [SyncVar]
+    private Quaternion networkRotation;
+
+    [SyncVar]
+    private float networkYRotation;
+
+    private void Start()
     {
-        if (pauseMenu == null) 
-            pauseMenu = pauseUI.GetComponent<PauseMenuUI>();
-
-        if (settingsManager == null)
-            settingsManager = FindObjectOfType<SettingsManager>();
-
-        if (settingsManager != null)
-        {
-            settingsManager.InitializeThyself();
-            settingsManager.LoadSettings();
-        }
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+        rbMass = rb.mass;
 
         if (feet == null)
             feet = transform.Find("feet")?.GetComponent<PlayerFeetScript>();
@@ -133,21 +138,72 @@ public class PlayerController : MonoBehaviour
             grabby.controller = this;
         }
 
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
-        rbMass = rb.mass;
-        Cursor.lockState = CursorLockMode.Locked;
+        // Only setup camera and input for local player
+        if (isLocalPlayer)
+        {
+            if (pauseMenu == null) 
+                pauseMenu = pauseUI.GetComponent<PauseMenuUI>();
 
-        if (playerCamera == null && Camera.main != null)
-            playerCamera = Camera.main;
+            if (settingsManager == null)
+                settingsManager = FindObjectOfType<SettingsManager>();
 
-        playerCameraTransform = playerCamera.transform;
-        originalCameraLocalPosition = playerCameraTransform.localPosition;
-        timeWatchStartPosition = timeWatch.transform.position;
+            if (settingsManager != null)
+            {
+                settingsManager.InitializeThyself();
+                settingsManager.LoadSettings();
+            }
+
+            Cursor.lockState = CursorLockMode.Locked;
+
+            if (playerCamera == null && Camera.main != null)
+                playerCamera = Camera.main;
+
+            playerCameraTransform = playerCamera.transform;
+            originalCameraLocalPosition = playerCameraTransform.localPosition;
+            timeWatchStartPosition = timeWatch.transform.position;
+
+            // Disable other players' cameras
+            DisableOtherPlayerCameras();
+        }
+        else
+        {
+            // Disable camera and input for remote players
+            if (playerCamera != null)
+                playerCamera.gameObject.SetActive(false);
+            
+            // Disable UI for remote players
+            if (pauseUI != null)
+                pauseUI.SetActive(false);
+        }
+    }
+
+    private void DisableOtherPlayerCameras()
+    {
+        PlayerController[] players = FindObjectsOfType<PlayerController>();
+        foreach (PlayerController player in players)
+        {
+            if (player != this && player.playerCamera != null)
+            {
+                player.playerCamera.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (!isLocalPlayer)
+        {
+            // Disable camera for remote players
+            if (playerCamera != null)
+                playerCamera.gameObject.SetActive(false);
+        }
     }
 
     void Update()
     {
+        if (!isLocalPlayer) return;
+
         if (moveDirection.magnitude < 0.1f || rb.velocity.magnitude < minSlipSpeed)
         {
             slipRisk = Mathf.MoveTowards(slipRisk, 0f, slipRiskDecayRate * Time.deltaTime);
@@ -176,9 +232,33 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         if (!alive) return;
-        if (canMove) MovePlayer();
-        HandleHeldItemPhysics();
-        HandleDragItemPhysics();
+
+        if (isLocalPlayer)
+        {
+            if (canMove) MovePlayer();
+            HandleHeldItemPhysics();
+            HandleDragItemPhysics();
+            
+            // Send position/rotation to server
+            CmdUpdateTransform(transform.position, transform.rotation.eulerAngles.y);
+        }
+        else
+        {
+            // Smoothly interpolate remote player position
+            if (Vector3.Distance(transform.position, networkPosition) > 0.1f)
+            {
+                transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * 10f);
+            }
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, networkYRotation, 0), Time.fixedDeltaTime * 10f);
+        }
+    }
+
+    [Command]
+    private void CmdUpdateTransform(Vector3 position, float yRotation)
+    {
+        networkPosition = position;
+        networkYRotation = yRotation;
+        networkRotation = Quaternion.Euler(0, yRotation, 0);
     }
 
     void HandlePauseToggle()
@@ -530,9 +610,60 @@ public class PlayerController : MonoBehaviour
 
     void PickUpItem(Item item)
     {
-        if (item == null && item.isPickupable) return;
+        if (item == null || !item.isPickupable) return;
 
-        heldItem = item.gameObject;
+        if (!isLocalPlayer) return;
+
+        // Get NetworkIdentity of item
+        NetworkIdentity itemNetId = item.GetComponent<NetworkIdentity>();
+        if (itemNetId == null)
+        {
+            Debug.LogWarning("Item doesn't have NetworkIdentity! Adding one...");
+            itemNetId = item.gameObject.AddComponent<NetworkIdentity>();
+        }
+
+        CmdPickupItem(itemNetId.netId);
+    }
+
+    [Command]
+    private void CmdPickupItem(uint itemNetId)
+    {
+        if (!NetworkServer.spawned.ContainsKey(itemNetId)) return;
+        
+        GameObject itemObj = NetworkServer.spawned[itemNetId].gameObject;
+        if (itemObj == null) return;
+
+        Item item = itemObj.GetComponent<Item>();
+        if (item == null || !item.isPickupable) return;
+
+        NetworkIdentity itemNetIdentity = itemObj.GetComponent<NetworkIdentity>();
+        if (itemNetIdentity == null) return;
+
+        // Check if item is already held by someone else
+        if (itemNetIdentity.connectionToClient != null && itemNetIdentity.connectionToClient != connectionToClient)
+            return;
+
+        // Assign authority to this player
+        if (itemNetIdentity.connectionToClient == null)
+        {
+            itemNetIdentity.AssignClientAuthority(connectionToClient);
+        }
+        
+        heldItemNetId = itemNetId;
+        
+        RpcPickupItem(itemNetId);
+    }
+
+    [ClientRpc]
+    private void RpcPickupItem(uint itemNetId)
+    {
+        if (!NetworkClient.spawned.ContainsKey(itemNetId)) return;
+        
+        GameObject itemObj = NetworkClient.spawned[itemNetId].gameObject;
+        Item item = itemObj.GetComponent<Item>();
+        if (item == null) return;
+
+        heldItem = itemObj;
         item.OnPickup(handTransform);
 
         heldItem.transform.parent = null;
@@ -551,7 +682,22 @@ public class PlayerController : MonoBehaviour
             feet.CleanUp();
         }
         catch { Debug.Log("Failed to remove feet or something. Whatever this is fine"); }
-        // TODO: This bug can still occur under slimmest of circumstances. I think? I just had it break! This is fucking stupid, whatever
+    }
+
+    private void OnHeldItemChanged(uint oldId, uint newId)
+    {
+        if (newId == 0)
+        {
+            heldItem = null;
+            heldItemRb = null;
+            return;
+        }
+
+        if (NetworkClient.spawned.ContainsKey(newId))
+        {
+            heldItem = NetworkClient.spawned[newId].gameObject;
+            heldItemRb = heldItem.GetComponent<Rigidbody>();
+        }
     }
 
     public void ForceDropItem()
@@ -561,23 +707,57 @@ public class PlayerController : MonoBehaviour
 
     private void DropItem()
     {
-        if (heldItem == null) return;
+        if (heldItem == null || !isLocalPlayer) return;
+        
+        NetworkIdentity itemNetId = heldItem.GetComponent<NetworkIdentity>();
+        if (itemNetId != null)
+        {
+            CmdDropItem(itemNetId.netId);
+        }
+    }
+
+    [Command]
+    private void CmdDropItem(uint itemNetId)
+    {
+        if (heldItemNetId != itemNetId) return;
+
+        GameObject itemObj = NetworkServer.spawned[itemNetId].gameObject;
+        Item item = itemObj.GetComponent<Item>();
+        if (item == null) return;
+
+        // Remove authority
+        itemObj.GetComponent<NetworkIdentity>().RemoveClientAuthority();
+        heldItemNetId = 0;
+
+        RpcDropItem(itemNetId);
+    }
+
+    [ClientRpc]
+    private void RpcDropItem(uint itemNetId)
+    {
+        if (!NetworkClient.spawned.ContainsKey(itemNetId)) return;
+
+        GameObject itemObj = NetworkClient.spawned[itemNetId].gameObject;
         DisableSpinRoutineIfReal();
 
-        Item item = heldItem.GetComponent<Item>();
+        Item item = itemObj.GetComponent<Item>();
         item.OnDrop();
 
         // Reset physics properties
-        if (heldItemRb != null)
+        Rigidbody itemRb = itemObj.GetComponent<Rigidbody>();
+        if (itemRb != null)
         {
-            heldItemRb.velocity = Vector3.zero;
-            heldItemRb.useGravity = true;
-            heldItemRb.drag = 0f;
-            heldItemRb.angularDrag = 0.05f;
+            itemRb.velocity = Vector3.zero;
+            itemRb.useGravity = true;
+            itemRb.drag = 0f;
+            itemRb.angularDrag = 0.05f;
         }
-        heldItem = null;
-        heldItemRb = null;
-        heldItem = null;
+        
+        if (heldItem == itemObj)
+        {
+            heldItem = null;
+            heldItemRb = null;
+        }
     }
 
     private void HandleThrow()
@@ -631,21 +811,55 @@ public class PlayerController : MonoBehaviour
 
     private void ThrowItem(float force)
     {
-        if (heldItem == null) return;
+        if (heldItem == null || !isLocalPlayer) return;
 
-        Item item = heldItem.GetComponent<Item>();
-        item.OnThrow(playerCameraTransform.forward, force);
+        NetworkIdentity itemNetId = heldItem.GetComponent<NetworkIdentity>();
+        if (itemNetId != null)
+        {
+            Vector3 throwDirection = playerCameraTransform.forward;
+            CmdThrowItem(itemNetId.netId, throwDirection, force);
+        }
+    }
+
+    [Command]
+    private void CmdThrowItem(uint itemNetId, Vector3 direction, float force)
+    {
+        if (heldItemNetId != itemNetId) return;
+
+        GameObject itemObj = NetworkServer.spawned[itemNetId].gameObject;
+        Item item = itemObj.GetComponent<Item>();
+        if (item == null) return;
+
+        // Remove authority
+        itemObj.GetComponent<NetworkIdentity>().RemoveClientAuthority();
+        heldItemNetId = 0;
+
+        RpcThrowItem(itemNetId, direction, force);
+    }
+
+    [ClientRpc]
+    private void RpcThrowItem(uint itemNetId, Vector3 direction, float force)
+    {
+        if (!NetworkClient.spawned.ContainsKey(itemNetId)) return;
+
+        GameObject itemObj = NetworkClient.spawned[itemNetId].gameObject;
+        Item item = itemObj.GetComponent<Item>();
+        item.OnThrow(direction, force);
 
         // Reset physics properties
-        if (heldItemRb != null)
+        Rigidbody itemRb = itemObj.GetComponent<Rigidbody>();
+        if (itemRb != null)
         {
-            heldItemRb.useGravity = true;
-            heldItemRb.drag = 0f;
-            heldItemRb.angularDrag = 0.05f;
+            itemRb.useGravity = true;
+            itemRb.drag = 0f;
+            itemRb.angularDrag = 0.05f;
         }
-        heldItem = null;
-        heldItemRb = null;
-        heldItem = null;
+        
+        if (heldItem == itemObj)
+        {
+            heldItem = null;
+            heldItemRb = null;
+        }
     }
 
     private void HandlePlacement()
@@ -803,19 +1017,58 @@ public class PlayerController : MonoBehaviour
 
     private void PlaceItem()
     {
-        if (previewObject == null) return;
-        Item item = heldItem.GetComponent<Item>();
-
-        if (heldItemRb != null)
+        if (previewObject == null || !isLocalPlayer) return;
+        
+        NetworkIdentity itemNetId = heldItem?.GetComponent<NetworkIdentity>();
+        if (itemNetId != null)
         {
-            heldItemRb.velocity = Vector3.zero;
-            heldItemRb.useGravity = true;
-            heldItemRb.drag = 0f;
-            heldItemRb.angularDrag = 0.05f;
+            Vector3 position = previewObject.transform.position;
+            Quaternion rotation = previewObject.transform.rotation;
+            CmdPlaceItem(itemNetId.netId, position, rotation);
+        }
+    }
+
+    [Command]
+    private void CmdPlaceItem(uint itemNetId, Vector3 position, Quaternion rotation)
+    {
+        if (heldItemNetId != itemNetId) return;
+
+        GameObject itemObj = NetworkServer.spawned[itemNetId].gameObject;
+        Item item = itemObj.GetComponent<Item>();
+        if (item == null) return;
+
+        // Remove authority
+        itemObj.GetComponent<NetworkIdentity>().RemoveClientAuthority();
+        heldItemNetId = 0;
+
+        RpcPlaceItem(itemNetId, position, rotation);
+    }
+
+    [ClientRpc]
+    private void RpcPlaceItem(uint itemNetId, Vector3 position, Quaternion rotation)
+    {
+        if (!NetworkClient.spawned.ContainsKey(itemNetId)) return;
+
+        GameObject itemObj = NetworkClient.spawned[itemNetId].gameObject;
+        Item item = itemObj.GetComponent<Item>();
+        
+        Rigidbody itemRb = itemObj.GetComponent<Rigidbody>();
+        if (itemRb != null)
+        {
+            itemRb.velocity = Vector3.zero;
+            itemRb.useGravity = true;
+            itemRb.drag = 0f;
+            itemRb.angularDrag = 0.05f;
         }
 
-        item.OnPlace(previewObject.transform.position, previewObject.transform.rotation);
-        heldItem = null;
+        item.OnPlace(position, rotation);
+        
+        if (heldItem == itemObj)
+        {
+            heldItem = null;
+            heldItemRb = null;
+        }
+        
         DisableSpinRoutineIfReal();
     }
 
@@ -890,7 +1143,7 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         // Player somehow disabled. Let's throw him back into the lobby.
-        GameManager.Instance.LoadSceneStr("Main Menu");
+        //GameManager.Instance.LoadSceneStr("Main Menu");
     }
 
     private void OnSettingsChanged()
@@ -969,8 +1222,14 @@ public class PlayerController : MonoBehaviour
         // i regret nothing
     }
 
+    public void Disconnect()
+    {
+        NetworkGameManager.singleton.StopHost();
+    }
+
     public void Die()
     {
+        if (NetworkGameManager.Instance) NetworkGameManager.singleton.StopHost();
         ((GameManager)GameManager.Instance).LoadSceneStr("Main Menu");
     }
 }

@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -21,9 +22,12 @@ public class GameManager : GenericManager<GameManager>
     public GameSave gameSave = new();
 
     // Game State
+    [SyncVar(hook = nameof(OnGameStartedChanged))]
     public bool gameStarted;
+    [SyncVar]
     public bool setdownItem;
     internal int levelSeed = 0;
+    [SyncVar(hook = nameof(OnScoreChanged))]
     public int score = 0;
 
     // Manager References
@@ -65,7 +69,8 @@ public class GameManager : GenericManager<GameManager>
     public float minimalDifficulty = 1, maximumDifficulty = 3;
     [SerializeField] float maxDifficultyTime = 120f;
     private float totalGameTime;
-    private float currentDifficulty;
+    // EDITED: Made currentDifficulty public so timers can access it
+    public float currentDifficulty;
 
     // Events System
     [Header("Events System")]
@@ -83,7 +88,16 @@ public class GameManager : GenericManager<GameManager>
     public override void Initialize()
     {
         base.Initialize();
-    
+        if (Instance == null || Instance == this)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogWarning("Dupe game manager; killed.");  // i think the base stuff doesn't work at all. it's. :(
+            Destroy(gameObject);
+            return;
+        }
         levelSeed = UnityEngine.Random.Range(0, 1969);
         InitializeItemTemplates();
         InitializeAudio();
@@ -130,6 +144,13 @@ public class GameManager : GenericManager<GameManager>
             obj.transform.parent = parent.transform;
             var itemComp = obj.GetComponent<Item>();
             itemComp.mixerGroup = sfx;
+            
+            // Ensure NetworkIdentity exists on templates (but don't spawn them - they're templates)
+            if (obj.GetComponent<NetworkIdentity>() == null)
+            {
+                obj.AddComponent<NetworkIdentity>();
+            }
+            
             itemTemplates.Add(itemComp);
             obj.SetActive(false);
         }
@@ -147,7 +168,7 @@ public class GameManager : GenericManager<GameManager>
 
     void InitializeManagers()
     {
-        var player = FindObjectOfType<PlayerController>()?.GetComponent<SerializableDictionaryObjectContainer>();
+        var player = FindObjectOfType<PlayerController>(true)?.GetComponent<SerializableDictionaryObjectContainer>();
         if (player == null) return; // we probably dont have to do this right now? something sometihng me complaining
         if (scoreUI == null)
         {
@@ -186,15 +207,21 @@ public class GameManager : GenericManager<GameManager>
         }
     }
 
+    // EDITED: Update now handles server/client properly
     void Update()
     {
         if (!gameStarted) return;
 
         UpdateGameTime();
         UpdateDifficulty();
-        UpdateEvents();
-
-        if (timer != null && timer.enabledTimer) timer.UpdateTimer();
+        
+        // EDITED: Events and timer updates only on server
+        if (isServer)
+        {
+            UpdateEvents();
+            if (timer != null && timer.enabledTimer) timer.UpdateTimer();
+        }
+        
         if (ordersManager != null) ordersManager.UpdateOrders();
 
         CheckForGameOver();
@@ -301,11 +328,36 @@ public class GameManager : GenericManager<GameManager>
         return false;
     }
 
+    // EDITED: Fixed score synchronization - now properly handles server/client calls
     public void AddScore(int amount, bool resetTimer = true, bool immediateReset = false)
     {
-        this.score += amount;
-        if (scoreUI != null)
-            scoreUI.text = this.score.ToString();
+        if (isServer)
+        {
+            // Server directly updates score (SyncVar will sync to clients)
+            score += amount;
+            
+            if (timer != null)
+            {
+                if (immediateReset) timer.ResetTimer();
+                if (resetTimer)
+                {
+                    setdownItem = true;
+                    if (ordersManager != null) ordersManager.GenerateNewOrderRequestee();
+                }
+            }
+        }
+        else
+        {
+            // Client requests score change from server
+            CmdAddScore(amount, resetTimer, immediateReset);
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdAddScore(int amount, bool resetTimer, bool immediateReset)
+    {
+        // Server validates and updates score
+        score += amount;
 
         if (timer != null)
         {
@@ -318,6 +370,19 @@ public class GameManager : GenericManager<GameManager>
         }
     }
 
+    private void OnScoreChanged(int oldScore, int newScore)
+    {
+        // EDITED: Score hook now updates UI on all clients when score changes
+        if (scoreUI != null)
+            scoreUI.text = newScore.ToString();
+    }
+
+    private void OnGameStartedChanged(bool oldValue, bool newValue)
+    {
+        gameStarted = newValue;
+    }
+
+    [Server]
     public void StartGame()
     {
         gameSave.score = score;  // TODO: save shit to save somewhere else probably
@@ -334,16 +399,27 @@ public class GameManager : GenericManager<GameManager>
         gameStarted = true;
         if (ordersManager != null && items.Count > 0)
             ordersManager.GenerateNewOrderRequestee();
+        
+        // Start timer on all clients
+        RpcStartGame();
+    }
+    
+    [ClientRpc]
+    private void RpcStartGame()
+    {
+        if (timer != null)
+        {
+            timer.StartTimer();
+        }
     }
 
     // Event System
+    [Server]
     bool StartRandomEvent()
     {
         if (eventList.Count == 0) return false;
 
-        //Debug.Log("Event should've started, but I can't fucking deal with this shit. Purge this code if you want to proceed."); // actually fuck this no logging of this shit, just know TODO: highlight xd that this fucker is stopping all the events. dont push this shit into production you numbnuts
-        return false;
-
+        // EDITED: Re-enabled event system - events now properly spawn and sync across network
         bool extremeMode = PlayerPrefs.GetInt("extremeDifficulty", 0) > 0;
 
         if (!extremeMode)
@@ -351,13 +427,23 @@ public class GameManager : GenericManager<GameManager>
             foreach (var evt in activeEvents)
             {
                 evt.EndEvent();
-                Destroy(evt.gameObject);
+                NetworkServer.Destroy(evt.gameObject);
             }
             activeEvents.Clear();
         }
 
         int randomIndex = UnityEngine.Random.Range(0, eventList.Count);
         GameObject eventInstance = Instantiate(eventList[randomIndex]);
+        
+        // Ensure NetworkIdentity exists for events
+        if (eventInstance.GetComponent<NetworkIdentity>() == null)
+        {
+            eventInstance.AddComponent<NetworkIdentity>();
+        }
+        
+        // Spawn event on network
+        NetworkServer.Spawn(eventInstance);
+        
         Event newEvent = eventInstance.GetComponent<Event>();
         newEvent.StartEvent();
         activeEvents.Add(newEvent);
@@ -373,7 +459,7 @@ public class GameManager : GenericManager<GameManager>
         {
             evt.EndEvent();
             activeEvents.Remove(evt);
-            Destroy(evt.gameObject);
+            NetworkServer.Destroy(evt.gameObject);
         }
     }
 
@@ -387,19 +473,38 @@ public class GameManager : GenericManager<GameManager>
         return null;
     }
 
+    // EDITED: CheckForGameOver now only runs on server
     void CheckForGameOver()
     {
+        if (!isServer) return;
+        
         if (timer != null && timer.IsTimeUp())
         {
             GameOver();
         }
     }
 
+    // EDITED: ForceGameOver now properly calls server method
     public void ForceGameOver()
+    {
+        if (isServer)
+        {
+            GameOver();
+        }
+        else
+        {
+            CmdForceGameOver();
+        }
+    }
+    
+    [Command(requiresAuthority = false)]
+    private void CmdForceGameOver()
     {
         GameOver();
     }
 
+    // EDITED: Game over now properly handles multiplayer - all players see game over
+    [Server]
     void GameOver()
     {
         if (!gameStarted) return;
@@ -411,46 +516,76 @@ public class GameManager : GenericManager<GameManager>
         }
         catch
         {
-            // Piss off negroid cunt
+            // Piss off  cunt
         }
         timer.StopTimer();
         
         foreach (var evt in activeEvents)
         {
             evt.EndEvent();
-            Destroy(evt.gameObject);
+            NetworkServer.Destroy(evt.gameObject);
         }
         activeEvents.Clear();
 
         gameStarted = false;
-        var player = FindFirstObjectByType<PlayerController>();
-        player.alive = false;
-
-        LeaderboardWrapper leaderboard = LoadLeaderboard();
-        LeaderboardEntry newEntry = CreateLeaderboardEntry();
-
-        bool added = false;
-        for (int i = 0; i < leaderboard.entries.Count; i++)
+        
+        // EDITED: Set all players to dead, not just one
+        RpcGameOver();
+    }
+    
+    [ClientRpc]
+    private void RpcGameOver()
+    {
+        // Set all players to dead
+        PlayerController[] players = FindObjectsOfType<PlayerController>();
+        foreach (var player in players)
         {
-            if (newEntry.score >= leaderboard.entries[i].score)
+            player.alive = false;
+        }
+        
+        // Only handle leaderboard on server (or local player)
+        if (isServer)
+        {
+            LeaderboardWrapper leaderboard = LoadLeaderboard();
+            LeaderboardEntry newEntry = CreateLeaderboardEntry();
+
+            bool added = false;
+            for (int i = 0; i < leaderboard.entries.Count; i++)
             {
-                leaderboard.entries.Insert(i, newEntry);
-                added = true;
-                break;
+                if (newEntry.score >= leaderboard.entries[i].score)
+                {
+                    leaderboard.entries.Insert(i, newEntry);
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) leaderboard.entries.Add(newEntry);
+
+            if (leaderboard.entries.Count > 10)
+            {
+                leaderboard.entries = leaderboard.entries.GetRange(0, 10);
+            }
+
+            SaveLeaderboard(leaderboard);
+            leaderboardEntry = newEntry;
+        }
+        
+        // Play game over animation on local player
+        var localPlayer = FindFirstObjectByType<PlayerController>();
+        if (localPlayer != null && localPlayer.isLocalPlayer)
+        {
+            var animator = localPlayer.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.Play("GameOver");
             }
         }
-        if (!added) leaderboard.entries.Add(newEntry);
-
-        if (leaderboard.entries.Count > 10)
+        
+        // Load scene after delay (only on server)
+        if (isServer)
         {
-            leaderboard.entries = leaderboard.entries.GetRange(0, 10);
+            Invoke(nameof(LoadSceneStr), 10f);
         }
-
-        SaveLeaderboard(leaderboard);
-
-        leaderboardEntry = newEntry;
-        player.GetComponent<Animator>().Play("GameOver");
-        Invoke(nameof(LoadSceneStr), 10f);
     }
 
     public void LoadSceneOffset(int offset = 0)

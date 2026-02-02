@@ -18,6 +18,9 @@ public class DeliveryArea : MonoBehaviour
     private Coroutine autoCloseCoroutine;
 
     private bool isInitialized = false;
+    
+    // EDITED: Added table index to identify which delivery area this is
+    [SerializeField] private int tableIndex = 0;
 
     private void Start()
     {
@@ -31,7 +34,25 @@ public class DeliveryArea : MonoBehaviour
 
         // Now initialize everything that depends on orderManager
         selectionGameObjects = new GameObject[orderManager.queue.GetLength(0)];
-        orderManager.deliveryArea = this;
+        
+        // EDITED: Find which table index this delivery area corresponds to
+        if (orderManager.doors != null && orderManager.doors.Length > 0)
+        {
+            for (int i = 0; i < orderManager.doors.Length; i++)
+            {
+                if (orderManager.doors[i] == this)
+                {
+                    tableIndex = i;
+                    break;
+                }
+            }
+        }
+        
+        // Only set deliveryArea if it's not already set (first one found)
+        if (orderManager.deliveryArea == null)
+        {
+            orderManager.deliveryArea = this;
+        }
 
         originalPosition = door.transform.position;
 
@@ -58,19 +79,28 @@ public class DeliveryArea : MonoBehaviour
         }
     }
 
+    // EDITED: ProcessDeliverySequence now uses correct table index and handles network properly
     IEnumerator ProcessDeliverySequence()
     {
         processingDelivery = true;
 
         // Attempt to process delivery
-        if (itemInsideMe != null && GameManager.Instance != null)
+        if (itemInsideMe != null && GameManager.Instance != null && OrdersManager.Instance != null)
         {
-            bool deliverySuccessful = GameManager.Instance.ProcessDelivery(0, itemInsideMe, itemInsideMe.fromShelf);
+            // EDITED: Use tableIndex instead of hardcoded 0
+            bool deliverySuccessful = GameManager.Instance.ProcessDelivery(tableIndex, itemInsideMe, itemInsideMe.fromShelf);
 
             if (deliverySuccessful)
             {
-                // Successful delivery - destroy item
-                Destroy(itemInsideMe.gameObject);
+                // Successful delivery - destroy item on network
+                if (Mirror.NetworkServer.active && itemInsideMe.GetComponent<Mirror.NetworkIdentity>() != null)
+                {
+                    Mirror.NetworkServer.Destroy(itemInsideMe.gameObject);
+                }
+                else
+                {
+                    Destroy(itemInsideMe.gameObject);
+                }
                 itemInsideMe = null;
 
                 // Close door after successful delivery

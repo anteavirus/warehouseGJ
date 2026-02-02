@@ -18,16 +18,20 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
         gameManager = gm;
         timeLeft = maxTimer;
         gamemode = "endless";
-        var player = FindObjectOfType<PlayerController>().GetComponent<SerializableDictionaryObjectContainer>();
+        var player = FindObjectOfType<PlayerController>(true).GetComponent<SerializableDictionaryObjectContainer>();
         timerUI = ((GameObject)player.Fetch("timerCircle")).GetComponent<Image>(); // i know it's a gameobject because of how lazy my fucking ass is
         timerUI.gameObject.SetActive(true);
         ((GameObject)player.Fetch("timerFire")).SetActive(true);
     }
 
+    // EDITED: UpdateTimer now only runs on server for synchronization
     public override void UpdateTimer()
     {
         if (gameManager == null) gameManager = GameManager.Instance; // BAD, Don't care anymore
         if (!enabledTimer || !gameManager.gameStarted) return;
+        
+        // EDITED: Only server updates timer to keep it synchronized
+        if (!Mirror.NetworkServer.active) return;
 
         // Calculate difficulty-based time decay
         float difficultyMultiplier = CalculateDifficultyMultiplier();
@@ -37,10 +41,11 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
         UpdateTimerUI();
     }
 
+    // EDITED: CalculateDifficultyMultiplier now properly uses gameManager's currentDifficulty
     private float CalculateDifficultyMultiplier()
     {
-        // This would use gameManager's difficulty settings
-        float currentDifficulty = 0f; // Get from gameManager
+        // EDITED: Use currentDifficulty from gameManager (now public)
+        float currentDifficulty = gameManager != null ? gameManager.currentDifficulty : 0.5f;
         bool hasActiveEvents = gameManager.activeEvents.Count > 0;
 
         if (hasActiveEvents && gameManager.score == 0)
