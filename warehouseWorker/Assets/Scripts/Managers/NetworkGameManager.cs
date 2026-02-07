@@ -77,6 +77,35 @@ public class NetworkGameManager : NetworkManager
         Debug.Log("Client connected!");
     }
 
+    public override void OnClientSceneChanged()
+    {
+        base.OnClientSceneChanged();
+        string sceneName = SceneManager.GetActiveScene().name;
+        // When client (not host) finishes loading the gameplay scene, initialize managers locally
+        // so shelves and other systems run. Server already inits in OnServerSceneChanged.
+        if (NetworkClient.isConnected && !NetworkServer.active && sceneName != "Main Menu")
+        {
+            StartCoroutine(InitializeClientManagersAfterSceneLoad());
+        }
+    }
+
+    private System.Collections.IEnumerator InitializeClientManagersAfterSceneLoad()
+    {
+        // Wait a few frames so SyncVars (e.g. GameManager.levelSeed) have time to sync from server before shelf generation
+        for (int i = 0; i < 3; i++)
+            yield return null;
+        var master = FindObjectOfType<MasterManager>();
+        if (master != null)
+        {
+            master.Initialize();
+            Debug.Log("Client: managers initialized after scene load.");
+        }
+        else
+        {
+            Debug.LogWarning("Client: MasterManager not found in scene.");
+        }
+    }
+
     public override void OnClientDisconnect()
     {
         base.OnClientDisconnect();
@@ -173,9 +202,8 @@ public class NetworkGameManager : NetworkManager
         if (sceneName != "Main Menu" && gameState != null && gameState.gameStatus == GameStatus.Ingame)
         {
             SetupGameMode(gameState.selectedGameMode);
-            MasterManager.Instance.Initialize(); // make them all initialize again r smth idk
-            MasterManager.Instance.IsaidInitialize();  // clients too
-            // TODO: order manager doesn't seem to create the UI elements for the monitor dynamically i don't wanna know why atp but yeah
+            MasterManager.Instance.Initialize();
+            // Clients initialize in OnClientSceneChanged when their scene load finishes (no RPC - avoids timing issues)
 
             // Move all existing players to spawn positions
             int index = 0;

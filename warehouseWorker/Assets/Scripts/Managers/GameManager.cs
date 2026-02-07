@@ -26,6 +26,7 @@ public class GameManager : GenericManager<GameManager>
     public bool gameStarted;
     [SyncVar]
     public bool setdownItem;
+    [SyncVar]
     internal int levelSeed = 0;
     [SyncVar(hook = nameof(OnScoreChanged))]
     public int score = 0;
@@ -98,7 +99,9 @@ public class GameManager : GenericManager<GameManager>
             Destroy(gameObject);
             return;
         }
-        levelSeed = UnityEngine.Random.Range(0, 1969);
+        // Only server sets levelSeed so shelf layout is consistent for all clients
+        if (isServer)
+            levelSeed = UnityEngine.Random.Range(0, 1969);
         InitializeItemTemplates();
         InitializeAudio();
         InitializeManagers();        
@@ -446,6 +449,7 @@ public class GameManager : GenericManager<GameManager>
         
         Event newEvent = eventInstance.GetComponent<Event>();
         newEvent.StartEvent();
+        newEvent.RpcStartEvent();
         activeEvents.Add(newEvent);
 
         StartCoroutine(EndEventAfterDuration(newEvent));
@@ -457,6 +461,7 @@ public class GameManager : GenericManager<GameManager>
         yield return new WaitForSeconds(evt.duration);
         if (activeEvents.Contains(evt))
         {
+            evt.RpcEndEvent();
             evt.EndEvent();
             activeEvents.Remove(evt);
             NetworkServer.Destroy(evt.gameObject);
@@ -522,6 +527,7 @@ public class GameManager : GenericManager<GameManager>
         
         foreach (var evt in activeEvents)
         {
+            evt.RpcEndEvent();
             evt.EndEvent();
             NetworkServer.Destroy(evt.gameObject);
         }
