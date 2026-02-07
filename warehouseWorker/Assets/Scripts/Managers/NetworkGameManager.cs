@@ -104,7 +104,8 @@ public class NetworkGameManager : NetworkManager
         GameObject player = Instantiate(playerPrefab, spawnPos, spawnRot);
         player.transform.SetParent(transform);
         NetworkServer.AddPlayerForConnection(conn, player);
-        player.SetActive(false);
+        NetworkServer.Spawn(player);
+        DisableYoShit(player);
 
         playerGameObjects[conn.connectionId] = player;
 
@@ -121,6 +122,7 @@ public class NetworkGameManager : NetworkManager
         if (playerGameObjects.ContainsKey(conn.connectionId))
         {
             playerGameObjects.Remove(conn.connectionId);
+            NetworkServer.UnSpawn(playerGameObjects[conn.connectionId]);
         }
 
         if (gameState != null)
@@ -172,6 +174,7 @@ public class NetworkGameManager : NetworkManager
         {
             SetupGameMode(gameState.selectedGameMode);
             MasterManager.Instance.Initialize(); // make them all initialize again r smth idk
+            MasterManager.Instance.IsaidInitialize();  // clients too
             // TODO: order manager doesn't seem to create the UI elements for the monitor dynamically i don't wanna know why atp but yeah
 
             // Move all existing players to spawn positions
@@ -182,8 +185,7 @@ public class NetworkGameManager : NetworkManager
                 {
                     Vector3 spawnPos = GetSpawnPositionForIndex(index);
                     kvp.Value.transform.position = spawnPos;
-                    kvp.Value.SetActive(true);
-
+                    ReenableYoShit(kvp.Value);
                     index++;
                 }
             }
@@ -251,6 +253,17 @@ public class NetworkGameManager : NetworkManager
         }
     }
 
+    // absolute dogshit
+    private void DisableYoShit(GameObject player)
+    {
+        player.GetComponent<PlayerController>().DisableYoShit(player);
+    }
+
+    private void ReenableYoShit(GameObject player)
+    {
+        player.GetComponent<PlayerController>().ReenableYoShit(player);
+    }
+
     private Vector3 GetSpawnPositionForIndex(int index)
     {
         if (spawnPoints != null && spawnPoints.Length > 0)
@@ -260,7 +273,7 @@ public class NetworkGameManager : NetworkManager
 
         // Fallback
         float angle = (index * 90f) * Mathf.Deg2Rad;
-        return new Vector3(Mathf.Cos(angle) * 2f, 1f, Mathf.Sin(angle) * 2f);
+        return new Vector3(Mathf.Cos(angle) * transform.position.x, transform.position.y, Mathf.Sin(angle) * transform.position.z);
     }
 
     // Public methods for UI
@@ -284,11 +297,4 @@ public class NetworkGameManager : NetworkManager
     {
         StopClient();
     }
-}
-
-public enum GameStatus
-{
-    Menu,   //  None, we're not preparing for the game
-    Lobby,  //  We're preparing for a game
-    Ingame  //  We're IN a game. Joining players must now join a new way (Unimplemented: box with the player in spawned ingame, player gets to see from the POV of the box. Players must use the box to unpack the player. If the box (with the player inside it) is destroyed, so is the player and they are not allowed to join the session.
 }

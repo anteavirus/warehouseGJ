@@ -1,5 +1,7 @@
 ﻿using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class NetworkGameState : NetworkBehaviour
 {
@@ -48,4 +50,45 @@ public class NetworkGameState : NetworkBehaviour
     {
         playerCount = count;
     }
+
+    [ClientRpc]
+    public void RpcInitializeAllManagers()
+    {
+        Debug.Log("Client received RpcInitializeAllManagers");
+
+        // Clients initialize their local managers
+        if (!isServer && MasterManager.Instance != null)
+        {
+            MasterManager.Instance.Initialize();
+        }
+    }
+
+    [TargetRpc]
+    public void TargetActivatePlayer(NetworkConnectionToClient target)
+    {
+        Debug.Log("Client activating player via TargetRpc");
+
+        // This runs on the specific client's connection
+        if (NetworkClient.localPlayer != null)
+        {
+            NetworkClient.localPlayer.gameObject.SetActive(true);
+
+        }
+    }
+
+    [ClientRpc]
+    public void RpcNotifyGameStart()
+    {
+        Debug.Log("Game is starting on client!");
+
+        // Any client-side game start logic here
+        // For example, disable main menu UI, show game UI, etc.
+    }
+}
+
+public enum GameStatus
+{
+    Menu,   //  None, we're not preparing for the game
+    Lobby,  //  We're preparing for a game
+    Ingame  //  We're IN a game. Joining players must now join a new way (Unimplemented: box with the player in spawned ingame, player gets to see from the POV of the box. Players must use the box to unpack the player. If the box (with the player inside it) is destroyed, so is the player and they are not allowed to join the session.
 }

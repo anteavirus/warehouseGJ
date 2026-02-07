@@ -84,7 +84,8 @@ public class PlayerController : NetworkBehaviour
     [Header("Pause UI Menu")]
     [SerializeField] private Animator pauseAnimator;
     [SerializeField] private PauseMenuUI pauseMenu;
-    [SerializeField] private GameObject pauseUI;
+    public GameObject pauseUI;
+    public GameObject UI;
     public AudioSource musicSource;
 
     public bool alive = true;
@@ -110,18 +111,8 @@ public class PlayerController : NetworkBehaviour
     PlayerFeetScript feet;
     PlayerGrabbyScript grabby;
 
-
     [SyncVar(hook = nameof(OnHeldItemChanged))]
     private uint heldItemNetId = 0;
-
-    [SyncVar]
-    private Vector3 networkPosition;
-
-    [SyncVar]
-    private Quaternion networkRotation;
-
-    [SyncVar]
-    private float networkYRotation;
 
     private void Start()
     {
@@ -174,6 +165,9 @@ public class PlayerController : NetworkBehaviour
             // Disable UI for remote players
             if (pauseUI != null)
                 pauseUI.SetActive(false);
+
+            if (UI != null)
+                UI.SetActive(false);
         }
     }
 
@@ -233,32 +227,12 @@ public class PlayerController : NetworkBehaviour
     {
         if (!alive) return;
 
+        HandleHeldItemPhysics();
+        HandleDragItemPhysics();
         if (isLocalPlayer)
         {
             if (canMove) MovePlayer();
-            HandleHeldItemPhysics();
-            HandleDragItemPhysics();
-            
-            // Send position/rotation to server
-            CmdUpdateTransform(transform.position, transform.rotation.eulerAngles.y);
         }
-        else
-        {
-            // Smoothly interpolate remote player position
-            if (Vector3.Distance(transform.position, networkPosition) > 0.1f)
-            {
-                transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * 10f);
-            }
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, networkYRotation, 0), Time.fixedDeltaTime * 10f);
-        }
-    }
-
-    [Command]
-    private void CmdUpdateTransform(Vector3 position, float yRotation)
-    {
-        networkPosition = position;
-        networkYRotation = yRotation;
-        networkRotation = Quaternion.Euler(0, yRotation, 0);
     }
 
     void HandlePauseToggle()
@@ -381,7 +355,7 @@ public class PlayerController : NetworkBehaviour
             );
         }
     }
-
+    // TODO: clients can't drag, but at least the server can see how the clients pick up the items. noone can place down items, not sure about dropping them. items' position is not synched properly. clients don't get shelves generated, i'm assuming something was a null.
     private void UpdateDrag() => rb.drag = feet.isGrounded ? groundDrag : airDrag;
 
     private void HandleFootsteps()
@@ -515,6 +489,7 @@ public class PlayerController : NetworkBehaviour
         if (gameObj == dragObject)
         {
             dragObject = null;
+            dragObject.GetComponent<NetworkIdentity>().RemoveClientAuthority();
             return;
         }
 
@@ -522,6 +497,7 @@ public class PlayerController : NetworkBehaviour
         if (dragObject != null)
         {
             dragObject = null;
+            dragObject.GetComponent<NetworkIdentity>().RemoveClientAuthority();
         }
 
         StartDragging(gameObj);
@@ -541,6 +517,12 @@ public class PlayerController : NetworkBehaviour
         dragRB.drag = 1f;
         dragRB.angularDrag = 1f;
         dragRB.useGravity = true;
+
+        var itemNetObj = dragObj.GetComponent<NetworkIdentity>();
+        if (itemNetObj.connectionToClient == null)
+        {
+            itemNetObj.AssignClientAuthority(connectionToClient);
+        }
 
         Debug.Log($"Started dragging: {dragObject.name}");
     }
@@ -615,8 +597,7 @@ public class PlayerController : NetworkBehaviour
         if (!isLocalPlayer) return;
 
         // Get NetworkIdentity of item
-        NetworkIdentity itemNetId = item.GetComponent<NetworkIdentity>();
-        if (itemNetId == null)
+        if (!item.TryGetComponent<NetworkIdentity>(out var itemNetId))
         {
             Debug.LogWarning("Item doesn't have NetworkIdentity! Adding one...");
             itemNetId = item.gameObject.AddComponent<NetworkIdentity>();
@@ -667,6 +648,7 @@ public class PlayerController : NetworkBehaviour
         item.OnPickup(handTransform);
 
         heldItem.transform.parent = null;
+
         heldItemRb = heldItem.GetComponent<Rigidbody>();
         if (heldItemRb != null)
         {
@@ -960,6 +942,64 @@ public class PlayerController : NetworkBehaviour
         UpdatePreviewAppearance();
     }
 
+    [Command]
+    public void CmdRequestTeleport(Vector3 position, Quaternion rotation)
+    {
+        // Server validates and teleports
+        transform.SetPositionAndRotation(position, rotation);
+
+        // Tell all clients about the teleport
+        RpcTeleport(position, rotation);
+    }
+
+    [ClientRpc]
+    void RpcTeleport(Vector3 position, Quaternion rotation)
+    {
+        if (!isLocalPlayer) return; // Only move our own player
+
+        transform.SetPositionAndRotation(position, rotation);
+    }
+
+    public void DisableYoShit(GameObject player)
+    {
+        DisableYoShitRPC(player);
+        DisableYoShitServer(player);
+    }
+    public void ReenableYoShit(GameObject player)
+    {
+        ReenableYoShitRPC(player);
+        ReenableYoShitServer(player);
+    }
+
+    // Garbage code, yippee
+    [ClientRpc]
+    void DisableYoShitRPC(GameObject player)
+    {
+        player.SetActive(false);
+        player.GetComponent<Rigidbody>().isKinematic = true;
+    }
+    [Server]
+    void DisableYoShitServer(GameObject player)
+    {
+        player.SetActive(false);
+        player.GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+
+    [ClientRpc]
+    void ReenableYoShitRPC(GameObject player)
+    {
+        player.SetActive(true);
+        player.GetComponent<Rigidbody>().isKinematic = false;
+    }
+    [Server]
+    void ReenableYoShitServer(GameObject player)
+    {
+        player.SetActive(true);
+        player.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+
     private RaycastHit? GetPriorityHit(RaycastHit[] hits)
     {
         RaycastHit? interactableHit = null;
@@ -1233,3 +1273,6 @@ public class PlayerController : NetworkBehaviour
         ((GameManager)GameManager.Instance).LoadSceneStr("Main Menu");
     }
 }
+// todo. players cant drag stuff that wasn't *spawned*. so i need to spawn those crates in as to allow them to be dragged, OR figure out a hacky way to allow that instead
+// same with preview items . okay so simpler fix to two of these issues: make something that spawns these items. urgh this stinks
+// also, teleport on the client side doesn't exactly work, as the server sometimes falls through and keeps falling. and that's despite the fact that server is not moving anywhere on their side of the game

@@ -29327,6 +29327,7 @@ GameObject:
   - component: {fileID: 778163637}
   - component: {fileID: 778163636}
   - component: {fileID: 778163635}
+  - component: {fileID: 778163640}
   m_Layer: 0
   m_Name: ArenaLimits
   m_TagString: Untagged
@@ -29346,6 +29347,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8afc06192c94a342b380a6151587a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!65 &778163636
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29427,11 +29432,28 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.2, y: 10.8, z: 10.2}
-  m_LocalScale: {x: 134.26, y: 134.26, z: 134.26}
+  m_LocalScale: {x: 219.70305, y: 219.70305, z: 219.70305}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &778163640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 778163634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 2075004229
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!4 &779392785 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2948954642890937735, guid: 1d4914a1fd62c8c4da8760fddda498a7,
@@ -47765,6 +47787,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1832216797}
     m_Modifications:
+    - target: {fileID: -6947938080807121004, guid: e42774a0f12832442a810fd6093ea058,
+        type: 3}
+      propertyPath: sceneId
+      value: 2584321646
+      objectReference: {fileID: 0}
     - target: {fileID: -5222378148774233081, guid: e42774a0f12832442a810fd6093ea058,
         type: 3}
       propertyPath: sceneId
@@ -51556,6 +51583,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1832216797}
     m_Modifications:
+    - target: {fileID: -6947938080807121004, guid: e42774a0f12832442a810fd6093ea058,
+        type: 3}
+      propertyPath: sceneId
+      value: 3906926220
+      objectReference: {fileID: 0}
     - target: {fileID: -5222378148774233081, guid: e42774a0f12832442a810fd6093ea058,
         type: 3}
       propertyPath: sceneId
@@ -51943,6 +51975,11 @@ PrefabInstance:
         type: 3}
       propertyPath: sceneId
       value: 4029614108
+      objectReference: {fileID: 0}
+    - target: {fileID: -2565254883457787866, guid: 54401f7e59df5554cb9be7300b293e66,
+        type: 3}
+      propertyPath: sceneId
+      value: 2426498459
       objectReference: {fileID: 0}
     - target: {fileID: 4983241534061811405, guid: 54401f7e59df5554cb9be7300b293e66,
         type: 3}

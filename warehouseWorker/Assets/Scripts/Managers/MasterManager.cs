@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -60,6 +61,12 @@ public class MasterManager : GenericManager<MasterManager>
         //WarehouseGeneratorManager.Initialize();
 
         GameManager.Initialize();
+    }
+
+    [ClientRpc]
+    public void IsaidInitialize()
+    {
+        Initialize();
     }
 
     private T FindManager<T>(T existingManager) where T : MonoBehaviour

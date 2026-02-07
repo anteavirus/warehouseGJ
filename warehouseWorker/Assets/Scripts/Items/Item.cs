@@ -162,5 +162,29 @@ public class Item : NetworkBehaviour
             AudioClip clip = collisionSounds[Random.Range(0, collisionSounds.Length)];
             audioSource.PlayOneShot(clip, impactVolume);
         }
+
+        if (collision.gameObject.TryGetComponent<PlayerController>(out var plr))
+        {
+            PleaseWork(plr);
+        }
+    }
+
+    [Server]
+    void PleaseWork(PlayerController plr, bool actuallyDont = false)
+    {
+
+        var a = GetComponent<NetworkIdentity>();
+        if (!actuallyDont)
+            a.AssignClientAuthority(plr.connectionToClient);
+        else
+            a.RemoveClientAuthority();
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.TryGetComponent<PlayerController>(out var plr))
+        {
+            PleaseWork(plr, true);
+        }
     }
 }

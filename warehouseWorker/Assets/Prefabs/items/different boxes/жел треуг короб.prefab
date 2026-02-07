@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 2729233576602681609}
   - component: {fileID: 5273844809283771851}
   - component: {fileID: -4839829646989551575}
+  - component: {fileID: 1729368121372378355}
+  - component: {fileID: -210613908083603654}
   m_Layer: 0
   m_Name: "\u0436\u0435\u043B \u0442\u0440\u0435\u0443\u0433 \u043A\u043E\u0440\u043E\u0431"
   m_TagString: Untagged
@@ -98,6 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25eeab41706f7a439a240ef48333062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _audioConfig: {fileID: 11400000, guid: f859b9e7eeff1fc4aab11b10320961c2, type: 2}
   ID: 0
   Name: {fileID: 6236705258853314598, guid: 2eb5e89c85e90234d961199ffcac3cd0, type: 3}
@@ -260,3 +266,55 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: 07643c6055d2b044aafed9dc42aa8edc, type: 3}
+--- !u!114 &1729368121372378355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2767663346185129533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 4159785762
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &-210613908083603654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2767663346185129533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0.05
+  target: {fileID: 1928216731443815302}
+  updateMethod: 0
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 1
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01

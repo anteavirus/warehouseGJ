@@ -7741,7 +7741,7 @@ GameObject:
   m_Component:
   - component: {fileID: 554592132807242651}
   m_Layer: 0
-  m_Name: Package Spawnpoint
+  m_Name: Player Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7756,7 +7756,7 @@ Transform:
   m_GameObject: {fileID: 5090694960971902447}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0.70710677, z: 0.0000011473893, w: 0.0000031068917}
-  m_LocalPosition: {x: 25.86, y: 2.619, z: 40.86}
+  m_LocalPosition: {x: 15.15, y: 2.619, z: 40.68}
   m_LocalScale: {x: 9.761425, y: 5.3255982, z: 0.73550457}
   m_ConstrainProportionsScale: 0
   m_Children: []
