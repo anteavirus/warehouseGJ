@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.UI;
+using Mirror;
 
 public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
 {
@@ -13,6 +15,10 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
         public float endTime;   // in seconds from midnight
         public float timeScale = 1.0f; // Speed multiplier for this shift
     }
+
+
+    [SyncVar(hook = nameof(OnTimeLeftChanged))]
+    private float currentTimeSync;
 
     [Header("Shift Settings")]
     [SerializeField] private Shift[] shifts;
@@ -34,11 +40,39 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     {
         gamemode = "shifts";
         gameManager = gm;
+        StartCoroutine(nameof(AtSomePointDoYourJob));
         if (shifts.Length > 0)
         {
             currentTimeOfDay = shifts[0].startTime;
             UpdateTimerUI();
         }
+    }
+
+    private void OnTimeLeftChanged(float _, float newVal)
+    {
+        if (!isServer)   // clients update their local copy and UI
+        {
+            currentTimeOfDay = newVal;
+            UpdateTimerUI();
+        }
+    }
+
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        // UI setup – runs on every client
+        StartCoroutine(AtSomePointDoYourJob());
+    }
+
+    // TODO: this is last file i've edited as of 08 02 26 if i'm still not finished the gameplay process can't begin i guess for some reason. i'm certain its cuz of client server issues as always. so yeah todo fucking make the gameplay loop begin . also the updated board in order manager doesn't update i think? test that
+    IEnumerator AtSomePointDoYourJob()
+    {
+        yield return new WaitUntil(() => PlayerController.LocalPlayer.IsTrulyNull());
+        var player = PlayerController.LocalPlayer.GetComponent<SerializableDictionaryObjectContainer>();
+        timeOnAClock = ((GameObject)player.Fetch("timerNumber")).GetComponent<TextMeshProUGUI>(); // i know it's a gameobject because of how lazy my fucking ass is
+        timeOnAClock.gameObject.SetActive(true);
+        yield break;
     }
 
     // EDITED: UpdateTimer now only runs on server for synchronization
@@ -57,6 +91,7 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
         // Calculate time progression based on shift time scale
         float deltaTime = Time.deltaTime * currentShift.timeScale;
         currentTimeOfDay += deltaTime;
+        currentTimeSync = currentTimeOfDay;
 
         // Check if shift ended
         if (currentTimeOfDay >= currentShift.endTime)
@@ -136,7 +171,12 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     {
         if (timeOnAClock == null)
         {
-            var player = FindObjectOfType<PlayerController>(true).GetComponent<SerializableDictionaryObjectContainer>();
+            var player = PlayerController.LocalPlayer?.GetComponent<SerializableDictionaryObjectContainer>();
+            if (player == null)
+            {
+                Debug.LogError("Dude  your shitcode is ass.");
+                return;
+            }
             timeOnAClock = ((GameObject)player.Fetch("timerNumber")).GetComponent<TextMeshProUGUI>(); // i know it's a gameobject because of how lazy my fucking ass is
             timeOnAClock.gameObject.SetActive(true);
         }

@@ -12,6 +12,7 @@ public class NetworkLobbyUI : MonoBehaviour
     [SerializeField] private Button joinButton;
     [SerializeField] private Button beginButton;
     [SerializeField] private Button disconnectButton;
+    [SerializeField] private TMP_InputField portHostInput;
     [SerializeField] private TMP_InputField addressInput;
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private TMP_Text playerCountText;
@@ -38,6 +39,9 @@ public class NetworkLobbyUI : MonoBehaviour
 
         if (beginButton != null)
             beginButton.onClick.AddListener(OnBeginClicked);
+
+        if (portHostInput != null)
+            portHostInput.text = "7777";
 
         if (addressInput != null)
             addressInput.text = "localhost";
@@ -95,7 +99,8 @@ public class NetworkLobbyUI : MonoBehaviour
     {
         if (networkManager != null)
         {
-            networkManager.StartHostGame();
+            string port = portHostInput != null ? portHostInput.text : "7777";
+            networkManager.StartHostGame(port);
         }
         else
         {

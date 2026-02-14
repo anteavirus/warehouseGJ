@@ -109,6 +109,11 @@ public class OrdersManager : GenericManager<OrdersManager>
                     Instance.AnnihilateRequestee(queuePosition);
                 }
             }
+
+            if (Instance != null && Instance.isServer)
+            {
+                Instance.RpcUpdateRequesteeSlot(queuePosition.x, queuePosition.y, timeRemaining, timeStart, true);
+            }
         }
 
         private float CalculateQueueJumpChance()
@@ -132,7 +137,8 @@ public class OrdersManager : GenericManager<OrdersManager>
     public List<GameObject> boxPrefabs = new List<GameObject>();  //setup
     public List<GameObject> readyToUseBoxes = new List<GameObject>(); //step2
     public List<Sprite> readyToUseBoxSprites = new List<Sprite>(); //step3
-    public Transform spawnPosition;
+    public Transform spawnPosition;   // Uh, they should spawn at the door spawn areas instead... Spawn position is best for players AND orders made by players.  I think.
+                                      // We really do need a Game Design Document...
     [Range(0, 10), SerializeField] float randomSpawnIntervalMax = 1;
 
     [Header("Layout")]
@@ -178,11 +184,15 @@ public class OrdersManager : GenericManager<OrdersManager>
         if (gameManager == null)
             gameManager = GameManager.Instance;
         source = GetComponent<AudioSource>();
+        if (canvas.IsTrulyNull())
+        {
+            canvas = GameObject.Find("OrdersCanvas").GetComponent<RectTransform>();
+        }
 
         // Don't initialize UI on server (headless) unless it's a host
         if (!isServer || (isServer && NetworkServer.active && NetworkClient.active)) // Host
         {
-            CreatePanels();
+            CreatePanels();  // these don't attach to the canvas for some reason. todo: fixit
             CreateGridSlots();
             UpdateOrderUI(); // Initial UI update
         }
@@ -198,10 +208,10 @@ public class OrdersManager : GenericManager<OrdersManager>
                 }
             }
 
-            doors = FindObjectsOfType<DeliveryArea>();
-            PrepareBoxes();
-            StartCoroutine(nameof(PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue));
         }
+        doors = FindObjectsOfType<DeliveryArea>();
+        PrepareBoxes();
+        StartCoroutine(nameof(PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue));
     }
 
     IEnumerator PrepareSpritesOneDayBecauseFuckYouRaceConditionOuttaTheBlue()
@@ -224,6 +234,40 @@ public class OrdersManager : GenericManager<OrdersManager>
         }
     }
 
+    [Server]
+    public void SyncFullOrdersStateToPlayer(NetworkConnectionToClient conn)
+    {
+        // Send all requestee slots
+        for (int x = 0; x < gridWidth; x++)
+            for (int y = 0; y < gridHeight; y++)
+            {
+                var req = queue[x, y];
+                if (req != null)
+                    TargetUpdateRequesteeSlot(conn, x, y, req.timeRemaining, req.timeStart, true);
+                else
+                    TargetUpdateRequesteeSlot(conn, x, y, 0, 1, false);
+            }
+
+        // Send all active orders
+        for (int i = 0; i < activeOrders.Length; i++)
+        {
+            var order = activeOrders[i];
+            if (order != null)
+                TargetUpdateOrderSlot(conn, i, (int)order.orderType, order.assignedBoxMaterial, true);
+            else
+                TargetUpdateOrderSlot(conn, i, 0, 0, false);
+        }
+    }
+
+    [TargetRpc]
+    private void TargetUpdateRequesteeSlot(NetworkConnection target, int x, int y, float timeRemaining, float timeStart, bool exists)
+        => RpcUpdateRequesteeSlot(x, y, timeRemaining, timeStart, exists);
+
+    [TargetRpc]
+    private void TargetUpdateOrderSlot(NetworkConnection target, int index, int orderType, int assignedBoxMaterial, bool exists)
+        => RpcUpdateOrderSlot(index, orderType, assignedBoxMaterial, exists);
+
+
     private void PrepareBoxes()
     {
         foreach (GameObject boxPrefab in boxPrefabs)
@@ -236,9 +280,13 @@ public class OrdersManager : GenericManager<OrdersManager>
                 boxInstance.transform.SetParent(transform);
                 boxInstance.SetActive(false);
 
+                if (boxInstance.TryGetComponent<Box>(out var box))
+                {
+                    Destroy(box);
+                }
+
                 // Remove NetworkIdentity if it exists on the template
-                NetworkIdentity netIdentity = boxInstance.GetComponent<NetworkIdentity>();
-                if (netIdentity != null)
+                if (boxInstance.TryGetComponent<NetworkIdentity>(out var netIdentity))
                 {
                     Destroy(netIdentity);
                 }
@@ -415,8 +463,10 @@ public class OrdersManager : GenericManager<OrdersManager>
         {
             queuePosition = emptySpot.Value
         };
-        queue[emptySpot.Value.x, emptySpot.Value.y] = newRequestee;
 
+        queue[emptySpot.Value.x, emptySpot.Value.y] = newRequestee;
+        RpcUpdateRequesteeSlot(emptySpot.Value.x, emptySpot.Value.y,
+                               newRequestee.timeRemaining, newRequestee.timeStart, true);
         RpcPlayOrderSound(0);
     }
     
@@ -455,6 +505,8 @@ public class OrdersManager : GenericManager<OrdersManager>
             {
                 activeOrders[requestee.queuePosition.x] = requestee.request;
                 requestee.request.orderPosition = requestee.queuePosition.x;
+                RpcUpdateOrderSlot(requestee.queuePosition.x, (int)requestee.request.orderType,
+                   requestee.request.assignedBoxMaterial, true);
 
                 if (requestee.request.orderType == OrderType.Deposit)
                 {
@@ -504,6 +556,7 @@ public class OrdersManager : GenericManager<OrdersManager>
             {
                 createdOrderObjects.Remove(order.requestObjectCreated);
             }
+            RpcUpdateOrderSlot(order.orderPosition, 0, 0, false);
         }
     }
 
@@ -520,6 +573,7 @@ public class OrdersManager : GenericManager<OrdersManager>
                 deliveryArea.selectionGameObjects[order.orderPosition] = null;
 
             gameManager.IncreaseChanceOfEvent();
+            RpcUpdateOrderSlot(order.orderPosition, 0, 0, false);
         }
     }
 
@@ -567,6 +621,11 @@ public class OrdersManager : GenericManager<OrdersManager>
             }
 
             queue[requesteePos.x, requesteePos.y] = null;
+        }
+
+        if (isServer)
+        {
+            RpcUpdateRequesteeSlot(requesteePos.x, requesteePos.y, 0, 1, false);
         }
     }
 
@@ -652,10 +711,60 @@ public class OrdersManager : GenericManager<OrdersManager>
         UpdateOrderUI();
     }
 
+    [ClientRpc]
+    private void RpcUpdateRequesteeSlot(int x, int y, float timeRemaining, float timeStart, bool exists)
+    {
+        if (requesteeSlots == null) return; // UI not yet initialized
+
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) return;
+
+        var slot = requesteeSlots[x, y];
+        if (!exists)
+        {
+            slot.color = UsefulStuffs.semiTransparent;
+            slot.fillAmount = 1f;
+        }
+        else
+        {
+            float percent = timeRemaining / timeStart;
+            slot.fillAmount = percent;
+            slot.color = GetTimeColor(percent);
+            slot.color = UsefulStuffs.WithAlpha(slot.color, 1f);
+        }
+    }
+
+    [ClientRpc]
+    private void RpcUpdateOrderSlot(int index, int orderType, int assignedBoxMaterial, bool exists)
+    {
+        if (orderSlots == null) return;
+
+        if (index < 0 || index >= orderSlots.Length) return;
+
+        var slot = orderSlots[index];
+        if (!exists)
+        {
+            slot.color = UsefulStuffs.semiTransparent;
+            slot.sprite = null;
+        }
+        else
+        {
+            slot.color = Color.white;
+            if (orderType == (int)OrderType.Receive)
+            {
+                if (readyToUseBoxSprites != null && assignedBoxMaterial < readyToUseBoxSprites.Count)
+                    slot.sprite = readyToUseBoxSprites[assignedBoxMaterial];
+            }
+            else if (orderType == (int)OrderType.Deposit)
+            {
+                slot.sprite = depositImage;
+            }
+        }
+    }
+
     [Server]
     void SpawnItem(OrderRequestee requestee)
     {
-        if (readyToUseBoxes.Count < 1 || spawnPosition == null || gameManager.itemTemplates.Count == 0) return;
+        if (readyToUseBoxes.Count < 1 || doors.Length < 1 || gameManager.itemTemplates.Count == 0) return;
 
         GameObject assignedBoxTemplate = UsefulStuffs.RandomNonNullFromList(readyToUseBoxes, out int assignedBoxIndex);
         if (assignedBoxTemplate == null) return;
@@ -664,7 +773,7 @@ public class OrdersManager : GenericManager<OrdersManager>
         GameObject boxPrefab = boxPrefabs[assignedBoxIndex];
 
         // Instantiate the box from the registered network prefab
-        var newBox = Instantiate(boxPrefab, spawnPosition.position, Quaternion.identity);
+        var newBox = Instantiate(boxPrefab, UsefulStuffs.RandomFromArray(doors).transform.position, Quaternion.identity);
 
         // Make sure the box has NetworkIdentity and NetworkTransform components
         if (newBox.GetComponent<NetworkIdentity>() == null)
@@ -719,8 +828,6 @@ public class OrdersManager : GenericManager<OrdersManager>
         if (deliveryArea != null)
         {
             deliveryArea.selectionGameObjects[requestee.queuePosition.x] = newBox;
-            // Make sure to update delivery area on all clients
-            deliveryArea.UpdateYoShit();
         }
 
         createdOrderObjects.Add(newBox);

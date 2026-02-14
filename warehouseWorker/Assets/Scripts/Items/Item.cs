@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 
-[RequireComponent(typeof(NetworkIdentity))]
 public class Item : NetworkBehaviour
 {
     [SerializeField] private DeliveryAudioConfig _audioConfig;
@@ -58,6 +57,8 @@ public class Item : NetworkBehaviour
     private void Start()
     {
         audioSource.outputAudioMixerGroup = mixerGroup;
+        if (isServer && !NetworkServer.spawned.ContainsValue(GetComponent<NetworkIdentity>()))
+            NetworkServer.Spawn(gameObject, 0);
     }
 
     public virtual void OnPickup(Transform holder)

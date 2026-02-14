@@ -1,4 +1,6 @@
 // EndlessGamemodeTimer.cs
+using Mirror;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +11,10 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
     [SerializeField] private float maxTimer = 30f;
     [SerializeField] private float timerRestore = 1f;
 
-    private float timeLeft;
+    [SyncVar(hook = nameof(OnTimeLeftChanged))]
+    private float timeLeftSync;
+
+    private float timeLeft;          
     private float progressTimer;
     private Image timerUI;
 
@@ -18,10 +23,33 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
         gameManager = gm;
         timeLeft = maxTimer;
         gamemode = "endless";
-        var player = FindObjectOfType<PlayerController>(true).GetComponent<SerializableDictionaryObjectContainer>();
+        StartCoroutine(nameof(AtSomePointDoYourJob));
+    }
+
+    private void OnTimeLeftChanged(float _, float newVal)
+    {
+        if (!isServer)   // clients update their local copy and UI
+        {
+            timeLeft = newVal;
+            UpdateTimerUI();
+        }
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        // UI setup – runs on every client
+        StartCoroutine(AtSomePointDoYourJob());
+    }
+
+    IEnumerator AtSomePointDoYourJob()
+    {
+        yield return new WaitUntil(() => PlayerController.LocalPlayer != null);
+        var player = PlayerController.LocalPlayer.GetComponent<SerializableDictionaryObjectContainer>();
         timerUI = ((GameObject)player.Fetch("timerCircle")).GetComponent<Image>(); // i know it's a gameobject because of how lazy my fucking ass is
         timerUI.gameObject.SetActive(true);
         ((GameObject)player.Fetch("timerFire")).SetActive(true);
+        yield break;
     }
 
     // EDITED: UpdateTimer now only runs on server for synchronization
@@ -36,6 +64,7 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
         // Calculate difficulty-based time decay
         float difficultyMultiplier = CalculateDifficultyMultiplier();
         timeLeft -= Time.deltaTime / (difficultyMultiplier + 0.01f);
+        timeLeftSync = timeLeft;  
 
         progressTimer = timeLeft / maxTimer;
         UpdateTimerUI();

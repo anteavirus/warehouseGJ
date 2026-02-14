@@ -136,6 +136,7 @@ public class GameManager : GenericManager<GameManager>
         {
             Destroy(existing.gameObject);
         }
+        itemTemplates = new();
         var parent = new GameObject("[Template]s Parent");
         foreach (var item in items)
         {
@@ -193,11 +194,12 @@ public class GameManager : GenericManager<GameManager>
             blackHoleSpawnPosition = GameObject.Find("black hole spawn")?.transform;
         }
 
-        if (shelvesStockManager != null)
+        if (isServer && shelvesStockManager != null)
         {
             shelvesStockManager.Initialize(this);
             shelvesStockManager.Work();
         }
+
 
         if (ordersManager != null)
         {

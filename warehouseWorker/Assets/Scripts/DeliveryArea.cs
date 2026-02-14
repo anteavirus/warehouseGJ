@@ -1,15 +1,17 @@
+using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class DeliveryArea : MonoBehaviour
+public class DeliveryArea : NetworkBehaviour
 {
     OrdersManager orderManager;
     Vector3 originalPosition;
     public GameObject[] selectionGameObjects;
-    bool doorClosed = true;
+    [SyncVar(hook = nameof(OnDoorStateChanged))]
+    private bool doorClosed = true;
     Item itemInsideMe;
     bool processingDelivery;
     bool doorsMoving;
@@ -32,21 +34,22 @@ public class DeliveryArea : MonoBehaviour
         // Wait for OrderManager to be available
         yield return StartCoroutine(FindOrderManagerSomeDay());
 
-        // Now initialize everything that depends on orderManager
-        selectionGameObjects = new GameObject[orderManager.queue.GetLength(0)];
+        //// Now initialize everything that depends on orderManager
+        //selectionGameObjects = new GameObject[orderManager.queue.GetLength(0)];
         
-        // EDITED: Find which table index this delivery area corresponds to
-        if (orderManager.doors != null && orderManager.doors.Length > 0)
-        {
-            for (int i = 0; i < orderManager.doors.Length; i++)
-            {
-                if (orderManager.doors[i] == this)
-                {
-                    tableIndex = i;
-                    break;
-                }
-            }
-        }
+        //// EDITED: Find which table index this delivery area corresponds to
+        //if (orderManager.doors != null && orderManager.doors.Length > 0)
+        //{
+        //    for (int i = 0; i < orderManager.doors.Length; i++)
+        //    {
+        //        if (orderManager.doors[i] == this)
+        //        {
+        //            tableIndex = i;
+        //            break;
+        //        }
+        //    }
+        //}
+
         
         // Only set deliveryArea if it's not already set (first one found)
         if (orderManager.deliveryArea == null)
@@ -58,6 +61,13 @@ public class DeliveryArea : MonoBehaviour
 
         isInitialized = true;
         StartCoroutine(MonitorForDelivery());
+    }
+
+    private void OnDoorStateChanged(bool _, bool newState)
+    {
+        // Start the appropriate coroutine on all clients
+        if (newState) StartCoroutine(CloseDoor());
+        else StartCoroutine(OpenDoor());
     }
 
     IEnumerator FindOrderManagerSomeDay()
@@ -119,16 +129,9 @@ public class DeliveryArea : MonoBehaviour
 
     public void MoveDoors(bool shouldClose)
     {
+        if (!isServer) return;
         if (doorsMoving) return;
-
-        if (shouldClose)
-        {
-            StartCoroutine(CloseDoor());
-        }
-        else
-        {
-            StartCoroutine(OpenDoor());
-        }
+        doorClosed = shouldClose;   // triggers the hook on all clients
     }
 
     IEnumerator OpenDoor()
@@ -233,14 +236,14 @@ public class DeliveryArea : MonoBehaviour
         }
     }
 
-    internal void UpdateYoShit()
-    {
-        if (!isInitialized || selectionGameObjects == null) return;
+    //internal void UpdateYoShit()
+    //{
+    //    if (!isInitialized || selectionGameObjects == null) return;
 
-        foreach (var item in selectionGameObjects)
-        {
-            if (item == null) continue;
-            item.SetActive(false);
-        }
-    }
+    //    foreach (var item in selectionGameObjects)
+    //    {
+    //        if (item == null) continue;
+    //        item.SetActive(false);
+    //    }
+    //}
 }

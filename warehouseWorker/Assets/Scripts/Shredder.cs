@@ -45,7 +45,7 @@ public class Shredder : MonoBehaviour
 
             if (other.TryGetComponent<PlayerController>(out var playerController))
             {
-                playerController.EndingSequence();
+                playerController.OnShredderEnter();
                 return;
             }
             Destroy(other.gameObject);

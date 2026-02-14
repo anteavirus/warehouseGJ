@@ -1,15 +1,32 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class ShelfSpawn : MonoBehaviour
 {
     [Header("Spawn Restrictions")]
     [Tooltip("Leave empty to accept all shelf types")]
     public int[] acceptedShelfTypes;
-    readonly bool stopEatingMyFPSWhenLookedViewedGizmos = false;
-    ShelvesStockManager shelfManager;
 
+    [Header("Override")]
+    [Tooltip("If assigned, this specific shelf prefab will be used regardless of restrictions (useful for manual placement)")]
     public StorageArea assignedShelfPrefab = null;
+
+    [Header("Editor Preview")]
+    [Tooltip("If true, draws all accepted shelf prefabs as a wireframe grid around the spawn point (editor only)")]
+    public bool showAllAcceptedShelves = false;
+
+    [Tooltip("When true, skips the heavy gizmo drawing (useful if the editor becomes laggy)")]
+    public bool stopEatingMyFPSWhenLookedViewedGizmos = false;
+
+    private ShelvesStockManager shelfManager;
+    private List<GameObject> cachedShelfPrefabs; // cache to avoid repeated lookups
+
+    // ----------------------------------------------------------------------------
+    // Public API
+    // ----------------------------------------------------------------------------
 
     public bool CanAcceptShelfType(int shelfTypeID)
     {
@@ -34,10 +51,13 @@ public class ShelfSpawn : MonoBehaviour
         return assignedShelfPrefab != null;
     }
 
-    // todo: clear up methods and. just everything cuz. shit is kinda outdated
+    /// <summary>
+    /// Assign a specific shelf prefab to this spawn point.
+    /// </summary>
     public void AssignItemAndShelf(int ID, StorageArea chosenShelf, int amount = 0)
     {
         assignedShelfPrefab = chosenShelf;
+        // Note: ID and amount are ignored; kept for compatibility.
     }
 
     public void ResetAssignment()
@@ -45,71 +65,127 @@ public class ShelfSpawn : MonoBehaviour
         assignedShelfPrefab = null;
     }
 
+    // ----------------------------------------------------------------------------
+    // Editor Gizmos
+    // ----------------------------------------------------------------------------
+
     private void OnDrawGizmos()
     {
-        Color color = gameObject.activeInHierarchy ? Color.green : Color.red;
+        // Always draw the basic transform gizmo
+        DrawTransformGizmo();
 
+        if (stopEatingMyFPSWhenLookedViewedGizmos)
+            return;
+
+        // Cache manager and prefab list
+        if (shelfManager == null)
+            shelfManager = FindObjectOfType<ShelvesStockManager>();
+        if (shelfManager == null)
+            return;
+
+        if (cachedShelfPrefabs == null || cachedShelfPrefabs.Count == 0)
+        {
+            shelfManager.UpdateShelfStoragesFromPrefabs(); // ensure list is built
+            cachedShelfPrefabs = shelfManager.shelfPrefabs;
+        }
+
+        // 1. Draw the overridden shelf if any
+        if (assignedShelfPrefab != null)
+        {
+            DrawShelfMesh(assignedShelfPrefab, Color.white * new Color(1,1,1,0.1f));
+        }
+
+        // 2. If requested, draw all accepted shelves in a grid
+        if (showAllAcceptedShelves && cachedShelfPrefabs != null)
+        {
+            DrawAllAcceptedShelvesGrid();
+        }
+    }
+
+    private void DrawTransformGizmo()
+    {
+        // Base cube and sphere
+        Color color = gameObject.activeInHierarchy ? Color.green : Color.red;
         Gizmos.color = color;
         Gizmos.DrawWireCube(transform.position, Vector3.one * 0.8f);
         Gizmos.color = color * 0.7f;
         Gizmos.DrawSphere(transform.position, 0.1f);
 
+        // Axes
         float axisLength = 0.5f;
-
-        Vector3 xDirection = transform.rotation * Vector3.right;
-        Vector3 yDirection = transform.rotation * Vector3.up;
-        Vector3 zDirection = transform.rotation * Vector3.forward;
-
         Vector3 origin = transform.position;
-
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(origin, origin + xDirection * axisLength);
-
+        Gizmos.DrawLine(origin, origin + transform.right * axisLength);
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(origin, origin + yDirection * axisLength);
-
+        Gizmos.DrawLine(origin, origin + transform.up * axisLength);
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(origin, origin + zDirection * axisLength);
+        Gizmos.DrawLine(origin, origin + transform.forward * axisLength);
+    }
 
-#if UNITY_EDITOR
-        if (stopEatingMyFPSWhenLookedViewedGizmos) return;
-        // TODO: this might be laggy. piss on thisa
+    private void DrawShelfMesh(StorageArea shelf, Color color)
+    {
+        if (shelf == null) return;
 
-        assignedShelfPrefab = null;
-        if (shelfManager == null)
-            shelfManager = FindObjectOfType<ShelvesStockManager>();
-        var shelfPrefabs = shelfManager.shelfPrefabs;
+        Transform parent = shelf.transform.parent;
+        if (parent == null) return;
 
-        if (shelfPrefabs?.Count <= 0)
-            shelfManager.UpdateShelfStoragesFromPrefabs();
+        MeshFilter meshFilter = parent.GetComponent<MeshFilter>();
+        if (meshFilter == null || meshFilter.sharedMesh == null) return;
 
-        if (shelfPrefabs?.Count > 0)
+        Gizmos.color = color;
+        // Use the parent's lossy scale for world size
+        Vector3 worldScale = parent.lossyScale;
+        Gizmos.DrawWireMesh(meshFilter.sharedMesh, 0, transform.position, transform.rotation, worldScale);
+    }
+
+    private void DrawAllAcceptedShelvesGrid()
+    {
+        if (acceptedShelfTypes == null || acceptedShelfTypes.Length == 0)
+            return; // nothing to show
+
+        int index = 0;
+        float spacing = 2f; // distance between previews
+        int columns = 3;
+
+        foreach (GameObject prefab in cachedShelfPrefabs)
         {
-            foreach (var item in shelfPrefabs)
+            if (prefab == null) continue;
+
+            StorageArea area = prefab.GetComponentInChildren<StorageArea>();
+            if (area == null) continue;
+
+            // Check if this shelf's allowed IDs intersect with any accepted type
+            bool matches = false;
+            foreach (int allowedId in area.allowedItemIDs)
             {
-                var a = UsefulStuffs.FindComponentInChildren<StorageArea>(item);
-                if (a != null)
+                if (System.Array.IndexOf(acceptedShelfTypes, allowedId) >= 0)
                 {
-                    foreach (var b in acceptedShelfTypes)
-                    {
-                        if (a.allowedItemIDs.Contains(b))
-                        {
-                            assignedShelfPrefab = a;
-                        }
-                    if (assignedShelfPrefab != null) break;
-                    }
+                    matches = true;
+                    break;
                 }
             }
-        }
+            if (!matches) continue;
 
-        if (assignedShelfPrefab != null)
-        {
-            Gizmos.color = new Color(1,1,1,0.05f);
-            var meshShit = assignedShelfPrefab.transform.parent.GetComponent<MeshFilter>();
-            Gizmos.DrawWireMesh(meshShit.sharedMesh, 0, transform.position, transform.rotation, UsefulStuffs.Multiply(Vector3.one,meshShit.transform.localScale));
+            // Position in a grid around the spawn point
+            int row = index / columns;
+            int col = index % columns;
+            Vector3 offset = new Vector3((col - columns / 2f) * spacing, 0, row * spacing);
+            Vector3 previewPos = transform.position + offset;
+
+            // Save current gizmo matrix to draw at previewPos
+            Matrix4x4 originalMatrix = Gizmos.matrix;
+            Gizmos.matrix = Matrix4x4.TRS(previewPos, transform.rotation, Vector3.one);
+
+            // Draw a semi‑transparent mesh
+            MeshFilter meshFilter = prefab.GetComponent<MeshFilter>();
+            if (meshFilter != null && meshFilter.sharedMesh != null)
+            {
+                Gizmos.color = new Color(1, 1, 1, 0.3f);
+                Gizmos.DrawWireMesh(meshFilter.sharedMesh, -prefab.transform.position); // adjust because matrix already sets position
+            }
+
+            Gizmos.matrix = originalMatrix;
+            index++;
         }
-#else
-        var definitelyNotDataMinedString = "Hi! If this were to be a development build, you'd see a lot more of disgusting shit where I hackily render every single shelf mesh on screen. Every single frame. Created and destroyed. Just to show that. Pretty cool, right? Anyway I'm sure you don't wanna see *that*, right? >:3 oh btw yeah that's what that bool is for (i.e. 'fuck off i dont wanna see ts')";
-#endif
     }
 }

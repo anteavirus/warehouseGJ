@@ -57,18 +57,16 @@ public class EndlessScroller : MonoBehaviour
     void Update()
     {
         UpdateScreenRect();
-        uvOffset += scrollSpeed * Time.unscaledDeltaTime;
+
+        uvOffset.x = Mathf.Repeat(uvOffset.x + scrollSpeed.x * Time.unscaledDeltaTime, 1f);
+        uvOffset.y = Mathf.Repeat(uvOffset.y + scrollSpeed.y * Time.unscaledDeltaTime, 1f);
 
         if (rawImage != null)
         {
-            // Scroll UV for UI RawImage
             rawImage.uvRect = new Rect(uvOffset, rawImage.uvRect.size);
         }
         else if (material != null)
         {
-            // Scroll UV for SpriteRenderer/MeshRenderer
-            uvOffset.x = Mathf.Repeat(uvOffset.x, 1);
-            uvOffset.y = Mathf.Repeat(uvOffset.y, 1);
             material.mainTextureOffset = uvOffset;
         }
     }

@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using kcp2k;
 
 public class NetworkGameManager : NetworkManager
 {
@@ -48,9 +49,10 @@ public class NetworkGameManager : NetworkManager
         if (gameStatePrefab != null)
         {
             GameObject gameStateObj = Instantiate(gameStatePrefab);
-            NetworkServer.Spawn(gameStateObj);
             gameStateObj.transform.SetParent(transform);
             gameState = gameStateObj.GetComponent<NetworkGameState>();
+            NetworkServer.Spawn(gameStateObj);
+            
             if (gameState != null)
             {
                 gameState.SetGameStatus(GameStatus.Lobby);
@@ -143,6 +145,7 @@ public class NetworkGameManager : NetworkManager
             gameState.UpdatePlayerCount(numPlayers);
         }
 
+        //OrdersManager.Instance.SyncFullOrdersStateToPlayer(conn);  <-- shit, do this fucker somewhere... else
         Debug.Log($"Player {conn.connectionId} spawned at {spawnPos}");
     }
 
@@ -202,8 +205,7 @@ public class NetworkGameManager : NetworkManager
         if (sceneName != "Main Menu" && gameState != null && gameState.gameStatus == GameStatus.Ingame)
         {
             SetupGameMode(gameState.selectedGameMode);
-            MasterManager.Instance.Initialize();
-            // Clients initialize in OnClientSceneChanged when their scene load finishes (no RPC - avoids timing issues)
+            MasterManager.Instance.Initialize();  // TODO: if i haven't finished, players must also have timers on their counterpart. server has them, clients don't.
 
             // Move all existing players to spawn positions
             int index = 0;
@@ -275,6 +277,7 @@ public class NetworkGameManager : NetworkManager
                     {
                         GameManager.Instance.timer = timer;
                         timer.Initialize(GameManager.Instance);
+                        NetworkServer.Spawn(timerInstance);
                     }
                 }
             }
@@ -305,14 +308,73 @@ public class NetworkGameManager : NetworkManager
     }
 
     // Public methods for UI
-    public void StartHostGame()
+    public void StartHostGame(string port = "7777")
     {
+        if (!string.IsNullOrEmpty(port))  // I have no idea how this can become suddenly null and how port will stay unset. I will have to forsee that at some later point, though. I can't be bothered making multiplayer working AND fixing all the bugs
+        {
+            var transport = Transport.active;
+
+            if (transport is KcpTransport kcp)
+            {
+                if (ushort.TryParse(port, out var result))
+                    if (result > 65535 || result < 1)
+                    {
+                        Debug.LogError("AFAIK computers have ports available only in range of [1, ... , 65535]. Sorry if that's not the case anymore.");
+                        return;
+                    }
+                    else
+                        kcp.Port = result;
+                else
+                {
+                    Debug.LogError("Parsed port bad. Please dont put your credit card information there. Any number in [1, 2, ..., 65535] is fine, and if not the stall's just occupied probably.");
+                    return;
+                }
+            }
+            else
+            {
+                Debug.LogError("Somehow, no Transport found. Yell at coder plox, thbx.");
+                return;
+            }
+        }
         StartHost();
     }
 
-    public void StartClientGame(string address = "localhost")
+    public void StartClientGame(string address = "localhost:7777")
     {
-        networkAddress = address;
+        var split = address.Split(':');
+        if (split.Length < 2)
+        { 
+            networkAddress = address;
+        
+        }
+        else
+        {
+            networkAddress = split[0];
+            var transport = Transport.active;
+        
+            if (transport is KcpTransport kcp)
+            {
+                if (ushort.TryParse(split[1], out var result))
+                    if (result > 65535 || result < 1)
+                    {
+                        Debug.LogError("AFAIK computers have ports available only in range of [1, ... , 65535]. Sorry if that's not the case anymore.");
+                        return;
+                    }
+                    else
+                        kcp.Port = result;
+                else
+                {
+                    Debug.LogError("Parsed port bad. Please dont put your credit card information there. Any number in [1, 2, ..., 65535] is fine, and if not the stall's just occupied probably.");
+                    return;
+                }
+            }
+            else
+            {
+                Debug.LogError("Somehow, no Transport found. Yell at coder plox, thbx.");
+                return;
+            }
+        }
+
         StartClient();
     }
 

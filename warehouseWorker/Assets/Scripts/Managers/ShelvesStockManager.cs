@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -99,6 +100,19 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
                     GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
                     spawnedShelf.name = $"Shelf_{spawnPoint.name}_{prefabToSpawn.name}";
 
+                    if (isServer)
+                    {
+                        uint assetId = prefabToSpawn.GetComponent<NetworkIdentity>().assetId;
+                        Debug.LogError($"Spawning shelf {prefabToSpawn.name} with assetId {assetId}");
+                    }
+
+                    //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
+                    //    spawnedShelf.AddComponent<NetworkIdentity>();
+                    //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)
+                    //    spawnedShelf.AddComponent<NetworkTransformReliable>();
+
+                    NetworkServer.Spawn(spawnedShelf);
+
                     // Find and configure the StorageArea component in the spawned shelf
                     StorageArea[] storageAreas = spawnedShelf.GetComponentsInChildren<StorageArea>();
                     foreach (var area in storageAreas)
@@ -128,6 +142,17 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
                     if (prefabToSpawn != null)
                     {
                         GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
+                        if (isServer)
+                        {
+                            uint assetId = prefabToSpawn.GetComponent<NetworkIdentity>().assetId;
+                            Debug.LogError($"Spawning shelf {prefabToSpawn.name} with assetId {assetId}");
+                        }
+                        //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
+                        //    spawnedShelf.AddComponent<NetworkIdentity>();
+                        //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)
+                        //    spawnedShelf.AddComponent<NetworkTransformReliable>();
+
+                        NetworkServer.Spawn(spawnedShelf);
                         spawnedShelf.name = $"EmptyShelf_{spawnPoint.name}_{prefabToSpawn.name}";
                         spawnedShelf.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
                     }
@@ -142,6 +167,17 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
                         if (prefabToSpawn != null)
                         {
                             GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
+                            if (isServer)
+                            {
+                                uint assetId = prefabToSpawn.GetComponent<NetworkIdentity>().assetId;
+                                Debug.LogError($"Spawning shelf {prefabToSpawn.name} with assetId {assetId}");
+                            }
+                            //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
+                            //    spawnedShelf.AddComponent<NetworkIdentity>();
+                            //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)
+                            //    spawnedShelf.AddComponent<NetworkTransformReliable>();
+
+                            NetworkServer.Spawn(spawnedShelf);
                             spawnedShelf.name = $"EmptyShelf_{spawnPoint.name}_{prefabToSpawn.name}";
                             spawnedShelf.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
                         }
@@ -150,6 +186,8 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
             }
         }
     }
+
+    // TODO: latest update 14.02.26; this fucking shit sucks what the fuck why the fuck the fucking delivery areas in the prefab have their own ids?????????? and why the fuck must i . do i HAVE to split the fucking stupid shit in two parts? like in "gameplay" and "static" shit???????? this fucking sucksssssssssssssss mannnnn fuck me for thinking multiplayer would be easy enough to implement ughhhhhhhhhhhhhhhhhhhhhhh and i'll need to GPT my fucuking dossier or whatever to pass onto the next month and at the end of april  make the fucking game work.  man i should've went into papers at least i wouldn't hate the shit out of programming now
 
     private GameObject GetRootPrefabForStorageArea(StorageArea storageArea)
     {

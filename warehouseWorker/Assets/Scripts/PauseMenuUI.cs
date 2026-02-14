@@ -35,7 +35,7 @@ public class PauseMenuUI : MonoBehaviour
 
     IEnumerator PauseStateUpdate()
     {
-        //if (LobbyManager.singleton.numPlayers < 2)  // This is probably fine. No pause for the wicked multiplayer players.
+        if (NetworkGameManager.singleton.numPlayers < 2)  // This is probably fine. No pause for the wicked multiplayer players.
             Time.timeScale = isPaused ? 0f : 1f;
         pauseAnimator.SetBool("animationComplete", false);
 

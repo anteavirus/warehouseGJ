@@ -5,11 +5,14 @@ using UnityEngine;
 public class IconManager : GenericManager<IconManager>
 {
     public static string IconNamePrefix(string text) => $"[{text}]";
+    [Tooltip("Objects to generate icon previews of")]
     public List<Item> itemTemplates = new();
 
     // Previews
     [SerializeField] Vector2 previewSize = new Vector2(128, 128);
     public List<Texture2D> previews = new();
+
+    [Tooltip("Last texture in the previewSprites sprites to pull as a default preview for the sprites")]
     public Texture2D defaultPreview;
     public List<Sprite> previewSprites;
 
@@ -89,13 +92,23 @@ public class IconManager : GenericManager<IconManager>
         RenderTexture rt = new RenderTexture(width, height, 16);
         cam.targetTexture = rt;
 
+        Color oldAmbient = RenderSettings.ambientLight;
+        UnityEngine.Rendering.AmbientMode oldMode = RenderSettings.ambientMode;
+
+        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
+        RenderSettings.ambientLight = Color.black;
+
         cam.Render();
+
+        RenderSettings.ambientLight = oldAmbient;
+        RenderSettings.ambientMode = oldMode;
 
         RenderTexture.active = rt;
         Texture2D tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
         tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         tex.Apply();
         tex.name = $"{IconNamePrefix(item > -1 ? itemTemplates[item].ID.ToString() : item.ToString())} - {prefab.name}";
+        tex.filterMode = FilterMode.Point;
 
         RenderTexture.active = null;
 

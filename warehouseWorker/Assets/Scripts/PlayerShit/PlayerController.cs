@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour
 {
+    public static PlayerController LocalPlayer;
     // === CAN BE CHANGED ===
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 10f;
@@ -114,6 +115,9 @@ public class PlayerController : NetworkBehaviour
     [SyncVar(hook = nameof(OnHeldItemChanged))]
     private uint heldItemNetId = 0;
 
+    private bool isDragging = false;
+    private NetworkIdentity dragNetIdentity;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -132,6 +136,8 @@ public class PlayerController : NetworkBehaviour
         // Only setup camera and input for local player
         if (isLocalPlayer)
         {
+            LocalPlayer = this;
+
             if (pauseMenu == null) 
                 pauseMenu = pauseUI.GetComponent<PauseMenuUI>();
 
@@ -479,63 +485,101 @@ public class PlayerController : NetworkBehaviour
     {
         if (item == null)
         {
-            dragObject = null;
+            StopDragging();
             return;
         }
-        if (item is not UnityEngine.GameObject gameObj) return;
+
+        if (item is not GameObject gameObj) return;
         if (gameObj.layer != LayerMask.NameToLayer("Draggable")) return;
 
-        // If we're already dragging this object, stop dragging
-        if (gameObj == dragObject)
+        var netId = gameObj.GetComponent<NetworkIdentity>();
+        if (netId == null)
         {
-            dragObject = null;
-            dragObject.GetComponent<NetworkIdentity>().RemoveClientAuthority();
+            Debug.LogWarning("Draggable object has no NetworkIdentity!");
             return;
         }
 
-        // If we're dragging something else, stop dragging it first
-        if (dragObject != null)
+        // If we're already dragging this object, stop
+        if (dragObject == gameObj)
         {
-            dragObject = null;
-            dragObject.GetComponent<NetworkIdentity>().RemoveClientAuthority();
+            StopDragging();
+            return;
         }
 
-        StartDragging(gameObj);
+        // If we're dragging something else, stop it first
+        if (dragObject != null)
+            StopDragging();
+
+        // Request authority from the server
+        CmdRequestDragAuthority(netId.netId);
+    }
+
+    [Command]
+    private void CmdRequestDragAuthority(uint netId)
+    {
+        if (!NetworkServer.spawned.TryGetValue(netId, out var netIdentity))
+            return;
+
+        // Grant authority if not already owned
+        if (netIdentity.connectionToClient == null)
+            netIdentity.AssignClientAuthority(connectionToClient);
+
+        TargetDragAuthorityGranted(connectionToClient, netId);
+    }
+
+    [TargetRpc]
+    private void TargetDragAuthorityGranted(NetworkConnection target, uint netId)
+    {
+        if (!NetworkClient.spawned.TryGetValue(netId, out var netIdentity))
+            return;
+
+        dragObject = netIdentity.gameObject;
+        dragNetIdentity = netIdentity;
+        isDragging = true;
+
+        // Configure Rigidbody for dragging
+        var dragRB = dragObject.GetComponent<Rigidbody>();
+        if (dragRB == null) dragRB = dragObject.AddComponent<Rigidbody>();
+        dragRB.drag = 1f;
+        dragRB.angularDrag = 1f;
+        dragRB.useGravity = true;
+
+        Debug.Log($"Started dragging: {dragObject.name}");
+    }
+
+    private void StopDragging()
+    {
+        if (dragObject != null && dragNetIdentity != null)
+        {
+            CmdReleaseDragAuthority(dragNetIdentity.netId);
+        }
+
+        isDragging = false;
+        dragObject = null;
+        dragNetIdentity = null;
+    }
+
+    [Command]
+    private void CmdReleaseDragAuthority(uint netId)
+    {
+        if (!NetworkServer.spawned.TryGetValue(netId, out var netIdentity))
+            return;
+        if (netIdentity.connectionToClient == connectionToClient)
+            netIdentity.RemoveClientAuthority();
     }
 
     [SerializeField] private float dragFollowForce = 100f;
     [SerializeField] private float dragDamping = 5f;
 
-    private void StartDragging(GameObject dragObj)
-    {
-        dragObject = dragObj;
-
-        // Configure the dragged object's Rigidbody
-        Rigidbody dragRB = dragObject.GetComponent<Rigidbody>();
-        if (dragRB == null) dragRB = dragObject.AddComponent<Rigidbody>();
-
-        dragRB.drag = 1f;
-        dragRB.angularDrag = 1f;
-        dragRB.useGravity = true;
-
-        var itemNetObj = dragObj.GetComponent<NetworkIdentity>();
-        if (itemNetObj.connectionToClient == null)
-        {
-            itemNetObj.AssignClientAuthority(connectionToClient);
-        }
-
-        Debug.Log($"Started dragging: {dragObject.name}");
-    }
-
     private void HandleDragItemPhysics()
     {
-        if (dragObject == null || !dragObject.TryGetComponent<Rigidbody>(out var dragRB))
+        if (!isDragging || dragObject == null || !dragObject.TryGetComponent<Rigidbody>(out var dragRB))
         {
             if (rb != null) rb.mass = rbMass;
             return;
-        }
+        }   
 
-        Vector3 direction = handTransform.transform.position - dragObject.transform.position;
+        Vector3 direction = handTransform.position - dragObject.transform.position;
         float distance = direction.magnitude;
 
         if (distance > 0.1f)
@@ -808,40 +852,30 @@ public class PlayerController : NetworkBehaviour
     {
         if (heldItemNetId != itemNetId) return;
 
-        GameObject itemObj = NetworkServer.spawned[itemNetId].gameObject;
+        if (!NetworkServer.spawned.TryGetValue(itemNetId, out var netIdentity))
+            return;
+
+        GameObject itemObj = netIdentity.gameObject;
         Item item = itemObj.GetComponent<Item>();
         if (item == null) return;
 
-        // Remove authority
-        itemObj.GetComponent<NetworkIdentity>().RemoveClientAuthority();
+        netIdentity.RemoveClientAuthority();
         heldItemNetId = 0;
 
+        // SERVER throws the item
+        item.OnThrow(direction, force);
+
+        // (Optional) ClientRpc for effects (sound, particles) – do not apply physics again
         RpcThrowItem(itemNetId, direction, force);
     }
 
     [ClientRpc]
     private void RpcThrowItem(uint itemNetId, Vector3 direction, float force)
     {
-        if (!NetworkClient.spawned.ContainsKey(itemNetId)) return;
-
-        GameObject itemObj = NetworkClient.spawned[itemNetId].gameObject;
-        Item item = itemObj.GetComponent<Item>();
-        item.OnThrow(direction, force);
-
-        // Reset physics properties
-        Rigidbody itemRb = itemObj.GetComponent<Rigidbody>();
-        if (itemRb != null)
-        {
-            itemRb.useGravity = true;
-            itemRb.drag = 0f;
-            itemRb.angularDrag = 0.05f;
-        }
-        
-        if (heldItem == itemObj)
-        {
-            heldItem = null;
-            heldItemRb = null;
-        }
+        // Only for client‑side effects (sound, animation)
+        if (!NetworkClient.spawned.TryGetValue(itemNetId, out var netIdentity))
+            return;
+        // Optionally play throw sound, etc.
     }
 
     private void HandlePlacement()
@@ -1038,6 +1072,10 @@ public class PlayerController : NetworkBehaviour
     {
         previewObject = Instantiate(heldItem);
         previewObject.tag = "IgnoreRaycast";
+        
+        if (previewObject.TryGetComponent<Item>(out var comp))  // that thing does not need item.
+            Destroy(comp);
+        
         previewObject.GetComponent<Rigidbody>().isKinematic = true;
         foreach (Collider col in previewObject.GetComponentsInChildren<Collider>())
             col.enabled = false;
@@ -1073,14 +1111,22 @@ public class PlayerController : NetworkBehaviour
     {
         if (heldItemNetId != itemNetId) return;
 
-        GameObject itemObj = NetworkServer.spawned[itemNetId].gameObject;
+        if (!NetworkServer.spawned.TryGetValue(itemNetId, out var netIdentity))
+            return;
+
+        GameObject itemObj = netIdentity.gameObject;
         Item item = itemObj.GetComponent<Item>();
         if (item == null) return;
 
-        // Remove authority
-        itemObj.GetComponent<NetworkIdentity>().RemoveClientAuthority();
+        // Remove authority from this client
+        netIdentity.RemoveClientAuthority();
         heldItemNetId = 0;
 
+        // SERVER sets the position (authoritative)
+        itemObj.transform.SetPositionAndRotation(position, rotation);
+        item.OnPlace(position, rotation);   // calls OnDrop() internally
+
+        // Tell all clients to also update the position (smoothness)
         RpcPlaceItem(itemNetId, position, rotation);
     }
 
@@ -1271,6 +1317,30 @@ public class PlayerController : NetworkBehaviour
     {
         if (NetworkGameManager.Instance) NetworkGameManager.singleton.StopHost();
         ((GameManager)GameManager.Instance).LoadSceneStr("Main Menu");
+    }
+
+    [Server]
+    public void ServerDie()
+    {
+        if (!alive) return;
+        alive = false;
+        GameManager.Instance.ForceGameOver();   // your existing method
+    }
+
+    [Client]
+    public void PlayerDie()
+    {
+        if (!alive) return;
+        alive = false;
+        GameManager.Instance.ForceGameOver();
+    }
+
+    public void OnShredderEnter()
+    {
+        if (isServer)
+            ServerDie();
+        else
+            PlayerDie();
     }
 }
 // todo. players cant drag stuff that wasn't *spawned*. so i need to spawn those crates in as to allow them to be dragged, OR figure out a hacky way to allow that instead
