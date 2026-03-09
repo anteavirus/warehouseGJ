@@ -382,7 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_duck
-  text: 
+  text: "\u0423\u0442\u043A\u0430"
 --- !u!114 &5305805351623239332
 MonoBehaviour:
   m_ObjectHideFlags: 0

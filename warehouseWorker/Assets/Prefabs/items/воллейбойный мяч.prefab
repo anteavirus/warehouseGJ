@@ -365,7 +365,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_volleyball
-  text: 
+  text: "\u0412\u043E\u043B\u043B\u0435\u0439\u0431\u043E\u0439\u043D\u044B\u0439
+    \u041C\u044F\u0447"
 --- !u!114 &4998166553626164617
 MonoBehaviour:
   m_ObjectHideFlags: 0

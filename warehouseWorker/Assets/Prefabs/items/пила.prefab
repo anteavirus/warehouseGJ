@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_saw
-  text: 
+  text: "\u041F\u0438\u043B\u0430"
 --- !u!114 &7620184684700225231
 MonoBehaviour:
   m_ObjectHideFlags: 0

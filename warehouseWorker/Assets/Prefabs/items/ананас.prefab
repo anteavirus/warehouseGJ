@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_pineapple
-  text: 
+  text: "\u0410\u043D\u0430\u043D\u0430\u0441"
 --- !u!114 &7238137103428969459
 MonoBehaviour:
   m_ObjectHideFlags: 0

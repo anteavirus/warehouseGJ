@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_slipper
-  text: 
+  text: "\u0422\u0430\u043F\u043E\u043A"
 --- !u!114 &948695969893615012
 MonoBehaviour:
   m_ObjectHideFlags: 0

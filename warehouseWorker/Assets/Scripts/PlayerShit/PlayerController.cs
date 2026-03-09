@@ -643,8 +643,8 @@ public class PlayerController : NetworkBehaviour
         // Get NetworkIdentity of item
         if (!item.TryGetComponent<NetworkIdentity>(out var itemNetId))
         {
-            Debug.LogWarning("Item doesn't have NetworkIdentity! Adding one...");
             itemNetId = item.gameObject.AddComponent<NetworkIdentity>();
+            Debug.LogWarning("wait, I can't add network identity to items. how did this get through?");
         }
 
         CmdPickupItem(itemNetId.netId);
@@ -1190,6 +1190,8 @@ public class PlayerController : NetworkBehaviour
 
     private void OnApplicationFocus(bool hasFocus)
     {
+        if (!isActiveAndEnabled) return;
+
         if (hasFocus)
         {
             if (pauseMenu != null)

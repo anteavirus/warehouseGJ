@@ -28,6 +28,10 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
         base.Initialize();
         if (gameManager == null)
             gameManager = (GameManager.Instance);
+        if (shelfSpawns.All(x => x == null))
+        {
+            shelfSpawns = FindObjectsOfType<ShelfSpawn>().ToList();
+        }
     }
 
     public void Initialize(GameManager gm)

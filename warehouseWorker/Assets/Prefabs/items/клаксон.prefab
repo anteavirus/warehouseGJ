@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_horn
-  text: 
+  text: "\u041A\u043B\u0430\u043A\u0441\u043E\u043D"
 --- !u!114 &5128358199371908108
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -104,6 +104,29 @@ public class GameManager : GenericManager<GameManager>
             levelSeed = UnityEngine.Random.Range(0, 1969);
         InitializeItemTemplates();
         InitializeAudio();
+
+        var player = FindObjectOfType<PlayerController>(true)?.GetComponent<SerializableDictionaryObjectContainer>();
+        if (player == null) return; // we probably dont have to do this right now? something sometihng me complaining
+        if (scoreUI == null)
+        {
+            scoreUI = player.Fetch("scoreUI").GetComponent<TextMeshProUGUI>();
+        }
+
+        if (timerUI == null)
+        {
+            timerUI = player.Fetch("timerCircle").GetComponent<Image>();
+        }
+
+        if (difficultyImage == null)
+        {
+            difficultyImage = player.Fetch("timerFire").GetComponent<Image>();
+        }
+
+        if (blackHoleSpawnPosition == null)
+        {
+            blackHoleSpawnPosition = GameObject.Find("black hole spawn")?.transform;
+        }
+
         InitializeManagers();        
         
         // timer is only initialized after other shit...
@@ -170,31 +193,10 @@ public class GameManager : GenericManager<GameManager>
         }
     }
 
+    [Server]
     void InitializeManagers()
     {
-        var player = FindObjectOfType<PlayerController>(true)?.GetComponent<SerializableDictionaryObjectContainer>();
-        if (player == null) return; // we probably dont have to do this right now? something sometihng me complaining
-        if (scoreUI == null)
-        {
-            scoreUI = player.Fetch("scoreUI").GetComponent<TextMeshProUGUI>();
-        }
-
-        if (timerUI == null)
-        {
-            timerUI = player.Fetch("timerCircle").GetComponent<Image>();
-        }
-
-        if (difficultyImage == null)
-        {
-            difficultyImage = player.Fetch("timerFire").GetComponent<Image>();
-        }
-
-        if ( blackHoleSpawnPosition == null)
-        {
-            blackHoleSpawnPosition = GameObject.Find("black hole spawn")?.transform;
-        }
-
-        if (isServer && shelvesStockManager != null)
+        if (shelvesStockManager != null)
         {
             shelvesStockManager.Initialize(this);
             shelvesStockManager.Work();

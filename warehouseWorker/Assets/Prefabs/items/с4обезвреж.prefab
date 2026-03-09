@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_c4_disarmed
-  text: 
+  text: "\u0412\u0437\u0440\u044B\u0447\u0430\u0442\u043A\u0430 \u041E\u0431\u0435\u0437\u0432\u0440\u0435\u0436\u0435\u043D\u043D\u0430\u044F"
 --- !u!114 &6350529289121510208
 MonoBehaviour:
   m_ObjectHideFlags: 0

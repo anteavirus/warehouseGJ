@@ -134,8 +134,7 @@ public class NetworkGameManager : NetworkManager
 
         GameObject player = Instantiate(playerPrefab, spawnPos, spawnRot);
         player.transform.SetParent(transform);
-        NetworkServer.AddPlayerForConnection(conn, player);
-        NetworkServer.Spawn(player);
+        NetworkServer.AddPlayerForConnection(conn, player);   // okay, here is . fuck. ugh, here is issue of some client not being able to join editor now=
         DisableYoShit(player);
 
         playerGameObjects[conn.connectionId] = player;

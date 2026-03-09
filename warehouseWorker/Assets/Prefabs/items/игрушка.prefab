@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_toy_bear
-  text: 
+  text: "\u041F\u043B\u044E\u0448\u0435\u0432\u044B\u0439 \u041C\u0438\u0448\u043A\u0430"
 --- !u!114 &6314483733044955126
 MonoBehaviour:
   m_ObjectHideFlags: 0

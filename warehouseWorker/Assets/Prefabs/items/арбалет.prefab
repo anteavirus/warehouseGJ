@@ -375,7 +375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localizationKey: item_crossbow
-  text: 
+  text: "\u0410\u0440\u0431\u0430\u043B\u0435\u0442"
 --- !u!114 &2489963048204146242
 MonoBehaviour:
   m_ObjectHideFlags: 0
