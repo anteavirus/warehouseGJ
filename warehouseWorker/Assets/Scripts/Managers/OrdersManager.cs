@@ -190,9 +190,9 @@ public class OrdersManager : GenericManager<OrdersManager>
         }
 
         // Don't initialize UI on server (headless) unless it's a host
-        if (!isServer || (isServer && NetworkServer.active && NetworkClient.active)) // Host
+        if (!isServerOnly) // Host
         {
-            CreatePanels();  // these don't attach to the canvas for some reason. todo: fixit
+            CreatePanels(); 
             CreateGridSlots();
             UpdateOrderUI(); // Initial UI update
         }
@@ -234,8 +234,8 @@ public class OrdersManager : GenericManager<OrdersManager>
         }
     }
 
-    [Server]
-    public void SyncFullOrdersStateToPlayer(NetworkConnectionToClient conn)
+    [ClientRpc]
+    public void SyncFullOrdersStateToPlayers()
     {
         // Send all requestee slots
         for (int x = 0; x < gridWidth; x++)
@@ -243,9 +243,9 @@ public class OrdersManager : GenericManager<OrdersManager>
             {
                 var req = queue[x, y];
                 if (req != null)
-                    TargetUpdateRequesteeSlot(conn, x, y, req.timeRemaining, req.timeStart, true);
+                    TargetUpdateRequesteeSlot(x, y, req.timeRemaining, req.timeStart, true);
                 else
-                    TargetUpdateRequesteeSlot(conn, x, y, 0, 1, false);
+                    TargetUpdateRequesteeSlot(x, y, 0, 1, false);
             }
 
         // Send all active orders
@@ -253,18 +253,18 @@ public class OrdersManager : GenericManager<OrdersManager>
         {
             var order = activeOrders[i];
             if (order != null)
-                TargetUpdateOrderSlot(conn, i, (int)order.orderType, order.assignedBoxMaterial, true);
+                TargetUpdateOrderSlot(i, (int)order.orderType, order.assignedBoxMaterial, true);
             else
-                TargetUpdateOrderSlot(conn, i, 0, 0, false);
+                TargetUpdateOrderSlot(i, 0, 0, false);
         }
     }
 
     [TargetRpc]
-    private void TargetUpdateRequesteeSlot(NetworkConnection target, int x, int y, float timeRemaining, float timeStart, bool exists)
+    private void TargetUpdateRequesteeSlot(int x, int y, float timeRemaining, float timeStart, bool exists)
         => RpcUpdateRequesteeSlot(x, y, timeRemaining, timeStart, exists);
 
     [TargetRpc]
-    private void TargetUpdateOrderSlot(NetworkConnection target, int index, int orderType, int assignedBoxMaterial, bool exists)
+    private void TargetUpdateOrderSlot(int index, int orderType, int assignedBoxMaterial, bool exists)
         => RpcUpdateOrderSlot(index, orderType, assignedBoxMaterial, exists);
 
 
@@ -426,6 +426,7 @@ public class OrdersManager : GenericManager<OrdersManager>
 
         // All clients update UI
         UpdateOrderUI();
+        SyncFullOrdersStateToPlayers(); //well. 
     }
 
     void UpdateRequestees()

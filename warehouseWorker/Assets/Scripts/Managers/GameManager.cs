@@ -214,15 +214,13 @@ public class GameManager : GenericManager<GameManager>
         }
     }
 
-    // EDITED: Update now handles server/client properly
     void Update()
     {
-        if (!gameStarted) return;
+        if (!gameStarted) return;    // WHY? doesn't it? Synchh??? Maybe because the managers are actually not spawned..?? Urghh... Fucking hell, should've used Menu/Ingame scripts instead of shoving it all in a single thing. I initialize shit all the time anyway all over again, memleak gonna happen one day anyway...
 
         UpdateGameTime();
         UpdateDifficulty();
         
-        // EDITED: Events and timer updates only on server
         if (isServer)
         {
             UpdateEvents();
@@ -386,12 +384,14 @@ public class GameManager : GenericManager<GameManager>
 
     private void OnGameStartedChanged(bool oldValue, bool newValue)
     {
+        Debug.Log($"game was {oldValue} and is now {newValue}");
         gameStarted = newValue;
     }
 
     [Server]
     public void StartGame()
     {
+        Debug.LogError("Start game on Server End has been started up.");
         gameSave.score = score;  // TODO: save shit to save somewhere else probably
         try
         {
@@ -406,7 +406,8 @@ public class GameManager : GenericManager<GameManager>
         gameStarted = true;
         if (ordersManager != null && items.Count > 0)
             ordersManager.GenerateNewOrderRequestee();
-        
+
+        timer.StartTimer();
         // Start timer on all clients
         RpcStartGame();
     }

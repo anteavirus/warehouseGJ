@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using Mirror;
 
 public class PunchClock : Item
 {
@@ -29,16 +30,9 @@ public class PunchClock : Item
         {
             base.OnUse(gameObject);
             
-            // EDITED: Only server can start the game
-            if (Mirror.NetworkServer.active)
-            {
-                GameManager.Instance.StartGame();
-            }
-            else
-            {
-                // Client requests server to start game
-                CmdStartGame();
-            }
+
+            CmdStartGame();
+            
             
             // Move objects up on all clients
             for (int i = 0; i < thingsToCloseSoThatPlayerWouldntBeSoftlockedForSomeTimePreferrablyHoursLikelyTwoSeconds.transform.childCount; i++)
@@ -48,9 +42,10 @@ public class PunchClock : Item
         }
     }
     
-    [Mirror.Command(requiresAuthority = false)]
+    [Command(requiresAuthority = false)]
     private void CmdStartGame()
     {
+        Debug.LogError("Command to start game received.");
         if (GameManager.Instance != null && !GameManager.Instance.gameStarted)
         {
             GameManager.Instance.StartGame();

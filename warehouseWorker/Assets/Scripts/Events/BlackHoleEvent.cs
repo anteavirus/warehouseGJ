@@ -10,24 +10,19 @@ public class BlackHoleEvent : Event
     [SerializeField] AudioClip suckingSFX;
 
     private GameObject blackHoleInstance;
-    private GameObject weakerBlackHoleInstance;
-
-    private Transform weakerSpawnPoint;
     private Transform spawnPoint;
 
     public override void StartEvent()
     {
         base.StartEvent();
         spawnPoint = ((GameManager)GameManager.Instance).blackHoleSpawnPosition;
-        weakerSpawnPoint = ((OrdersManager)OrdersManager.Instance).spawnPosition;
         Invoke(nameof(SpawnBlackHole), 2f);
     }
 
     void SpawnBlackHole()
     {
         blackHoleInstance = Instantiate(blackHolePrefab, spawnPoint.position, Quaternion.identity);
-        weakerBlackHoleInstance = Instantiate(blackHolePrefab, weakerSpawnPoint.position, Quaternion.identity);
-        var audio = weakerBlackHoleInstance.AddComponent<AudioSource>();
+        var audio = blackHoleInstance.AddComponent<AudioSource>();
         audio.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx; // shittiest hakc
         audio.maxDistance = 50;
         audio.spatialBlend = 1;
@@ -38,7 +33,7 @@ public class BlackHoleEvent : Event
 
     public override void UpdateEvent()
     {
-        if (!isActive || blackHoleInstance == null || weakerBlackHoleInstance == null) return;
+        if (!isActive || blackHoleInstance == null) return;
 
         ApplyBlackHoleForce();
     }
@@ -48,10 +43,6 @@ public class BlackHoleEvent : Event
         if (blackHoleInstance != null)
         {
             GraviPull(blackHoleInstance.transform);
-        }
-        if (weakerBlackHoleInstance != null)
-        {
-            GraviPull(weakerBlackHoleInstance.transform, 2.5f);
         }
     }
 
@@ -99,10 +90,6 @@ public class BlackHoleEvent : Event
         if (blackHoleInstance != null)
         {
             Destroy(blackHoleInstance);
-        }
-        if (weakerBlackHoleInstance != null)
-        {
-            Destroy(weakerBlackHoleInstance);
         }
         base.EndEvent();
     }

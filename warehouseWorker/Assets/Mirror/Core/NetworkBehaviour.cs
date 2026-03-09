@@ -258,8 +258,18 @@ namespace Mirror
 
             // clear all unsynchronized changes in syncobjects
             // (Linq allocates, use for instead)
+            if (syncObjects == null)
+            {
+                Debug.LogError($"[Mirror Debug pls remove] syncObjects is NULL on {name} (type {GetType().FullName})");
+                return;
+            }
             for (int i = 0; i < syncObjects.Count; ++i)
             {
+                if (syncObjects[i] == null)
+                {
+                    Debug.LogError($"[Mirror Debug pls remove] syncObjects[{i}] is NULL on {name} (type {GetType().FullName})");
+                    continue;
+                }
                 syncObjects[i].ClearChanges();
             }
         }

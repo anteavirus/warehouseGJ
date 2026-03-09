@@ -45,6 +45,7 @@ public class NetworkGameManager : NetworkManager
         base.OnStartServer();
         Debug.Log("Server started!");
 
+        NetworkServer.Spawn(MasterManager.Instance.gameObject);  // Time to crab
         // Spawn game state object
         if (gameStatePrefab != null)
         {
@@ -75,6 +76,7 @@ public class NetworkGameManager : NetworkManager
 
     public override void OnClientConnect()
     {
+        //Destroy(MasterManager.Instance.gameObject); // Welp, time for crab.
         base.OnClientConnect();
         Debug.Log("Client connected!");
     }
@@ -94,8 +96,9 @@ public class NetworkGameManager : NetworkManager
     private System.Collections.IEnumerator InitializeClientManagersAfterSceneLoad()
     {
         // Wait a few frames so SyncVars (e.g. GameManager.levelSeed) have time to sync from server before shelf generation
-        for (int i = 0; i < 3; i++)
-            yield return null;
+        Debug.Log("strating to do shit");
+        yield return new WaitUntil(() => NetworkClient.isLoadingScene == false);
+        Debug.Log("Yep, i've got the signal. continuing");
         var master = FindObjectOfType<MasterManager>();
         if (master != null)
         {

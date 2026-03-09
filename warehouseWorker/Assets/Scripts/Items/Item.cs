@@ -164,28 +164,30 @@ public class Item : NetworkBehaviour
             audioSource.PlayOneShot(clip, impactVolume);
         }
 
-        if (collision.gameObject.TryGetComponent<PlayerController>(out var plr))
-        {
-            PleaseWork(plr);
-        }
+        //if (collision.gameObject.TryGetComponent<PlayerController>(out var plr))
+        //{
+        //    PleaseWork(plr);
+        //}
     }
+   
+    // Actually, please don't work. You're fucking up items positions.
 
-    [Server]
-    void PleaseWork(PlayerController plr, bool actuallyDont = false)
-    {
+    //[Server]
+    //void PleaseWork(PlayerController plr, bool actuallyDont = false)
+    //{
 
-        var a = GetComponent<NetworkIdentity>();
-        if (!actuallyDont)
-            a.AssignClientAuthority(plr.connectionToClient);
-        else
-            a.RemoveClientAuthority();
-    }
+    //    var a = GetComponent<NetworkIdentity>();
+    //    if (!actuallyDont)
+    //        a.AssignClientAuthority(plr.connectionToClient);
+    //    else
+    //        a.RemoveClientAuthority();
+    //}
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent<PlayerController>(out var plr))
-        {
-            PleaseWork(plr, true);
-        }
+        //if (collision.gameObject.TryGetComponent<PlayerController>(out var plr))
+        //{
+        //    PleaseWork(plr, true);
+        //}
     }
 }
