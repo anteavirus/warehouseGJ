@@ -19,6 +19,10 @@ public class DeliveryArea : NetworkBehaviour
     private bool playerAtDoor;
     private Coroutine autoCloseCoroutine;
 
+    private Vector3 closedLocalPosition;
+    private Vector3 openLocalPosition;
+    private Coroutine currentMoveCoroutine;
+
     private bool isInitialized = false;
     
     // EDITED: Added table index to identify which delivery area this is
@@ -34,9 +38,12 @@ public class DeliveryArea : NetworkBehaviour
         // Wait for OrderManager to be available
         yield return StartCoroutine(FindOrderManagerSomeDay());
 
+        closedLocalPosition = door.transform.localPosition;
+        openLocalPosition = closedLocalPosition + Vector3.up * 3f;
+
         //// Now initialize everything that depends on orderManager
         //selectionGameObjects = new GameObject[orderManager.queue.GetLength(0)];
-        
+
         //// EDITED: Find which table index this delivery area corresponds to
         //if (orderManager.doors != null && orderManager.doors.Length > 0)
         //{
@@ -50,7 +57,7 @@ public class DeliveryArea : NetworkBehaviour
         //    }
         //}
 
-        
+
         // Only set deliveryArea if it's not already set (first one found)
         if (orderManager.deliveryArea == null)
         {
@@ -83,9 +90,8 @@ public class DeliveryArea : NetworkBehaviour
     {
         while (true)
         {
-            yield return new WaitUntil(() => doorClosed && itemInsideMe != null && !processingDelivery);
+            yield return new WaitUntil(() => itemInsideMe != null && !processingDelivery);
             yield return StartCoroutine(ProcessDeliverySequence());
-            yield return new WaitWhile(() => processingDelivery);
         }
     }
 
@@ -137,39 +143,33 @@ public class DeliveryArea : NetworkBehaviour
     IEnumerator OpenDoor()
     {
         if (doorsMoving) yield break;
-        doorsMoving = true;
-
-        yield return StartCoroutine(MoveDoorToPosition(door.transform, originalPosition + Vector3.up * 3f, 1f));
-
-        doorClosed = false;
-        doorsMoving = false;
+        if (currentMoveCoroutine != null) StopCoroutine(currentMoveCoroutine);
+        currentMoveCoroutine = StartCoroutine(MoveDoorToLocalPosition(openLocalPosition, 1f));
     }
 
     IEnumerator CloseDoor()
     {
         if (doorsMoving) yield break;
-
-        doorsMoving = true;
-
-        yield return StartCoroutine(MoveDoorToPosition(door.transform, originalPosition, 1f));
-
-        doorClosed = true;
-        doorsMoving = false;
+        if (currentMoveCoroutine != null) StopCoroutine(currentMoveCoroutine);
+        currentMoveCoroutine = StartCoroutine(MoveDoorToLocalPosition(closedLocalPosition, 1f));
     }
 
-    IEnumerator MoveDoorToPosition(Transform doorTransform, Vector3 targetPosition, float duration)
+    IEnumerator MoveDoorToLocalPosition(Vector3 targetLocal, float duration)
     {
-        Vector3 startPosition = doorTransform.position;
+        doorsMoving = true;
+        Vector3 startLocal = door.transform.localPosition;
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
-            doorTransform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
+            door.transform.localPosition = Vector3.Lerp(startLocal, targetLocal, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        doorTransform.position = targetPosition;
+        door.transform.localPosition = targetLocal;
+        doorsMoving = false;
+        currentMoveCoroutine = null;
     }
 
     // Automatically close door after a delay when player leaves

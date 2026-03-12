@@ -259,11 +259,11 @@ public class OrdersManager : GenericManager<OrdersManager>
         }
     }
 
-    [TargetRpc]
+    [ClientRpc]
     private void TargetUpdateRequesteeSlot(int x, int y, float timeRemaining, float timeStart, bool exists)
         => RpcUpdateRequesteeSlot(x, y, timeRemaining, timeStart, exists);
 
-    [TargetRpc]
+    [ClientRpc]
     private void TargetUpdateOrderSlot(int index, int orderType, int assignedBoxMaterial, bool exists)
         => RpcUpdateOrderSlot(index, orderType, assignedBoxMaterial, exists);
 
@@ -550,8 +550,11 @@ public class OrdersManager : GenericManager<OrdersManager>
             activeOrders[order.orderPosition] = null;
             gameManager.AddScore(orderCompleteScore, resetTimer: true, immediateReset: true);
             RpcPlayOrderSound(1); // 1 = orderCompleteSound
-            if (deliveryArea != null)
+            if (deliveryArea != null && deliveryArea.selectionGameObjects != null &&
+                order.orderPosition >= 0 && order.orderPosition < deliveryArea.selectionGameObjects.Length)
+            {
                 deliveryArea.selectionGameObjects[order.orderPosition] = null;
+            }
 
             if (order.requestObjectCreated != null && order.orderType == OrderType.Receive)
             {
@@ -570,8 +573,11 @@ public class OrdersManager : GenericManager<OrdersManager>
             activeOrders[order.orderPosition] = null;
             gameManager.AddScore(orderFailPenalty, resetTimer: false);
             RpcPlayOrderSound(2); // 2 = orderFailSound
-            if (deliveryArea != null)
-                deliveryArea.selectionGameObjects[order.orderPosition] = null;
+            if (deliveryArea != null && deliveryArea.selectionGameObjects != null &&
+                order.orderPosition >= 0 && order.orderPosition < deliveryArea.selectionGameObjects.Length)
+            {
+                deliveryArea.selectionGameObjects[order.orderPosition] = null;  // it is theoretically necessary to keep it fine. too bad i'm feeling done with this
+            }
 
             gameManager.IncreaseChanceOfEvent();
             RpcUpdateOrderSlot(order.orderPosition, 0, 0, false);
@@ -767,11 +773,9 @@ public class OrdersManager : GenericManager<OrdersManager>
     {
         if (readyToUseBoxes.Count < 1 || doors.Length < 1 || gameManager.items.Count == 0) return;
 
-        GameObject assignedBoxTemplate = UsefulStuffs.RandomNonNullFromList(readyToUseBoxes, out int assignedBoxIndex);
-        if (assignedBoxTemplate == null) return;
-
-        // Get the original prefab from boxPrefabs, not the template
-        GameObject boxPrefab = boxPrefabs[assignedBoxIndex];
+        GameObject boxPrefab = UsefulStuffs.RandomNonNullFromList(boxPrefabs, out int assignedBoxIndex);
+        if (boxPrefab == null || assignedBoxIndex < 0 || assignedBoxIndex >= boxPrefabs.Count)
+            return;
 
         // Instantiate the box from the registered network prefab
         var newBox = Instantiate(boxPrefab, UsefulStuffs.RandomFromArray(doors).transform.position, Quaternion.identity);
@@ -809,7 +813,7 @@ public class OrdersManager : GenericManager<OrdersManager>
             }
 
             newItem.SetActive(true);
-            NetworkServer.Spawn(newItem);
+            //NetworkServer.Spawn(newItem);
             newItem.SetActive(false); // Item is inside the box
         }
 
@@ -826,7 +830,8 @@ public class OrdersManager : GenericManager<OrdersManager>
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
 
-        if (deliveryArea != null)
+        if (deliveryArea != null && deliveryArea.selectionGameObjects != null &&
+            requestee.queuePosition.x >= 0 && requestee.queuePosition.x < deliveryArea.selectionGameObjects.Length)
         {
             deliveryArea.selectionGameObjects[requestee.queuePosition.x] = newBox;
         }

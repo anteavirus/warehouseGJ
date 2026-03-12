@@ -601,16 +601,29 @@ public class GameManager : GenericManager<GameManager>
     IEnumerator ReturnToMainMenuAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        if (PlayerController.LocalPlayer != null)
+        {
+            PlayerController.LocalPlayer.Disconnect();
+            Destroy(PlayerController.LocalPlayer.gameObject);   // This works. Thankfully.
+        }
+        else
+        {
+            var a = FindAnyObjectByType<PlayerController>();
+            if (a != null)
+            {
+                Destroy(a.gameObject);
+            }
+            else
+                Debug.LogError("UH oh. I can't find the player at all... How will I rid myself of this LOSER screen?");
+        }        
+        
         if (isServer)
         {
-            NetworkManager.singleton.ServerChangeScene("Main Menu");
             NetworkServer.DisconnectAll();
             (NetworkGameManager.singleton ?? NetworkGameManager.Instance).StopHost();
         }
         NetworkClient.Disconnect();
-
-        if (PlayerController.LocalPlayer != null)
-            Destroy(PlayerController.LocalPlayer);
         LoadSceneStr();
     }
 

@@ -106,19 +106,32 @@ public static class UsefulStuffs
         return list[index];
     }
 
-    public static T RandomNonNullFromList<T>(List<T> list) where T : class => RandomFromList(list, out _);
+    public static T RandomNonNullFromList<T>(List<T> list) where T : class =>
+        RandomNonNullFromList(list, out _);
+
     public static T RandomNonNullFromList<T>(List<T> list, out int index) where T : class
     {
-        List<T> nonNulls = new();
-        index = -1;
-        foreach (var item in list)
-            if (item != null) nonNulls.Add(item);
+        List<T> nonNulls = new List<T>();
+        List<int> originalIndices = new List<int>();
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i] != null)
+            {
+                nonNulls.Add(list[i]);
+                originalIndices.Add(i);
+            }
+        }
 
         if (nonNulls.Count == 0)
+        {
+            index = -1;
             return null;
-        
-        index = UnityEngine.Random.Range(0, list.Count);
-        return nonNulls[index];
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, nonNulls.Count);
+        index = originalIndices[randomIndex];   
+        return nonNulls[randomIndex];
     }
 
     public static Vector2 Vect2OneHalved => new(0.5f, 0.5f);
