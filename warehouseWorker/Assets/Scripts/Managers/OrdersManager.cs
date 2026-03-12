@@ -450,7 +450,7 @@ public class OrdersManager : GenericManager<OrdersManager>
     [Server]
     public void GenerateNewOrderRequestee()
     {
-        if (gameManager.itemTemplates.Count == 0) return;
+        if (gameManager.items.Count == 0) return;
 
         Vector2Int? emptySpot = FindEmptyQueueSpot();
         if (!emptySpot.HasValue) return;
@@ -765,7 +765,7 @@ public class OrdersManager : GenericManager<OrdersManager>
     [Server]
     void SpawnItem(OrderRequestee requestee)
     {
-        if (readyToUseBoxes.Count < 1 || doors.Length < 1 || gameManager.itemTemplates.Count == 0) return;
+        if (readyToUseBoxes.Count < 1 || doors.Length < 1 || gameManager.items.Count == 0) return;
 
         GameObject assignedBoxTemplate = UsefulStuffs.RandomNonNullFromList(readyToUseBoxes, out int assignedBoxIndex);
         if (assignedBoxTemplate == null) return;
@@ -793,10 +793,10 @@ public class OrdersManager : GenericManager<OrdersManager>
 
         // Spawn item if gameManager.itemTemplates exists
         GameObject newItem = null;
-        if (gameManager.itemTemplates != null && gameManager.itemTemplates.Count > 0)
+        if (gameManager.items != null && gameManager.items.Count > 0)
         {
-            int randomIndex = Random.Range(0, gameManager.itemTemplates.Count);
-            newItem = Instantiate(gameManager.itemTemplates[randomIndex].gameObject);
+            int randomIndex = Random.Range(0, gameManager.items.Count);
+            newItem = Instantiate(gameManager.items[randomIndex].gameObject);
 
             if (newItem.GetComponent<NetworkIdentity>() == null)
             {

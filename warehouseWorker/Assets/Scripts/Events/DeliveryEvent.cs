@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Mirror;
 
 
 // TODO: this event kinda sucks. We should probably comment it out probably, and decide if it still fits.
@@ -20,18 +21,20 @@ public class DeliveryEvent : Event
     {
         base.StartEvent();
         if (spawnCenter == null) spawnCenter = OrdersManager.Instance.spawnPosition;
-        SelectMainItem();
-        SpawnMainItem();
+        if (!isServer) return;
+        //SelectMainItem();
+        //SpawnMainItem();
         SpawnDecoys();
         if (((GameManager)GameManager.Instance).talkingDeliveryItem == null)
             ((GameManager)GameManager.Instance).talkingDeliveryItem = Instantiate(talkingDeliveryItem);
     }
 
+    [Server]
     private void SpawnMainItem()
     {
         // Find the corresponding prefab from GameManager's items list
         GameObject mainItemPrefab = null;
-        foreach (var itemPrefab in ((GameManager)GameManager.Instance).itemTemplates)
+        foreach (var itemPrefab in ((GameManager)GameManager.Instance).items)
         {
             if (itemPrefab.TryGetComponent<Item>(out var itemComponent) && itemComponent.ID == _mainItem.ID)
             {
@@ -51,15 +54,17 @@ public class DeliveryEvent : Event
         deliveryBox.GetComponent<Box>().containedItem = mainItemPrefab;
     }
 
-    private void SelectMainItem()
-    {
-        var validItems = ((GameManager)GameManager.Instance).itemTemplates;
+    //[Server]
+    //private void SelectMainItem()
+    //{
+    //    var validItems = ((GameManager)GameManager.Instance).items;
 
-        _mainItem = validItems[Random.Range(0, validItems.Count)];
-        
-        Debug.Log($"Main delivery item selected: {_mainItem.name}");
-    }
+    //    _mainItem = validItems[Random.Range(0, validItems.Count)].GetComponent<Item>();
 
+    //    Debug.Log($"Main delivery item selected: {_mainItem.name}");
+    //}
+
+    [Server]
     private void SpawnDecoys()
     {
         for (int i = 0; i < decoysToSpawn; i++)
@@ -77,10 +82,11 @@ public class DeliveryEvent : Event
 
     public override void EndEvent()
     {
+        base.EndEvent();
+        if (!isServer) return;
         foreach (GameObject decoy in spawnedDecoys)
         {
-            if (decoy != null) Destroy(decoy.gameObject);
+            if (decoy != null) NetworkServer.Destroy(decoy.gameObject);
         }
-        base.EndEvent();
     }
 }

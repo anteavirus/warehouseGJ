@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 
 public class BoogeymanAndLightsTurnOffEvent : Event
 {
     [Header("Boogeyman Settings")]
     public GameObject boogeymanPrefab;
-    public BoxCollider spawnArea;
 
     [Header("Light Settings")]
     [SerializeField] List<Transform> lightParents = new List<Transform>();
@@ -31,20 +31,17 @@ public class BoogeymanAndLightsTurnOffEvent : Event
     public override void StartEvent()
     {
         base.StartEvent();
-        SpawnBoogey();
         InitializeLightControl();
-
         player = FindObjectOfType<PlayerController>();
         player.musicSource.Pause();
+        if (isServer)
+            SpawnBoogey();
     }
 
+    [Server]
     void SpawnBoogey()
     {
-        if (spawnArea == null)
-            spawnArea = GameObject.Find("SpookySpawn").GetComponent<BoxCollider>();
-
-        Vector3 spawnPos = GetRandomPositionInBox(spawnArea.bounds);
-        realBoogey = Instantiate(boogeymanPrefab, spawnPos, Quaternion.identity);
+        realBoogey = Instantiate(boogeymanPrefab, Vector3.one, Quaternion.identity);  // ваще похуй
     }
 
     void InitializeLightControl()

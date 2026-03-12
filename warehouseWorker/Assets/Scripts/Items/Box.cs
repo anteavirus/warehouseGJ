@@ -18,6 +18,7 @@ public class Box : Item
     public bool containmentProcedureSuccessful = true;
     public float containmentProcedureMaxTime = 30f;
     public float containmentProcedureClock = 30f;
+    internal int materialIndex;
 
     private void Start()
     {

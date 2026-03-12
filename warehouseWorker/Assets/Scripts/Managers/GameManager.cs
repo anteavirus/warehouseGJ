@@ -47,8 +47,8 @@ public class GameManager : GenericManager<GameManager>
     // Items & Templates
     [Header("Items")]
     [Tooltip("I will kill you if you put something that doesn't have an Item Component here.")]
-    [SerializeField] List<GameObject> items = new();
-    public List<Item> itemTemplates = new();
+    public List<GameObject> items = new();
+    //public List<Item> itemTemplates = new();
 
     // Spawning
     [Header("Spawning")]
@@ -102,7 +102,7 @@ public class GameManager : GenericManager<GameManager>
         // Only server sets levelSeed so shelf layout is consistent for all clients
         if (isServer)
             levelSeed = UnityEngine.Random.Range(0, 1969);
-        InitializeItemTemplates();
+        //InitializeItemTemplates();
         InitializeAudio();
 
         var player = FindObjectOfType<PlayerController>(true)?.GetComponent<SerializableDictionaryObjectContainer>();
@@ -152,37 +152,37 @@ public class GameManager : GenericManager<GameManager>
 
     }
 
-    void InitializeItemTemplates()
-    {
-        var existing = transform.Find("[Template]s Parent");
-        if (!existing.IsTrulyNull())
-        {
-            Destroy(existing.gameObject);
-        }
-        itemTemplates = new();
-        var parent = new GameObject("[Template]s Parent");
-        foreach (var item in items)
-        {
-            var obj = Instantiate(item);
-            obj.transform.SetParent(transform);
-            var localname = obj.GetComponent<LocalizedText>();
-            localname.UpdateText();
-            obj.name = localname.text;
-            obj.transform.parent = parent.transform;
-            var itemComp = obj.GetComponent<Item>();
-            itemComp.mixerGroup = sfx;
+    //void InitializeItemTemplates()
+    //{
+    //    var existing = transform.Find("[Template]s Parent");
+    //    if (!existing.IsTrulyNull())
+    //    {
+    //        Destroy(existing.gameObject);
+    //    }
+    //    itemTemplates = new();
+    //    var parent = new GameObject("[Template]s Parent");
+    //    foreach (var item in items)
+    //    {
+    //        var obj = Instantiate(item);
+    //        obj.transform.SetParent(transform);
+    //        var localname = obj.GetComponent<LocalizedText>();
+    //        localname.UpdateText();
+    //        obj.name = localname.text;
+    //        obj.transform.parent = parent.transform;
+    //        var itemComp = obj.GetComponent<Item>();
+    //        itemComp.mixerGroup = sfx;
             
-            // Ensure NetworkIdentity exists on templates (but don't spawn them - they're templates)
-            if (obj.GetComponent<NetworkIdentity>() == null)
-            {
-                obj.AddComponent<NetworkIdentity>();
-            }
+    //        // Ensure NetworkIdentity exists on templates (but don't spawn them - they're templates)
+    //        if (obj.GetComponent<NetworkIdentity>() == null)
+    //        {
+    //            obj.AddComponent<NetworkIdentity>();
+    //        }
             
-            itemTemplates.Add(itemComp);
-            obj.SetActive(false);
-        }
-        parent.transform.SetParent(transform);
-    }
+    //        itemTemplates.Add(itemComp);
+    //        obj.SetActive(false);
+    //    }
+    //    parent.transform.SetParent(transform);
+    //}
 
     void InitializeAudio()
     {
@@ -475,10 +475,10 @@ public class GameManager : GenericManager<GameManager>
 
     public Item ReturnItemById(int id)
     {
-        foreach (var item in itemTemplates)
+        foreach (var item in items)
         {
-            if (item.ID == id)
-                return item;
+            if (item.TryGetComponent<Item>(out var itemComp) && itemComp.ID == id)
+                return itemComp;
         }
         return null;
     }
@@ -582,21 +582,36 @@ public class GameManager : GenericManager<GameManager>
         }
         
         // Play game over animation on local player
-        var localPlayer = FindFirstObjectByType<PlayerController>();
+        PlayerController localPlayer = FindObjectsOfType<PlayerController>().First(i => i.isLocalPlayer);
         if (localPlayer != null && localPlayer.isLocalPlayer)
         {
-            var animator = localPlayer.GetComponent<Animator>();
-            if (animator != null)
+            if (localPlayer.TryGetComponent<Animator>(out var animator))
             {
                 animator.Play("GameOver");
             }
         }
-        
-        // Load scene after delay (only on server)
+        else
+        {
+            Debug.Log("failed to play client side game over animation. clean up jannie");
+        }
+
+        StartCoroutine(ReturnToMainMenuAfterDelay(10f));
+    }
+
+    IEnumerator ReturnToMainMenuAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         if (isServer)
         {
-            Invoke(nameof(LoadSceneStr), 10f);
+            NetworkManager.singleton.ServerChangeScene("Main Menu");
+            NetworkServer.DisconnectAll();
+            (NetworkGameManager.singleton ?? NetworkGameManager.Instance).StopHost();
         }
+        NetworkClient.Disconnect();
+
+        if (PlayerController.LocalPlayer != null)
+            Destroy(PlayerController.LocalPlayer);
+        LoadSceneStr();
     }
 
     public void LoadSceneOffset(int offset = 0)

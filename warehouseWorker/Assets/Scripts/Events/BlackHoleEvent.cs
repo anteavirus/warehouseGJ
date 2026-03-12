@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 
 public class BlackHoleEvent : Event
@@ -19,9 +20,12 @@ public class BlackHoleEvent : Event
         Invoke(nameof(SpawnBlackHole), 2f);
     }
 
+    [Server]
     void SpawnBlackHole()
     {
-        blackHoleInstance = Instantiate(blackHolePrefab, spawnPoint.position, Quaternion.identity);
+        if (!isServer) return;
+        blackHoleInstance = Instantiate(blackHolePrefab, spawnPoint.position, Quaternion.identity);   // Isn't quite necessary; who coded this?
+        NetworkServer.Spawn(blackHoleInstance);
         var audio = blackHoleInstance.AddComponent<AudioSource>();
         audio.outputAudioMixerGroup = ((GameManager)GameManager.Instance).sfx; // shittiest hakc
         audio.maxDistance = 50;
@@ -48,6 +52,7 @@ public class BlackHoleEvent : Event
 
     void GraviPull(Transform position, float forceWeakener = 1)
     {
+        if (!isServer) return;  // fuck you server
         Collider[] colliders = Physics.OverlapSphere(position.position, rangeOfForce);
         foreach (Collider col in colliders)
         {
@@ -87,9 +92,10 @@ public class BlackHoleEvent : Event
     public override void EndEvent()
     {
         // handled by GM
+        if (!isServer) return;
         if (blackHoleInstance != null)
         {
-            Destroy(blackHoleInstance);
+            NetworkServer.Destroy(blackHoleInstance);
         }
         base.EndEvent();
     }

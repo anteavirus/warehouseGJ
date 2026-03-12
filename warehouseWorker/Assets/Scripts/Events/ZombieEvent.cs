@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 
 public class ZombieEvent : Event
@@ -15,10 +16,14 @@ public class ZombieEvent : Event
     public override void StartEvent()
     {
         base.StartEvent();
-        SpawnZombies();
-        SpawnWeapons();
+        if (isServer)
+        {
+            SpawnZombies();
+            SpawnWeapons();
+        }
     }
 
+    [Server]
     private void SpawnZombies()
     {
         if (spawnArea == null) spawnArea = GameObject.Find("ZombieSpawn").GetComponent<BoxCollider>();
@@ -31,7 +36,9 @@ public class ZombieEvent : Event
         for (int i = 0; i < numberOfZombies; i++)
         {
             Vector3 spawnPos = GetRandomPositionInBox(spawnArea.bounds);
-            Instantiate(zombiePrefab, spawnPos, Quaternion.identity);
+
+            var ayyzelyoniezombie = Instantiate(zombiePrefab, spawnPos, Quaternion.identity);
+            NetworkServer.Spawn(ayyzelyoniezombie);
         }
     }
 
@@ -45,6 +52,7 @@ public class ZombieEvent : Event
         );
     }
 
+    [Server]
     private void SpawnWeapons()
     {
         if (throwableWeaponPrefabs.Length == 0 || weaponsToSpawn <= 0) return;
@@ -56,7 +64,8 @@ public class ZombieEvent : Event
                 ? weaponSpawnPoints[Random.Range(0, weaponSpawnPoints.Length)].position
                 : OrdersManager.Instance.spawnPosition.position;
 
-            Instantiate(weaponPrefab, spawnPos, Quaternion.identity);
+            var weapons = Instantiate(weaponPrefab, spawnPos, Quaternion.identity);
+            NetworkServer.Spawn(weapons);
         }
     }
 }

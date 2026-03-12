@@ -79,7 +79,11 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
         Debug.Log($"[ShelfManager] Using seed: {assignmentSeed} for assignment");
 
         UpdateShelfStoragesFromPrefabs();
-        List<Item> availableItems = new List<Item>(gameManager.itemTemplates); // Create a copy to avoid modification issues
+        List<Item> availableItems = gameManager.items
+            .Select(i => i.GetComponent<Item>())
+            .Where(c => c != null) 
+            .ToList();
+
 
         // Filter only active spawn points
         var activeSpawns = shelfSpawns.Where(sp => sp != null && sp.IsActiveForAssignment()).ToList();
@@ -103,12 +107,6 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
                 {
                     GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
                     spawnedShelf.name = $"Shelf_{spawnPoint.name}_{prefabToSpawn.name}";
-
-                    if (isServer)
-                    {
-                        uint assetId = prefabToSpawn.GetComponent<NetworkIdentity>().assetId;
-                        Debug.LogError($"Spawning shelf {prefabToSpawn.name} with assetId {assetId}");
-                    }
 
                     //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
                     //    spawnedShelf.AddComponent<NetworkIdentity>();
@@ -146,11 +144,7 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
                     if (prefabToSpawn != null)
                     {
                         GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
-                        if (isServer)
-                        {
-                            uint assetId = prefabToSpawn.GetComponent<NetworkIdentity>().assetId;
-                            Debug.LogError($"Spawning shelf {prefabToSpawn.name} with assetId {assetId}");
-                        }
+                        
                         //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
                         //    spawnedShelf.AddComponent<NetworkIdentity>();
                         //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)
@@ -171,11 +165,7 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
                         if (prefabToSpawn != null)
                         {
                             GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
-                            if (isServer)
-                            {
-                                uint assetId = prefabToSpawn.GetComponent<NetworkIdentity>().assetId;
-                                Debug.LogError($"Spawning shelf {prefabToSpawn.name} with assetId {assetId}");
-                            }
+
                             //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
                             //    spawnedShelf.AddComponent<NetworkIdentity>();
                             //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)

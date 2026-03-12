@@ -552,8 +552,6 @@ MonoBehaviour:
   OrdersManager: {fileID: 8844170251250435432}
   ShelvesStockManager: {fileID: 3170013401021449806}
   ShopManager: {fileID: 1969059495573962861}
-  WarehouseGeneratorManager: {fileID: 1754175910371117790}
-  SpawnManager: {fileID: 2399779274390119558}
 --- !u!114 &3995619366177694389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,6 +638,7 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 1978285415011787513, guid: cccd51cfc9d7c024a817850f82d4de21, type: 3}
+  - {fileID: 639902644409947038, guid: 7dce725888ab09d44a929bf56a235451, type: 3}
   - {fileID: 2967366868401370336, guid: 1a6a5002f985bee459ae84ea280ff2e8, type: 3}
   - {fileID: 2967366868401370336, guid: 6e7add9295133fe40b9ffffdf3f80fbd, type: 3}
   - {fileID: 2967366868401370336, guid: df335f4c893fc2d469e19b8b123714b6, type: 3}
@@ -654,6 +653,7 @@ MonoBehaviour:
   - {fileID: 447633452283104326, guid: 267ab40f71c19914986e78f28e81d1b5, type: 3}
   - {fileID: 2967366868401370336, guid: 9c665b26cdc150c43940b61b2adcbfdd, type: 3}
   - {fileID: 2967366868401370336, guid: d8c755b85f2f51143880e6f8d760a3f2, type: 3}
+  - {fileID: 3826668044454975344}
   - {fileID: 2819549715647649002, guid: 8cfb0586b1f9ff442b44b6292d39f6e6, type: 3}
   - {fileID: 2967366868401370336, guid: 5268504bd46cb314698991a6d8af56b3, type: 3}
   - {fileID: 6920069248926246038, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff, type: 3}

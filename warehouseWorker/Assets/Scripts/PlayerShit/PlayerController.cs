@@ -520,9 +520,15 @@ public class PlayerController : NetworkBehaviour
         if (!NetworkServer.spawned.TryGetValue(netId, out var netIdentity))
             return;
 
-        // Grant authority if not already owned
         if (netIdentity.connectionToClient == null)
             netIdentity.AssignClientAuthority(connectionToClient);
+
+        var rb = netIdentity.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
 
         TargetDragAuthorityGranted(connectionToClient, netId);
     }
@@ -564,8 +570,19 @@ public class PlayerController : NetworkBehaviour
     {
         if (!NetworkServer.spawned.TryGetValue(netId, out var netIdentity))
             return;
+
         if (netIdentity.connectionToClient == connectionToClient)
+        {
             netIdentity.RemoveClientAuthority();
+
+            // Re‑enable server physics
+            var rb = netIdentity.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+            }
+        }
     }
 
     [SerializeField] private float dragFollowForce = 100f;

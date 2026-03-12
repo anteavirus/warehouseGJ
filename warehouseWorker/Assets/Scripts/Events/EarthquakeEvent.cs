@@ -38,7 +38,7 @@ public class EarthquakeEvent : Event
     public override void UpdateEvent()
     {
         base.UpdateEvent();
-
+        if (!isServer) return;
         float progress = Mathf.Clamp01(elapsedTime / duration);
         float currentIntensity = intensityCurve.Evaluate(progress);
 

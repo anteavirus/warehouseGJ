@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 
 public class C4Event : Event
@@ -14,9 +15,11 @@ public class C4Event : Event
     public override void StartEvent()
     {
         base.StartEvent();
+        if (!isServer) return;
         SpawnItems();
     }
 
+    [Server]
     private void SpawnItems()
     {
         if (c4SpawnPoint == null)

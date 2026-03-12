@@ -61,7 +61,7 @@ public class WindyEvent : Event
         // If there's an Item component, check if it's in GameManager.itemTemplates
         if (itemComponent != null)
         {
-            return ((GameManager)GameManager.Instance).itemTemplates.Any(i => i.ID == itemComponent.ID);
+            return ((GameManager)GameManager.Instance).items.Any(i => i.TryGetComponent<Item>(out var item) && item.ID == itemComponent.ID);
         }
 
         // If no Item component found, allow playing by default
@@ -104,6 +104,7 @@ public class WindyEvent : Event
 
     public override void UpdateEvent()
     {
+        if (!isServer) return;
         Collider[] colliders = Physics.OverlapSphere(transform.position, 50f);
         foreach (Collider col in colliders)
         {
