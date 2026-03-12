@@ -45,6 +45,18 @@ public class NetworkGameManager : NetworkManager
         base.OnStartServer();
         Debug.Log("Server started!");
 
+        if (MasterManager.Instance == null)  // FUCK.
+        {
+            var a = FindObjectOfType<MasterManager>();
+            if (a == null)
+            {
+                a = Instantiate(Resources.Load<MasterManager>("Prefabs/MasterManager"));
+
+            }
+            
+            a.Initialize();  // please?
+            Debug.Log(MasterManager.Instance);
+        }
         NetworkServer.Spawn(MasterManager.Instance.gameObject);  // Time to crab
         // Spawn game state object
         if (gameStatePrefab != null)
