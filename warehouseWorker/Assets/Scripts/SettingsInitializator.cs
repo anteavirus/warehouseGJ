@@ -111,7 +111,9 @@ public class SettingsManager : MonoBehaviour
         if (Instance.started) return;
         started = true;
         settingsFileManip = FileDataManipulator.ForPersistentDataPath(settings, new string[1] { "settings.json" });
-        settings = settingsFileManip.LoadData<Settings>();
+        Settings savedSettings = settingsFileManip.LoadData<Settings>();
+        if (savedSettings != null)
+            settings = savedSettings;
 
         InitializeMouseSettings();
         InitializeResolutions();
