@@ -11,7 +11,7 @@ using UnityEngine.Rendering;
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance;
-    Settings settings = new();
+    public Settings settings = new();
     FileDataManipulator settingsFileManip;
 
     [System.Serializable]
@@ -129,7 +129,8 @@ public class SettingsManager : MonoBehaviour
     private void CreateLanguageButtons()
     {
         if (LocalizationManager.Instance == null) return;
-        LocalizationManager.Instance.languageSelectionContent = settingsPanels.Find(i => i.name == "language").transform.Find("Scroll View").Find("Viewport").Find("Content").gameObject;
+        if (LocalizationManager.Instance.languageSelectionContent == null)  /// МОЛЮСЬ мы не будем дергать туда сюда панель языков. Она захардкодена брать всё первое, где ожидает своё любимое лакомство - CONTENT. Если конечно Local.Manager сам не нашёл это место.
+            LocalizationManager.Instance.languageSelectionContent = settingsPanels.Find(i => i.name == "language").transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
         LocalizationManager.Instance.Initialize();
     }
 
@@ -221,7 +222,7 @@ public class SettingsManager : MonoBehaviour
         string keyName = key.ToString();
 
         if (keyName.StartsWith("Mouse"))
-            if (int.TryParse(keyName.Split("Mouse")[1], out int mouseVal))  // NOTE: [0] actually contains a null value 
+            if (int.TryParse(keyName.Split("Mouse")[1], out int mouseVal))  // NOTE: [0] содержит всё в начале до Mouse, по хорошему - null
             {
                 if (mouseVal >= 0 && mouseVal <= 2)
                     return $"key_mouse_{mouseVal}";

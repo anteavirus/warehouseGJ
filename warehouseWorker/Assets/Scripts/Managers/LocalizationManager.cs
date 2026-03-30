@@ -14,13 +14,24 @@ public class LocalizationManager : GenericManager<LocalizationManager>
     [System.Serializable]
     class LanguageData
     {
-        public string languageCode;
-        public string languageName;
-        public List<SerializableDictionary<string, string>.SerializableKeyValuePair> translations;
+        /// <summary>
+        /// "Ключ" языка чтобы отличать AU от TI и ST
+        /// </summary>
+            public string languageCode;
+        
+        /// <summary>
+        /// Название самого языка. Можем назвать "SIGMA CREEPER [С ОГУРЦОМ]" если захотим
+        /// </summary>
+            public string languageName;
+        
+        /// <summary>
+        /// "Ключ" | Перевод, буковки все. 
+        /// </summary>
+            public List<SerializableDictionary<string, string>.SerializableKeyValuePair> translations;
     }
 
     readonly List<LanguageData> languages = new();
-    public string defaultLanguage = "en";
+    public string defaultLanguage = "en";  // american goy. или boy оба подходят прекрасно
     public string currentLanguage;
 
     public event Action OnLanguageChanged;
@@ -28,22 +39,24 @@ public class LocalizationManager : GenericManager<LocalizationManager>
     public override void Initialize()
     {
         base.Initialize();
-        currentLanguage = PlayerPrefs.GetString("SelectedLanguage", defaultLanguage);   // TODO: HOW MANY TIMES DO I HAVE TO TEACH ME THIS LESSON?
+        currentLanguage = PlayerPrefs.GetString("SelectedLanguage", defaultLanguage);   // TODO: желательно в префы совать префы, и честно это сюда подходит. но я не уверен.
         LoadLanguages();
     }
 
     void LoadLanguages()
     {
         if (languageSelectionContent == null)
-            languageSelectionContent = FindObjectOfType<ScrollRect>()?.transform.Find("Viewport")?.Find("Content")?.gameObject;
-        // i failed as a coder
+            languageSelectionContent = FindObjectOfType<LanguageSelectorMarker>(true)?.gameObject;  // ищем везде как можем
+
+        if (languageSelectionContent == null)
+            Debug.LogError("Ну что же. Не нашли маркер. Пошли вы все в лес за грибами");
 
         LoadLanguagesFromResources();
         LoadLanguagesFromStreamingAssets();
 
         if (languages.Count == 0)
         {
-            Debug.LogError("No language files found. Good job!");
+            Debug.LogError("Не были найдены файлы языков. круто");
         }
 
         CreateLanguageButtons();
@@ -53,7 +66,7 @@ public class LocalizationManager : GenericManager<LocalizationManager>
     {
         if (languageSelectionContent == null)
         {
-            Debug.LogError("Language selection content is not assigned!");
+            Debug.LogError("Не было дезигнировано поле для заполнения выборами языков! я про контент бтв");
             return;
         }
 
@@ -77,9 +90,11 @@ public class LocalizationManager : GenericManager<LocalizationManager>
                 buttonComponent.onClick.AddListener(() =>
                 {
                     SetLanguage(lang.languageCode);
-                    Debug.Log($"Selected language: {lang.languageName}");
-
-                    if (SceneManager.GetActiveScene().name == "LanguageSelection") LoadScene("Main Menu", null);
+                    Debug.Log($"Выбран язык: {lang.languageName}");
+                    
+                    // по рофлу кинем игрока в главное меню если мы в выборе языка. при нажатии любого из языков. сука а идея-то хуйня
+                    if (SceneManager.GetActiveScene().name == "LanguageSelection") 
+                        LoadScene("Main Menu", null);
                 });
             }
         }
@@ -89,13 +104,16 @@ public class LocalizationManager : GenericManager<LocalizationManager>
             GameObject warningText = new("WarningText");
             warningText.transform.SetParent(languageSelectionContent.transform);
             TextMeshProUGUI textComponent = warningText.AddComponent<TextMeshProUGUI>();
-            textComponent.text = "No languages available. I have no idea how this happened...";
+            textComponent.text = "Языки не были доступны. Я не знаю как это случилось... And sorry i cant be bothered to add localization for this message im busy doing jackshit with tons of work on my back";
             textComponent.color = Color.red;
             textComponent.alignment = TextAlignmentOptions.Center;
         }
     }
 
-    public void LoadScene(string name, object labubu)   // I don't remember what the fuck is this fucking fukc hack was but this looks so fucking stupid
+
+    // это вроде чтобы подгрузить что-то??? но это же не корутина и не асинхр. метод так что он тупо запустится в любом случае.
+    // ну и нахуй я это писал так.
+    public void LoadScene(string name, object labubu)   
     {
         if (labubu == null)
         {
@@ -116,6 +134,7 @@ public class LocalizationManager : GenericManager<LocalizationManager>
                 LanguageData languageData = JsonUtility.FromJson<LanguageData>(file.text);
                 if (languageData != null && !LanguageExists(languageData.languageCode))
                 {
+                    Debug.Log($"Language loaded {languageData.languageName}");
                     languages.Add(languageData);
                 }
             }
@@ -151,7 +170,7 @@ public class LocalizationManager : GenericManager<LocalizationManager>
                     if (existingLang != null)
                     {
                         languages.Remove(existingLang);
-                        Debug.Log($"Overriding hardcoded language {languageData.languageCode} with custom version");
+                        Debug.Log($"Заменяю захардкоденный язык '{languageData.languageCode}' на пользовательский. жду шайбы по лбу");
                         languageData.languageName += " [CUSTOM]";
                     }
 
@@ -160,7 +179,7 @@ public class LocalizationManager : GenericManager<LocalizationManager>
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to load custom language file {filePath}: {e.Message}");
+                Debug.LogError($"Не удалось подгрузить файл {filePath}: {e.Message}");
             }
         }
     }
@@ -193,7 +212,7 @@ public class LocalizationManager : GenericManager<LocalizationManager>
             }
         }
 
-        Debug.LogWarning($"Translation key '{key}' not found in {currentLanguage} nor {defaultLanguage} language.");
+        Debug.LogWarning($"Ключ перевода '{key}' не найден ни в языке '{currentLanguage}' ни в '{defaultLanguage}'. Используем ужасный ключик '#{key}#'...");
         return $"#{key}#";
     }
 
@@ -209,7 +228,7 @@ public class LocalizationManager : GenericManager<LocalizationManager>
         }
         else
         {
-            Debug.LogWarning($"Language '{languageCode}' not available.");
+            Debug.LogWarning($"Язык '{languageCode}' не существует. Как минимум не был зарегистрирован к этому моменту.");
         }
     }
 

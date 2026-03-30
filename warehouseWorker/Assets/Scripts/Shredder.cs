@@ -22,16 +22,22 @@ public class Shredder : MonoBehaviour
         ambientShredder.Play();
     }
 
+    /// <summary>
+    /// If some item is entering the script's collider trigger (strictly 3d items)
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Interactable"))
         {        
+            /// Try and play some sound of shredding 
             if (shredderDestroySFX.Length > 0 && shredderDestroySFX.All(i => i != null))
             {
                 AudioClip clip = shredderDestroySFX[Random.Range(0, shredderDestroySFX.Length)];
                 shredderSource.PlayOneShot(clip);
             }
             
+            // TODO: I'm pretty sure this should be a network behaviour as well... 
             // Dirty, but serves me well for now
             if (other.TryGetComponent<Box>(out var box))
             {
@@ -48,7 +54,7 @@ public class Shredder : MonoBehaviour
                 playerController.OnShredderEnter();
                 return;
             }
-            Destroy(other.gameObject);
+            Destroy(other.gameObject);  
 
             if (speedierShredder != null) StopCoroutine(speedierShredder);
             speedierShredder = StartCoroutine(MakeItSpewOutFaster(shredderParticle));
@@ -60,7 +66,7 @@ public class Shredder : MonoBehaviour
         var module = particleSystem.main;
         float startSpeed = 1f;
         float targetSpeed = 2f;
-        float duration = 3f;
+        float duration = 13f;
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)
@@ -73,8 +79,6 @@ public class Shredder : MonoBehaviour
         }
 
         module.simulationSpeed = targetSpeed;
-
-        yield return new WaitForSeconds(12f);
 
         elapsedTime = 0f;
         while (elapsedTime < duration)

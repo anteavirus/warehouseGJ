@@ -646,6 +646,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df2f7e93c1bf6b14491a8fac35712fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings:
+    resolutionIndex: 0
+    qualityLevel: 2
+    fullscreen: 1
+    masterVolume: 0
+    sfxVolume: 0
+    musicVolume: 0
+    mouseSensitivity: 100
+    environmentLightColor: '#060607'
+    brightness: 1
+    keyBindings: []
   settingsPanelsParent: {fileID: 6091588421684856497}
   settingsPanels:
   - {fileID: 5700648560056272181}
@@ -4907,6 +4918,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5511845479948223151}
   - component: {fileID: 968454732850660602}
+  - component: {fileID: 3589845724139220007}
   m_Layer: 0
   m_Name: Content
   m_TagString: Untagged
@@ -4959,6 +4971,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3589845724139220007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5567074488946318506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83bfe8305ae5659458e9303e2ae17e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5638217749418841288
 GameObject:
   m_ObjectHideFlags: 0
@@ -5353,7 +5377,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7865799810556041128}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999998
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

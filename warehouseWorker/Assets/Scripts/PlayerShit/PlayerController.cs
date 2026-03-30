@@ -73,12 +73,15 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float slipCooldown = 3f;
     [SerializeField] private float minSlipSpeed = 3f;
 
+    [Header("Dragging")]
+    [SerializeField] private float dragFollowForce = 100f;
+    [SerializeField] private float dragDamping = 5f;
+
     [Space]
     // === MUST BE CHANGED ===
     [Header("Settings Reference")]
     [SerializeField] private SettingsManager settingsManager;
 
-    private float currentMouseSensitivity = 100;
 
     private Vector3 lastMovementDirection;
 
@@ -116,7 +119,6 @@ public class PlayerController : NetworkBehaviour
     private uint heldItemNetId = 0;
 
     private bool isDragging = false;
-    private NetworkIdentity dragNetIdentity;
 
     private void Start()
     {
@@ -437,9 +439,9 @@ public class PlayerController : NetworkBehaviour
     }
 
     private void HandleLook()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * currentMouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * currentMouseSensitivity * Time.deltaTime;
+    {   // I just realized that I did not in fact have properly implemented mouse sensitivity the entire time.
+        float mouseX = Input.GetAxis("Mouse X") * settingsManager.settings.mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * settingsManager.settings.mouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
@@ -540,39 +542,54 @@ public class PlayerController : NetworkBehaviour
             return;
 
         dragObject = netIdentity.gameObject;
-        dragNetIdentity = netIdentity;
         isDragging = true;
 
-        // Configure Rigidbody for dragging
         var dragRB = dragObject.GetComponent<Rigidbody>();
-        if (dragRB == null) dragRB = dragObject.AddComponent<Rigidbody>();
-        dragRB.drag = 1f;
-        dragRB.angularDrag = 1f;
+        //if (dragRB == null) dragRB = dragObject.AddComponent<Rigidbody>(); // If it didn't have Rigidbody, I FAILED MY JOB. Or whoever designed the damn prefabs that were supposedly good enough to drag
         dragRB.useGravity = true;
+        dragRB.isKinematic = false;
 
         Debug.Log($"Started dragging: {dragObject.name}");
     }
 
     private void StopDragging()
     {
-        if (dragObject != null && dragNetIdentity != null)
+        if (dragObject != null)
         {
-            CmdReleaseDragAuthority(dragNetIdentity.netId);
+            CmdReleaseDragAuthority(dragObject, dragObject.transform.position);
         }
 
         isDragging = false;
         dragObject = null;
-        dragNetIdentity = null;
     }
 
     [Command]
-    private void CmdReleaseDragAuthority(uint netId)
+    private void CmdReleaseDragAuthority(GameObject dragObject, Vector3 finalPosition)
     {
-        if (!NetworkServer.spawned.TryGetValue(netId, out var netIdentity))
+        // if we could start dragging it, surely we can release it, right?
+
+        if (!dragObject.TryGetComponent<NetworkIdentity>(out var netIdentity))
+        {
+            Debug.LogError("Oh fuck, the item we were dragging DID NOT have net identity????");
+
+            var rb = netIdentity.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+            }
+            else
+            {
+                Debug.LogError("Whoever designed this object, airstrike them. Bomb them, keep bombing them again, and again.");
+            }
+            // Let's pretend this never happened.
             return;
+        }
 
         if (netIdentity.connectionToClient == connectionToClient)
         {
+            dragObject.transform.position = finalPosition;
+
             netIdentity.RemoveClientAuthority();
 
             // Re‑enable server physics
@@ -580,13 +597,12 @@ public class PlayerController : NetworkBehaviour
             if (rb != null)
             {
                 rb.isKinematic = false;
-                rb.useGravity = true;
+                rb.useGravity = true; 
+                //rb.velocity = Vector3.zero;   /// Todo: how bad will it shoot objects 
+                //rb.angularVelocity = Vector3.zero;
             }
         }
     }
-
-    [SerializeField] private float dragFollowForce = 100f;
-    [SerializeField] private float dragDamping = 5f;
 
     private void HandleDragItemPhysics()
     {

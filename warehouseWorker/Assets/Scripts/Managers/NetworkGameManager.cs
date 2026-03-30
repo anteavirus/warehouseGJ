@@ -107,10 +107,9 @@ public class NetworkGameManager : NetworkManager
 
     private System.Collections.IEnumerator InitializeClientManagersAfterSceneLoad()
     {
-        // Wait a few frames so SyncVars (e.g. GameManager.levelSeed) have time to sync from server before shelf generation
-        Debug.Log("strating to do shit");
+        Debug.Log("client: strating to do shit");
         yield return new WaitUntil(() => NetworkClient.isLoadingScene == false);
-        Debug.Log("Yep, i've got the signal. continuing");
+        Debug.Log("client: Yep, i'm done loading. continuing");
         var master = FindObjectOfType<MasterManager>();
         if (master != null)
         {
@@ -167,8 +166,8 @@ public class NetworkGameManager : NetworkManager
     {
         if (playerGameObjects.ContainsKey(conn.connectionId))
         {
-            playerGameObjects.Remove(conn.connectionId);
             NetworkServer.UnSpawn(playerGameObjects[conn.connectionId]);
+            playerGameObjects.Remove(conn.connectionId);
         }
 
         if (gameState != null)

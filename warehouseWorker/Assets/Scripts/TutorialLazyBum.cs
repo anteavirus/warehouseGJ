@@ -1,6 +1,9 @@
 ﻿using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Worst Implementation of a "Tutorial"; mission tablet, really.
+/// </summary>
 public class TutorialLazyBum : MonoBehaviour
 {
     public TextMeshProUGUI text;
