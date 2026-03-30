@@ -1,9 +1,12 @@
-﻿using Mirror;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
+/// <summary>
+/// Shelf spawning & stock management. Pure MonoBehaviour — delegates
+/// network spawning to <see cref="GameNetworkBridge"/>.
+/// </summary>
 public class ShelvesStockManager : GenericManager<ShelvesStockManager>
 {
     public GameManager gameManager;
@@ -20,18 +23,19 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
     [Tooltip("Hi I am storageAreas from shelfPrefabs")]
     public List<StorageArea> shelfStorages;
 
-    // Dictionary to map StorageArea back to its root prefab GameObject
     private Dictionary<StorageArea, GameObject> storageAreaToPrefabMap = new();
+
+    private bool IsServer => GameNetworkBridge.Instance != null && GameNetworkBridge.Instance.isServer;
+
+    #region Initialize
 
     public override void Initialize()
     {
         base.Initialize();
         if (gameManager == null)
-            gameManager = (GameManager.Instance);
+            gameManager = GameManager.Instance;
         if (shelfSpawns.All(x => x == null))
-        {
             shelfSpawns = FindObjectsOfType<ShelfSpawn>().ToList();
-        }
     }
 
     public void Initialize(GameManager gm)
@@ -39,168 +43,135 @@ public class ShelvesStockManager : GenericManager<ShelvesStockManager>
         base.Initialize();
         gameManager = gm;
         if (shelfSpawns.All(x => x == null))
-        {
             shelfSpawns = FindObjectsOfType<ShelfSpawn>().ToList();
-        }
-        // todo. m. a thing.
     }
+
+    #endregion
+
+    #region Storage area mapping
 
     public void UpdateShelfStoragesFromPrefabs()
     {
         shelfStorages.Clear();
         storageAreaToPrefabMap.Clear();
 
-        if (shelfPrefabs?.Count > 0)
-        {
-            foreach (GameObject prefab in shelfPrefabs)
-            {
-                if (prefab == null) continue;
+        if (shelfPrefabs?.Count <= 0) return;
 
-                StorageArea[] areas = prefab.GetComponentsInChildren<StorageArea>(true);
-                foreach (StorageArea area in areas)
+        foreach (var prefab in shelfPrefabs)
+        {
+            if (prefab == null) continue;
+            foreach (var area in prefab.GetComponentsInChildren<StorageArea>(true))
+            {
+                if (!shelfStorages.Contains(area))
                 {
-                    if (!shelfStorages.Contains(area))
-                    {
-                        shelfStorages.Add(area);
-                        // Map the StorageArea back to its root prefab
-                        storageAreaToPrefabMap[area] = prefab;
-                    }
+                    shelfStorages.Add(area);
+                    storageAreaToPrefabMap[area] = prefab;
                 }
             }
         }
     }
 
+    #endregion
+
+    #region Work — server-side shelf placement
+
     public void Work()
     {
-        // Use GameManager's seed if available, otherwise use system time
-        assignmentSeed = gameManager != null ? gameManager.levelSeed : (int)System.DateTime.Now.Ticks;
+        assignmentSeed = gameManager != null
+            ? GameNetworkBridge.Instance?.levelSeed ?? (int)System.DateTime.Now.Ticks
+            : (int)System.DateTime.Now.Ticks;
         Random.InitState(assignmentSeed);
 
-        Debug.Log($"[ShelfManager] Using seed: {assignmentSeed} for assignment");
+        Debug.Log($"[ShelfManager] Using seed: {assignmentSeed}");
 
         UpdateShelfStoragesFromPrefabs();
-        List<Item> availableItems = gameManager.items
+
+        var availableItems = gameManager?.items
             .Select(i => i.GetComponent<Item>())
-            .Where(c => c != null) 
-            .ToList();
+            .Where(c => c != null)
+            .ToList() ?? new List<Item>();
 
-
-        // Filter only active spawn points
         var activeSpawns = shelfSpawns.Where(sp => sp != null && sp.IsActiveForAssignment()).ToList();
-
-        //foreach (var item in activeSpawns) item.ResetAssignment(); // Reset, shitcoded gizmos might've fucked it all up. TODO: create a better system // Or, is it?
-
-        // Keep unassigned items but don't spawn shelves for them
-        // We're not deleting them anymore - they just won't be placed
         SpawnShelvesAtSpawnPoints(activeSpawns);
     }
 
     private void SpawnShelvesAtSpawnPoints(List<ShelfSpawn> spawnPoints)
     {
-        foreach (ShelfSpawn spawnPoint in spawnPoints)
+        if (!IsServer) return;
+
+        foreach (var spawnPoint in spawnPoints)
         {
             if (spawnPoint.IsAssigned())
             {
-                GameObject prefabToSpawn = GetRootPrefabForStorageArea(spawnPoint.assignedShelfPrefab);
-
-                if (prefabToSpawn != null)
-                {
-                    GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
-                    spawnedShelf.name = $"Shelf_{spawnPoint.name}_{prefabToSpawn.name}";
-
-                    //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
-                    //    spawnedShelf.AddComponent<NetworkIdentity>();
-                    //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)
-                    //    spawnedShelf.AddComponent<NetworkTransformReliable>();
-
-                    NetworkServer.Spawn(spawnedShelf);
-
-                    // Find and configure the StorageArea component in the spawned shelf
-                    StorageArea[] storageAreas = spawnedShelf.GetComponentsInChildren<StorageArea>();
-                    foreach (var area in storageAreas)
-                    {
-                        // In the new StorageArea, we don't assign item IDs or amounts
-                        // The shelf just accepts items based on its allowedItemIDs
-                        area.scaleOffset = spawnedShelf.transform.localScale;
-                        break;
-                    }
-                }
-                else
-                {
-                    Debug.LogError($"Could not find root prefab for StorageArea {spawnPoint.assignedShelfPrefab.name}");
-                }
+                SpawnShelfForSpawn(spawnPoint);
             }
             else
             {
-                var wildcardShelves = shelfStorages
-                    .Where(shelf => shelf.allowedItemIDs.Count == 0 || shelf.allowedItemIDs.Contains(0))
-                    .ToList();
-
-                if (wildcardShelves.Count > 0)
-                {
-                    StorageArea emptyShelf = wildcardShelves[Random.Range(0, wildcardShelves.Count)];
-
-                    GameObject prefabToSpawn = GetRootPrefabForStorageArea(emptyShelf);
-                    if (prefabToSpawn != null)
-                    {
-                        GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
-                        
-                        //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
-                        //    spawnedShelf.AddComponent<NetworkIdentity>();
-                        //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)
-                        //    spawnedShelf.AddComponent<NetworkTransformReliable>();
-
-                        NetworkServer.Spawn(spawnedShelf);
-                        spawnedShelf.name = $"EmptyShelf_{spawnPoint.name}_{prefabToSpawn.name}";
-                        spawnedShelf.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
-                    }
-                }
-                else
-                {
-                    if (shelfStorages.Count > 0)
-                    {
-                        StorageArea emptyShelf = shelfStorages[Random.Range(0, shelfStorages.Count)];
-
-                        GameObject prefabToSpawn = GetRootPrefabForStorageArea(emptyShelf);
-                        if (prefabToSpawn != null)
-                        {
-                            GameObject spawnedShelf = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
-
-                            //if (spawnedShelf.GetComponent<NetworkIdentity>() == null)
-                            //    spawnedShelf.AddComponent<NetworkIdentity>();
-                            //if (spawnedShelf.GetComponent<NetworkTransformReliable>() == null)
-                            //    spawnedShelf.AddComponent<NetworkTransformReliable>();
-
-                            NetworkServer.Spawn(spawnedShelf);
-                            spawnedShelf.name = $"EmptyShelf_{spawnPoint.name}_{prefabToSpawn.name}";
-                            spawnedShelf.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
-                        }
-                    }
-                }
+                SpawnRandomEmptyShelf(spawnPoint);
             }
         }
     }
 
-    // TODO: latest update 14.02.26; this fucking shit sucks what the fuck why the fuck the fucking delivery areas in the prefab have their own ids?????????? and why the fuck must i . do i HAVE to split the fucking stupid shit in two parts? like in "gameplay" and "static" shit???????? this fucking sucksssssssssssssss mannnnn fuck me for thinking multiplayer would be easy enough to implement ughhhhhhhhhhhhhhhhhhhhhhh and i'll need to GPT my fucuking dossier or whatever to pass onto the next month and at the end of april  make the fucking game work.  man i should've went into papers at least i wouldn't hate the shit out of programming now
-
-    private GameObject GetRootPrefabForStorageArea(StorageArea storageArea)
+    private void SpawnShelfForSpawn(ShelfSpawn spawnPoint)
     {
-        if (storageAreaToPrefabMap.TryGetValue(storageArea, out GameObject mappedPrefab))
+        var prefabToSpawn = GetRootPrefabForStorageArea(spawnPoint.assignedShelfPrefab);
+        if (prefabToSpawn == null)
         {
-            return mappedPrefab;
+            Debug.LogError($"Could not find root prefab for StorageArea {spawnPoint.assignedShelfPrefab.name}");
+            return;
         }
 
-        foreach (GameObject prefab in shelfPrefabs)
+        var spawned = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        spawned.name = $"Shelf_{spawnPoint.name}_{prefabToSpawn.name}";
+
+        GameNetworkBridge.Instance?.ServerSpawn(spawned);
+
+        foreach (var area in spawned.GetComponentsInChildren<StorageArea>())
+        {
+            area.scaleOffset = spawned.transform.localScale;
+            break;
+        }
+    }
+
+    private void SpawnRandomEmptyShelf(ShelfSpawn spawnPoint)
+    {
+        var candidates = shelfStorages
+            .Where(s => s.allowedItemIDs.Count == 0 || s.allowedItemIDs.Contains(0))
+            .ToList();
+
+        if (candidates.Count == 0)
+            candidates = shelfStorages.ToList();
+
+        if (candidates.Count == 0) return;
+
+        var area = candidates[Random.Range(0, candidates.Count)];
+        var prefabToSpawn = GetRootPrefabForStorageArea(area);
+        if (prefabToSpawn == null) return;
+
+        var spawned = Instantiate(prefabToSpawn, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        spawned.name = $"EmptyShelf_{spawnPoint.name}_{prefabToSpawn.name}";
+
+        GameNetworkBridge.Instance?.ServerSpawn(spawned);
+        spawned.SetLayerRecursively(LayerMask.NameToLayer("Grass"));
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private GameObject GetRootPrefabForStorageArea(StorageArea area)
+    {
+        if (storageAreaToPrefabMap.TryGetValue(area, out var mapped))
+            return mapped;
+
+        foreach (var prefab in shelfPrefabs)
         {
             if (prefab == null) continue;
-
-            StorageArea[] areas = prefab.GetComponentsInChildren<StorageArea>(true);
-            if (areas.Contains(storageArea))
-            {
+            if (prefab.GetComponentsInChildren<StorageArea>(true).Contains(area))
                 return prefab;
-            }
         }
-
         return null;
     }
+
+    #endregion
 }

@@ -26,7 +26,7 @@ public class PunchClock : Item
     public override void OnUse(GameObject user)
     {
         if (!user.TryGetComponent<PunchCard>(out var _)) return;
-        if (GameManager.Instance != null && !GameManager.Instance.gameStarted)
+        if (GameManager.Instance != null && !GameManager.Instance.GameStarted)
         {
             base.OnUse(gameObject);
             
@@ -46,7 +46,7 @@ public class PunchClock : Item
     private void CmdStartGame()
     {
         Debug.LogError("Command to start game received.");
-        if (GameManager.Instance != null && !GameManager.Instance.gameStarted)
+        if (GameManager.Instance != null && !GameManager.Instance.GameStarted)
         {
             GameManager.Instance.StartGame();
         }

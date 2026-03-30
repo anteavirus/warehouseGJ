@@ -56,7 +56,7 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
     public override void UpdateTimer()
     {
         if (gameManager == null) gameManager = GameManager.Instance; // BAD, Don't care anymore
-        if (!enabledTimer || !gameManager.gameStarted) return;
+        if (!enabledTimer || !gameManager.GameStarted) return;
         
         // EDITED: Only server updates timer to keep it synchronized
         if (!Mirror.NetworkServer.active) return;
@@ -77,7 +77,7 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
         float currentDifficulty = gameManager != null ? gameManager.currentDifficulty : 0.5f;
         bool hasActiveEvents = gameManager.activeEvents.Count > 0;
 
-        if (hasActiveEvents && gameManager.score == 0)
+        if (hasActiveEvents && gameManager.Score == 0)
         {
             return Mathf.Lerp(gameManager.maximumDifficulty, gameManager.minimalDifficulty / 4, currentDifficulty);
         }
@@ -100,11 +100,8 @@ public class EndlessGamemodeTimer : ElGenerico<EndlessGamemodeTimer>
 
     public override void ResetTimer()
     {
-        if (gameManager.setdownItem)
-        {
-            timeLeft = Mathf.Clamp(timeLeft + timerRestore, 0, maxTimer);
-            gameManager.setdownItem = false;
-        }
+        // Set down item blahblahblah, nerd shit fuck outta here.
+        timeLeft = Mathf.Clamp(timeLeft + timerRestore, 0, maxTimer);
     }
 
     public override void StartTimer()

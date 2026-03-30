@@ -95,7 +95,7 @@ public class Terminal : MonoBehaviour
     // TODO: successful / failed purchase, notification, perhaps even an actual explanation
     void ExtraSpecialFunctionTomfuckery(ShopManager.PurchasableElement item)
     {
-        if (GameManager.Instance.score - item.cost < 0) return; // Can't have people going into debt
+        if (GameManager.Instance.Score - item.cost < 0) return; // Can't have people going into debt
 
         var fuckingGameObject = Instantiate(item.prefab);
         fuckingGameObject.transform.SetPositionAndRotation(GameManager.Instance.blackHoleSpawnPosition.position, Quaternion.identity);
@@ -141,7 +141,7 @@ public class Terminal : MonoBehaviour
             }
         }
 
-        ((GameManager)GameManager.Instance).score -= item.cost;    
+        ((GameManager)GameManager.Instance).AddScore(-item.cost, false, false);    
         return; // Successful purchase
     }
 

@@ -79,7 +79,7 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     public override void UpdateTimer()
     {
         if (gameManager == null) gameManager = GameManager.Instance; // BAD, Don't care anymore
-        if (!enabledTimer || !gameManager.gameStarted) return;
+        if (!enabledTimer || !gameManager.GameStarted) return;
         
         // EDITED: Only server updates timer to keep it synchronized
         if (!Mirror.NetworkServer.active) return;
@@ -157,7 +157,7 @@ public class ShiftsGamemodeTimer : ElGenerico<ShiftsGamemodeTimer>
     {
         // Notify other systems about shift change
         Debug.Log($"Shift changed to: {newShift.shiftName}");
-        gameManager.gameStarted = false;
+        gameManager.PauseGame();
         // Uh .  Play sfx
 	//OnShiftChange?.Invoke();
         // You could trigger events here like:

@@ -10,7 +10,9 @@ public class StorageArea : MonoBehaviour
     public List<int> allowedItemIDs => _allowedItemIDs;
 
     BoxCollider boxCollider;
-    [SerializeField] Vector3 limitVelocity = new Vector3(0.3f, 0.3f, 0.3f);
+
+    [Tooltip("Please set this to a value that seems to be somewhat fun"), SerializeField]
+        Vector3 limitVelocity = new(5f, 5f, 5f);   // please set this to a limit that wouldn't allow earthquake to finish the players' job n all
 
     public Vector3 scaleOffset;
 
@@ -43,6 +45,7 @@ public class StorageArea : MonoBehaviour
             Mathf.Abs(velocity.x) < limitVelocity.x &&
             Mathf.Abs(velocity.y) < limitVelocity.y &&
             Mathf.Abs(velocity.z) < limitVelocity.z;
+        // PLEASE SET THE VELOCITY LIMIT TO BE OVER GENERAL THROW SPEED, LIKE LETS Make it somewhat funnnnnnnnnn plessssssssssssss
 
         if (isVelocityUnderLimit)
         {
@@ -51,7 +54,6 @@ public class StorageArea : MonoBehaviour
                 if (GameManager.Instance != null && !item.fromShelf && item.order.orderType == OrdersManager.OrderType.Deposit)
                 {
                     item.order.orderFulfilled = true;
-                    ((GameManager)GameManager.Instance).setdownItem = true; // is this necessary anymore? whatever it'll stay until we get rid of this
                 }
             }
         }

@@ -1,11 +1,25 @@
 using System.Collections.Generic;
-using UnityEngine;
 using Mirror;
+using UnityEngine;
 
+/// <summary>
+/// Spawns networked objects by name or prefab reference.
+/// Pure MonoBehaviour — uses <see cref="GameNetworkBridge"/> for
+/// server checks and network spawning.
+/// </summary>
 public class SpawnManager : GenericManager<SpawnManager>
 {
-    [Tooltip("Map of custom names to prefabs. If left empty, it will auto-populate from NetworkManager's spawnPrefabs on Start.")]
+    [Tooltip("Map of custom names to prefabs. Auto-populated from NetworkManager.spawnPrefabs if empty.")]
     public Dictionary<string, GameObject> spawnableObjects = new Dictionary<string, GameObject>();
+
+    #region Bridge shortcut
+
+    private bool IsServer => GameNetworkBridge.Instance != null && GameNetworkBridge.Instance.isServer;
+    private bool IsClient => GameNetworkBridge.Instance != null && GameNetworkBridge.Instance.isClient;
+
+    #endregion
+
+    #region Initialize
 
     public override void Initialize()
     {
@@ -21,224 +35,126 @@ public class SpawnManager : GenericManager<SpawnManager>
             return;
         }
 
-        Debug.Log(netIdentity);  // Are they all really null?
-
         if (spawnableObjects.Count == 0)
-        {
             RefreshFromNetworkManager();
-        }
     }
 
-    /// <summary>
-    /// Populates the dictionary from NetworkManager's spawnPrefabs list.
-    /// Duplicate keys are skipped (warning logged).
-    /// </summary>
+    #endregion
+
+    #region Prefab registry
+
+    /// <summary>Populates dictionary from NetworkManager.spawnPrefabs.</summary>
     public void RefreshFromNetworkManager()
     {
-        var networkManager = NetworkManager.singleton ?? NetworkGameManager.Instance ?? null;
-        if (networkManager == null)
+        var nm = NetworkManager.singleton ?? NetworkGameManager.Instance;
+        if (nm == null)
         {
-            Debug.LogError("Network Manager is null, tried both the defaul NetworkManager.singleton and NetworkGameManager.Instance, because of course we have to do our things that'll interfere with the prebuilt ones, AnTeaVirus. That's clearly a smart thing to do.");
+            Debug.LogError("NetworkManager is null — tried singleton and NetworkGameManager.Instance.");
             return;
         }
 
         spawnableObjects.Clear();
-
-        foreach (var prefab in networkManager.spawnPrefabs)
+        foreach (var prefab in nm.spawnPrefabs)
         {
             if (prefab == null) continue;
-
             string key = prefab.name;
             if (!spawnableObjects.ContainsKey(key))
-            {
                 spawnableObjects.Add(key, prefab);
-            }
             else
-            {
-                Debug.LogWarning($"Duplicate prefab name '{key}' ignored when populating spawnableObjects.");
-            }
+                Debug.LogWarning($"Duplicate prefab name '{key}' ignored.");
         }
     }
 
-    /// <summary>
-    /// Checks if a prefab is registered in NetworkManager's spawnPrefabs list.
-    /// </summary>
     public bool IsPrefabRegistered(GameObject prefab)
     {
-        if (NetworkManager.singleton == null) return false;
-        return NetworkManager.singleton.spawnPrefabs.Contains(prefab);
+        return NetworkManager.singleton != null && NetworkManager.singleton.spawnPrefabs.Contains(prefab);
     }
 
-    // ==================== SPAWN BY NAME ====================
+    #endregion
 
-    /// <summary>
-    /// Spawns a networked object by name (key in spawnableObjects dictionary).
-    /// </summary>
+    #region Spawn by name
+
     public GameObject SpawnObject(string name, Vector3 position, Quaternion rotation, Transform parent = null)
     {
-        if (!NetworkServer.active)
+        if (!IsServer) { Debug.LogError("SpawnObject can only be called on server."); return null; }
+
+        if (!spawnableObjects.TryGetValue(name, out var prefab))
         {
-            Debug.LogError("SpawnObject can only be called on an active server.");
+            Debug.LogError($"No prefab '{name}'. Available: {string.Join(", ", spawnableObjects.Keys)}");
             return null;
         }
 
-        if (netIdentity == null)
-        {
-            Debug.LogError("NetIdentity is null. Can someone replace this coder? Clearly this one is incapable of doing anything.");
-            return null;
-        }
-
-        if (isClient)
-        {
-            Debug.LogError("Client attempted to network spawn an object.");
-            return null;
-        }
-
-        if (!spawnableObjects.TryGetValue(name, out GameObject prefab))
-        {
-            Debug.LogError($"No prefab found with key '{name}'. Available keys: {string.Join(", ", spawnableObjects.Keys)}");
-            return null;
-        }
-
-        GameObject instance = Instantiate(prefab, position, rotation, parent);
-        NetworkServer.Spawn(instance);
+        var instance = Instantiate(prefab, position, rotation, parent);
+        GameNetworkBridge.Instance?.ServerSpawn(instance);
         return instance;
     }
 
     public GameObject SpawnObject(string name, Vector3 position, Transform parent = null)
-    {
-        return SpawnObject(name, position, Quaternion.identity, parent);
-    }
+        => SpawnObject(name, position, Quaternion.identity, parent);
 
     public GameObject SpawnObject(string name)
-    {
-        return SpawnObject(name, Vector3.zero, Quaternion.identity);
-    }
+        => SpawnObject(name, Vector3.zero, Quaternion.identity);
 
-    /// <summary>
-    /// Spawns a networked object by name with a specific connection (ownership).
-    /// </summary>
     public GameObject SpawnObject(string name, Vector3 position, Quaternion rotation, NetworkConnection conn)
     {
-        if (!NetworkServer.active)
+        if (!IsServer) { Debug.LogError("SpawnObject can only be called on server."); return null; }
+
+        if (!spawnableObjects.TryGetValue(name, out var prefab))
         {
-            Debug.LogError("SpawnObject can only be called on an active server.");
+            Debug.LogError($"No prefab '{name}'.");
             return null;
         }
 
-        if (netIdentity == null)
-        {
-            Debug.LogError("NetIdentity is null. Can someone replace this coder? Clearly this one is incapable of doing anything.");
-            return null;
-        }
-
-        if (isClient)
-        {
-            Debug.LogError("Client attempted to network spawn an object.");
-            return null;
-        }
-
-        if (!spawnableObjects.TryGetValue(name, out GameObject prefab))
-        {
-            Debug.LogError($"No prefab found with key '{name}'.");
-            return null;
-        }
-
-        GameObject instance = Instantiate(prefab, position, rotation);
-        NetworkServer.Spawn(instance, conn.identity.gameObject);
+        var instance = Instantiate(prefab, position, rotation);
+        if (conn?.identity?.gameObject != null)
+            GameNetworkBridge.Instance?.ServerSpawn(instance, conn.identity.gameObject);
+        else
+            GameNetworkBridge.Instance?.ServerSpawn(instance);
         return instance;
     }
 
-    // ==================== SPAWN BY PREFAB ====================
+    #endregion
 
-    /// <summary>
-    /// Spawns a networked object directly from a prefab reference.
-    /// The prefab must be registered in NetworkManager's spawnPrefabs list.
-    /// </summary>
+    #region Spawn by prefab
+
     public GameObject SpawnObject(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
     {
-        if (!NetworkServer.active)
-        {
-            Debug.LogError("SpawnObject can only be called on an active server.");
-            return null;
-        }
-
-        if (netIdentity == null)
-        {
-            Debug.LogError("NetIdentity is null. Can someone replace this coder? Clearly this one is incapable of doing anything.");
-            return null;
-        }
-
-        if (isClient)
-        {
-            Debug.LogError("Client attempted to network spawn an object.");
-            return null;
-        }
-
-        if (prefab == null)
-        {
-            Debug.LogError("Cannot spawn a null prefab.");
-            return null;
-        }
-
+        if (!IsServer) { Debug.LogError("SpawnObject can only be called on server."); return null; }
+        if (prefab == null) { Debug.LogError("Cannot spawn null prefab."); return null; }
         if (!IsPrefabRegistered(prefab))
         {
-            Debug.LogError($"Prefab '{prefab.name}' is not registered in NetworkManager's spawnPrefabs list. Add it to the list in the NetworkManager inspector.");
+            Debug.LogError($"Prefab '{prefab.name}' not in NetworkManager.spawnPrefabs.");
             return null;
         }
 
-        GameObject instance = Instantiate(prefab, position, rotation, parent);
-        NetworkServer.Spawn(instance);
+        var instance = Instantiate(prefab, position, rotation, parent);
+        GameNetworkBridge.Instance?.ServerSpawn(instance);
         return instance;
     }
 
     public GameObject SpawnObject(GameObject prefab, Vector3 position, Transform parent = null)
-    {
-        return SpawnObject(prefab, position, Quaternion.identity, parent);
-    }
+        => SpawnObject(prefab, position, Quaternion.identity, parent);
 
     public GameObject SpawnObject(GameObject prefab)
-    {
-        return SpawnObject(prefab, Vector3.zero, Quaternion.identity);
-    }
+        => SpawnObject(prefab, Vector3.zero, Quaternion.identity);
 
-    /// <summary>
-    /// Spawns a networked object from a prefab with a specific connection (ownership).
-    /// </summary>
     public GameObject SpawnObject(GameObject prefab, Vector3 position, Quaternion rotation, NetworkConnection conn)
     {
-        if (!NetworkServer.active)
-        {
-            Debug.LogError("SpawnObject can only be called on an active server.");
-            return null;
-        }
-
-        if (netIdentity == null)
-        {
-            Debug.LogError("NetIdentity is null. Can someone replace this coder? Clearly this one is incapable of doing anything.");
-            return null;
-        }
-
-        if (isClient)
-        {
-            Debug.LogError("Client attempted to network spawn an object.");
-            return null;
-        }
-
-        if (prefab == null)
-        {
-            Debug.LogError("Cannot spawn a null prefab.");
-            return null;
-        }
-
+        if (!IsServer) { Debug.LogError("SpawnObject can only be called on server."); return null; }
+        if (prefab == null) { Debug.LogError("Cannot spawn null prefab."); return null; }
         if (!IsPrefabRegistered(prefab))
         {
-            Debug.LogError($"Prefab '{prefab.name}' is not registered in NetworkManager's spawnPrefabs list.");
+            Debug.LogError($"Prefab '{prefab.name}' not in NetworkManager.spawnPrefabs.");
             return null;
         }
 
-        GameObject instance = Instantiate(prefab, position, rotation);
-        NetworkServer.Spawn(instance, conn.identity.gameObject);
+        var instance = Instantiate(prefab, position, rotation);
+        if (conn?.identity?.gameObject != null)
+            GameNetworkBridge.Instance?.ServerSpawn(instance, conn.identity.gameObject);
+        else
+            GameNetworkBridge.Instance?.ServerSpawn(instance);
         return instance;
     }
+
+    #endregion
 }

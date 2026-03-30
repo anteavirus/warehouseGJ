@@ -25,8 +25,8 @@ public class DeliveryEvent : Event
         //SelectMainItem();
         //SpawnMainItem();
         SpawnDecoys();
-        if (((GameManager)GameManager.Instance).talkingDeliveryItem == null)
-            ((GameManager)GameManager.Instance).talkingDeliveryItem = Instantiate(talkingDeliveryItem);
+        //if (((GameManager)GameManager.Instance).talkingDeliveryItem == null)
+        //    ((GameManager)GameManager.Instance).talkingDeliveryItem = Instantiate(talkingDeliveryItem);
     }
 
     [Server]

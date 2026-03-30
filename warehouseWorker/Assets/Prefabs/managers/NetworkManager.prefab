@@ -84,8 +84,10 @@ MonoBehaviour:
   - {fileID: 447633452283104326, guid: 267ab40f71c19914986e78f28e81d1b5, type: 3}
   - {fileID: 2967366868401370336, guid: 9c665b26cdc150c43940b61b2adcbfdd, type: 3}
   - {fileID: 2967366868401370336, guid: d8c755b85f2f51143880e6f8d760a3f2, type: 3}
-  - {fileID: 0}
+  - {fileID: 3826668044454975344, guid: 74ad74604b674244bacbc9ac4b7da5f0, type: 3}
+  - {fileID: 3826668044454975344, guid: f108c36f9b7b6394895ac729bef2e5fb, type: 3}
   - {fileID: 2819549715647649002, guid: 8cfb0586b1f9ff442b44b6292d39f6e6, type: 3}
+  - {fileID: 7887749082518827772, guid: e1102ed7503d46747a9bc28f6566f9d6, type: 3}
   - {fileID: 2967366868401370336, guid: 5268504bd46cb314698991a6d8af56b3, type: 3}
   - {fileID: 6920069248926246038, guid: 2aab7f9b694fa7a4d8dfdefb4afc92ff, type: 3}
   - {fileID: 6898375982121201960, guid: 586f6f2734408664184b480b07d0ee30, type: 3}
@@ -139,6 +141,8 @@ MonoBehaviour:
   - {fileID: 2186794489220007029}
   maxPlayers: 4
   gameStatePrefab: {fileID: 447633452283104326, guid: 267ab40f71c19914986e78f28e81d1b5,
+    type: 3}
+  gameNetworkBridgePrefab: {fileID: 7887749082518827772, guid: e1102ed7503d46747a9bc28f6566f9d6,
     type: 3}
   endlessGamemodeTimerPrefab: {fileID: 6898375982121201960, guid: 2b9bd64ee3e0dd04e869a3002feb5b5c,
     type: 3}

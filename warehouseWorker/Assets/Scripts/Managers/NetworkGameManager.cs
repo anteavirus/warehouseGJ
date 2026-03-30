@@ -1,12 +1,19 @@
 using Mirror;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using kcp2k;
 
+/// <summary>
+/// Mirror NetworkManager subclass. Owns player spawning, scene management,
+/// and creates the <see cref="GameNetworkBridge"/> on server start.
+/// This is the ONLY NetworkManager — everything else is MonoBehaviour.
+/// </summary>
 public class NetworkGameManager : NetworkManager
 {
     public static NetworkGameManager Instance { get; private set; }
+
+    #region Inspector fields
 
     [Header("Player Spawning")]
     public Transform[] spawnPoints;
@@ -15,15 +22,22 @@ public class NetworkGameManager : NetworkManager
     [Header("Game Settings")]
     public int maxPlayers = 4;
 
-    [Header("Game State Prefab")]
+    [Header("Prefabs")]
     public GameObject gameStatePrefab;
-
-    [Header("Game Mode Prefabs")]
+    public GameObject gameNetworkBridgePrefab;   // NEW — must be assigned
     public GameObject endlessGamemodeTimerPrefab;
     public GameObject shiftsGamemodeTimerPrefab;
 
+    #endregion
+
+    #region Runtime state
+
     private NetworkGameState gameState;
     private Dictionary<int, GameObject> playerGameObjects = new Dictionary<int, GameObject>();
+
+    #endregion
+
+    #region Lifecycle
 
     public override void Awake()
     {
@@ -36,103 +50,114 @@ public class NetworkGameManager : NetworkManager
         else
         {
             Destroy(gameObject);
-            return;
         }
     }
+
+    #endregion
+
+    #region Server start / stop
 
     public override void OnStartServer()
     {
         base.OnStartServer();
-        Debug.Log("Server started!");
+        Debug.Log("[NetworkGameManager] Server started.");
 
-        if (MasterManager.Instance == null)  // FUCK.
+        // 1. Ensure MasterManager exists
+        if (MasterManager.Instance == null)
         {
-            var a = FindObjectOfType<MasterManager>();
-            if (a == null)
-            {
-                a = Instantiate(Resources.Load<MasterManager>("Prefabs/MasterManager"));
-
-            }
-            
-            a.Initialize();  // please?
-            Debug.Log(MasterManager.Instance);
+            var mm = FindObjectOfType<MasterManager>();
+            if (mm == null)
+                mm = Instantiate(Resources.Load<MasterManager>("Prefabs/MasterManager"));
+            mm.Initialize();
         }
-        NetworkServer.Spawn(MasterManager.Instance.gameObject);  // Time to crab
-        // Spawn game state object
+        // Spawn master manager on network so clients can find it
+        NetworkServer.Spawn(MasterManager.Instance.gameObject);
+
+        // 2. Create & spawn GameNetworkBridge
+        if (GameNetworkBridge.Instance == null && gameNetworkBridgePrefab != null)
+        {
+            var bridgeObj = Instantiate(gameNetworkBridgePrefab, transform);
+            bridgeObj.transform.SetParent(transform);
+            bridgeObj.name = "GameNetworkBridge";
+            NetworkServer.Spawn(bridgeObj);
+            Debug.Log("[NetworkGameManager] GameNetworkBridge created & spawned.");
+        }
+        else if (GameNetworkBridge.Instance == null)
+        {
+            Debug.LogError("[NetworkGameManager] gameNetworkBridgePrefab not assigned! " +
+                           "Cannot create the network bridge. Multiplayer will break.");
+        }
+
+        // 3. Spawn game state
         if (gameStatePrefab != null)
         {
-            GameObject gameStateObj = Instantiate(gameStatePrefab);
-            gameStateObj.transform.SetParent(transform);
-            gameState = gameStateObj.GetComponent<NetworkGameState>();
-            NetworkServer.Spawn(gameStateObj);
-            
-            if (gameState != null)
-            {
-                gameState.SetGameStatus(GameStatus.Lobby);
-            }
+            var gsObj = Instantiate(gameStatePrefab);
+            gsObj.transform.SetParent(transform);
+            gameState = gsObj.GetComponent<NetworkGameState>();
+            NetworkServer.Spawn(gsObj);
+            gameState?.SetGameStatus(GameStatus.Lobby);
         }
 
-        // Initialize game managers on server
+        // 4. Initialize managers (they will now find the bridge)
         if (MasterManager.Instance != null)
-        {
             MasterManager.Instance.Initialize();
-        }
     }
 
     public override void OnStopServer()
     {
         base.OnStopServer();
-        Debug.Log("Server stopped!");
+        Debug.Log("[NetworkGameManager] Server stopped.");
         playerGameObjects.Clear();
     }
 
+    #endregion
+
+    #region Client connect / disconnect / scene
+
     public override void OnClientConnect()
     {
-        //Destroy(MasterManager.Instance.gameObject); // Welp, time for crab.
         base.OnClientConnect();
-        Debug.Log("Client connected!");
+        Debug.Log("[NetworkGameManager] Client connected.");
     }
 
     public override void OnClientSceneChanged()
     {
         base.OnClientSceneChanged();
         string sceneName = SceneManager.GetActiveScene().name;
-        // When client (not host) finishes loading the gameplay scene, initialize managers locally
-        // so shelves and other systems run. Server already inits in OnServerSceneChanged.
+
         if (NetworkClient.isConnected && !NetworkServer.active && sceneName != "Main Menu")
         {
-            StartCoroutine(InitializeClientManagersAfterSceneLoad());
+            StartCoroutine(InitClientAfterSceneLoad());
         }
     }
 
-    private System.Collections.IEnumerator InitializeClientManagersAfterSceneLoad()
+    private System.Collections.IEnumerator InitClientAfterSceneLoad()
     {
-        Debug.Log("client: strating to do shit");
         yield return new WaitUntil(() => NetworkClient.isLoadingScene == false);
-        Debug.Log("client: Yep, i'm done loading. continuing");
+
         var master = FindObjectOfType<MasterManager>();
         if (master != null)
         {
             master.Initialize();
-            Debug.Log("Client: managers initialized after scene load.");
+            Debug.Log("[NetworkGameManager] Client: managers initialized after scene load.");
         }
         else
         {
-            Debug.LogWarning("Client: MasterManager not found in scene.");
+            Debug.LogWarning("[NetworkGameManager] Client: MasterManager not found in scene.");
         }
     }
 
     public override void OnClientDisconnect()
     {
         base.OnClientDisconnect();
-        Debug.Log("Client disconnected!");
-
-        // Return to main menu on disconnect
+        Debug.Log("[NetworkGameManager] Client disconnected.");
         if (SceneManager.GetActiveScene().name != "Main Menu")
-        {
             SceneManager.LoadScene("Main Menu");
-        }
     }
+
+    #endregion
+
+    #region Player management
 
     public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
@@ -144,70 +169,54 @@ public class NetworkGameManager : NetworkManager
         }
 
         Vector3 spawnPos = GetNextSpawnPosition();
-        Quaternion spawnRot = Quaternion.identity;
-
-        GameObject player = Instantiate(playerPrefab, spawnPos, spawnRot);
+        var player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
         player.transform.SetParent(transform);
-        NetworkServer.AddPlayerForConnection(conn, player);   // okay, here is . fuck. ugh, here is issue of some client not being able to join editor now=
-        DisableYoShit(player);
+        NetworkServer.AddPlayerForConnection(conn, player);
 
+        DisableYoShit(player);
         playerGameObjects[conn.connectionId] = player;
 
-        if (gameState != null)
-        {
-            gameState.UpdatePlayerCount(numPlayers);
-        }
-
-        //OrdersManager.Instance.SyncFullOrdersStateToPlayer(conn);  <-- shit, do this fucker somewhere... else
-        Debug.Log($"Player {conn.connectionId} spawned at {spawnPos}");
+        gameState?.UpdatePlayerCount(numPlayers);
+        Debug.Log($"[NetworkGameManager] Player {conn.connectionId} spawned at {spawnPos}");
     }
 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
-        if (playerGameObjects.ContainsKey(conn.connectionId))
+        if (playerGameObjects.TryGetValue(conn.connectionId, out var go))
         {
-            NetworkServer.UnSpawn(playerGameObjects[conn.connectionId]);
+            NetworkServer.UnSpawn(go);
             playerGameObjects.Remove(conn.connectionId);
         }
-
-        if (gameState != null)
-        {
-            gameState.UpdatePlayerCount(numPlayers - 1);
-        }
-
+        gameState?.UpdatePlayerCount(numPlayers - 1);
         base.OnServerDisconnect(conn);
     }
 
     private Vector3 GetNextSpawnPosition()
     {
         if (spawnPoints != null && spawnPoints.Length > 0)
-        {
-            Transform spawnPoint = spawnPoints[nextSpawnIndex % spawnPoints.Length];
-            nextSpawnIndex++;
-            return spawnPoint.position;
-        }
+            return spawnPoints[nextSpawnIndex++ % spawnPoints.Length].position;
 
-        // Fallback: spawn around origin
-        float angle = (nextSpawnIndex * 90f) * Mathf.Deg2Rad;
-        nextSpawnIndex++;
+        float angle = (nextSpawnIndex++ * 90f) * Mathf.Deg2Rad;
         return new Vector3(Mathf.Cos(angle) * 2f, 1f, Mathf.Sin(angle) * 2f);
     }
 
+    #endregion
+
+    #region Game flow
+
+    /// <summary>Transitions from lobby to gameplay.</summary>
     [Server]
     public void BeginGame(int gameMode)
     {
         if (gameState == null) return;
-
         if (gameState.gameStatus != GameStatus.Lobby)
         {
-            Debug.LogWarning("Cannot begin game - not in lobby!");
+            Debug.LogWarning("Cannot begin game — not in lobby.");
             return;
         }
 
         gameState.SetGameMode(gameMode);
         gameState.SetGameStatus(GameStatus.Ingame);
-
-        // Load gameplay scene
         ServerChangeScene(GetSceneNameForGameMode(gameMode));
     }
 
@@ -218,136 +227,104 @@ public class NetworkGameManager : NetworkManager
         if (sceneName != "Main Menu" && gameState != null && gameState.gameStatus == GameStatus.Ingame)
         {
             SetupGameMode(gameState.selectedGameMode);
-            MasterManager.Instance.Initialize();  // TODO: if i haven't finished, players must also have timers on their counterpart. server has them, clients don't.
+            MasterManager.Instance?.Initialize();
 
-            // Move all existing players to spawn positions
-            int index = 0;
+            // Reposition players
+            int idx = 0;
             foreach (var kvp in playerGameObjects)
             {
                 if (kvp.Value != null)
                 {
-                    Vector3 spawnPos = GetSpawnPositionForIndex(index);
-                    kvp.Value.transform.position = spawnPos;
+                    kvp.Value.transform.position = GetSpawnPositionForIndex(idx++);
                     ReenableYoShit(kvp.Value);
-                    index++;
                 }
             }
         }
     }
 
-    private string GetSceneNameForGameMode(int gameMode)
-    {
-        switch (gameMode)
-        {
-            // TODO: oo[s
-            case 0: // Endless
-                return "GameplayScene";
-            case 1: // Shifts
-                return "GameplayScene";
-            case 2: // Another mode
-                return "GameplayScene";
-            default:
-                return "GameplayScene";
-        }
-    }
+    private string GetSceneNameForGameMode(int gameMode) => "GameplayScene";
 
     [Server]
     private void SetupGameMode(int gameMode)
     {
-        if (MasterManager.Instance != null)
+        if (MasterManager.Instance == null) return;
+
+        var timerMan = MasterManager.Instance.transform.Find("TimerManager")?.gameObject;
+        if (timerMan == null) return;
+
+        foreach (Transform child in timerMan.transform)
         {
-            GameObject timerMan = MasterManager.Instance.transform.Find("TimerManager").gameObject;
-            if (timerMan != null)
-            {
-                foreach (Transform child in timerMan.transform)
-                {
-                    if (child != timerMan.transform)
-                    {
-                        Destroy(child.gameObject);
-                    }
-                }
+            if (child != timerMan.transform)
+                Destroy(child.gameObject);
+        }
 
-                GameObject timerPrefab = null;
-                switch (gameMode)
-                {
-                    case 0: // Endless
-                        timerPrefab = endlessGamemodeTimerPrefab;
-                        break;
-                    case 1: // Shifts
-                        timerPrefab = shiftsGamemodeTimerPrefab;
-                        break;
-                    case 2: // Another mode todo here ofc
-                        timerPrefab = endlessGamemodeTimerPrefab;
-                        break;
-                }
+        GameObject timerPrefab = gameMode switch
+        {
+            1 => shiftsGamemodeTimerPrefab,
+            _ => endlessGamemodeTimerPrefab
+        };
 
-                if (timerPrefab != null)
-                {
-                    GameObject timerInstance = Instantiate(timerPrefab, timerMan.transform);
-                    timerInstance.transform.SetParent(timerMan.transform);
-                    // Initialize timer
-                    if (timerInstance.TryGetComponent<GenericTimer>(out var timer))
-                    {
-                        GameManager.Instance.timer = timer;
-                        timer.Initialize(GameManager.Instance);
-                        NetworkServer.Spawn(timerInstance);
-                    }
-                }
-            }
+        if (timerPrefab == null) return;
+
+        var timerInstance = Instantiate(timerPrefab, timerMan.transform);
+        if (timerInstance.TryGetComponent<GenericTimer>(out var timer))
+        {
+            GameManager.Instance.timer = timer;
+            timer.Initialize(GameManager.Instance);
+            GameNetworkBridge.Instance?.ServerSpawn(timerInstance);
         }
     }
 
-    // absolute dogshit
+    #endregion
+
+    #region Player enable/disable
+
     private void DisableYoShit(GameObject player)
     {
-        player.GetComponent<PlayerController>().DisableYoShit(player);
+        if (player.TryGetComponent<PlayerController>(out var pc))
+            pc.DisableYoShit(player);
     }
 
     private void ReenableYoShit(GameObject player)
     {
-        player.GetComponent<PlayerController>().ReenableYoShit(player);
+        if (player.TryGetComponent<PlayerController>(out var pc))
+            pc.ReenableYoShit(player);
     }
 
     private Vector3 GetSpawnPositionForIndex(int index)
     {
         if (spawnPoints != null && spawnPoints.Length > 0)
-        {
             return spawnPoints[index % spawnPoints.Length].position;
-        }
 
-        // Fallback
         float angle = (index * 90f) * Mathf.Deg2Rad;
-        return new Vector3(Mathf.Cos(angle) * transform.position.x, transform.position.y, Mathf.Sin(angle) * transform.position.z);
+        return new Vector3(Mathf.Cos(angle) * transform.position.x,
+                           transform.position.y,
+                           Mathf.Sin(angle) * transform.position.z);
     }
 
-    // Public methods for UI
+    #endregion
+
+    #region Public UI-facing methods (called from buttons etc.)
+
     public void StartHostGame(string port = "7777")
     {
-        if (!string.IsNullOrEmpty(port))  // I have no idea how this can become suddenly null and how port will stay unset. I will have to forsee that at some later point, though. I can't be bothered making multiplayer working AND fixing all the bugs
-        {
-            var transport = Transport.active;
+        if (string.IsNullOrEmpty(port)) { StartHost(); return; }
 
-            if (transport is KcpTransport kcp)
-            {
-                if (ushort.TryParse(port, out var result))
-                    if (result > 65535 || result < 1)
-                    {
-                        Debug.LogError("AFAIK computers have ports available only in range of [1, ... , 65535]. Sorry if that's not the case anymore.");
-                        return;
-                    }
-                    else
-                        kcp.Port = result;
-                else
-                {
-                    Debug.LogError("Parsed port bad. Please dont put your credit card information there. Any number in [1, 2, ..., 65535] is fine, and if not the stall's just occupied probably.");
-                    return;
-                }
-            }
+        var transport = Transport.active;
+        if (transport is KcpTransport kcp)
+        {
+            if (ushort.TryParse(port, out var result) && result is >= 1 and <= 65535)
+                kcp.Port = result;
             else
             {
-                Debug.LogError("Somehow, no Transport found. Yell at coder plox, thbx.");
+                Debug.LogError("Port must be 1–65535.");
                 return;
             }
+        }
+        else
+        {
+            Debug.LogError("No KcpTransport found.");
+            return;
         }
         StartHost();
     }
@@ -356,48 +333,34 @@ public class NetworkGameManager : NetworkManager
     {
         var split = address.Split(':');
         if (split.Length < 2)
-        { 
+        {
             networkAddress = address;
-        
         }
         else
         {
             networkAddress = split[0];
             var transport = Transport.active;
-        
             if (transport is KcpTransport kcp)
             {
-                if (ushort.TryParse(split[1], out var result))
-                    if (result > 65535 || result < 1)
-                    {
-                        Debug.LogError("AFAIK computers have ports available only in range of [1, ... , 65535]. Sorry if that's not the case anymore.");
-                        return;
-                    }
-                    else
-                        kcp.Port = result;
+                if (ushort.TryParse(split[1], out var result) && result is >= 1 and <= 65535)
+                    kcp.Port = result;
                 else
                 {
-                    Debug.LogError("Parsed port bad. Please dont put your credit card information there. Any number in [1, 2, ..., 65535] is fine, and if not the stall's just occupied probably.");
+                    Debug.LogError("Port must be 1–65535.");
                     return;
                 }
             }
             else
             {
-                Debug.LogError("Somehow, no Transport found. Yell at coder plox, thbx.");
+                Debug.LogError("No KcpTransport found.");
                 return;
             }
         }
-
         StartClient();
     }
 
-    public void StopHostGame()
-    {
-        StopHost();
-    }
+    public void StopHostGame() => StopHost();
+    public void StopClientGame() => StopClient();
 
-    public void StopClientGame()
-    {
-        StopClient();
-    }
+    #endregion
 }
